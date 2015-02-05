@@ -30,7 +30,7 @@ env:
 
 #===============================================================================
 # Script options
-# Thes options may be broken out into the before_script, script and after_script
+# These options may be broken out into the before_script, script and after_script
 # or not, that is up to you 
 #===============================================================================
 
@@ -55,7 +55,7 @@ script:
 #===============================================================================
 # Build Results
 # Build results are split into two categories: artifacts and targets
-# You may omit either key and stiff have a successfull build
+# You may omit either key and still have a successfull build
 # They may be a string, list and contain any bash glob
 #===============================================================================
 
