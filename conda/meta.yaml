@@ -1,0 +1,26 @@
+package:
+  name: spinsfast
+  version: 104.1
+
+source:
+  git_url: git@github.com:moble/spinsfast.git
+
+build:
+  detect_binary_files_with_prefix: true
+  # script: python python/setup.py install
+
+requirements:
+  build:
+    - python
+    - fftw
+    - numpy
+
+  run:
+    - python
+    - fftw
+    - numpy
+
+about:
+  home: 'http://astrophysics.physics.fsu.edu/~huffenbe/research/spinsfast/index.html'
+  license: GPL
+  summary: 'Fast and exact spin-s spherical-harmonic transforms'
