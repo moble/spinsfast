@@ -16,10 +16,10 @@ package: spinsfast
 
 ## The platforms to build on.
 ## platform defaults to linux-64
-platform:
- - linux-64
- - linux-32
-## The engine are the inital conda packages you want to run with
+# platform:
+#  - linux-64
+#  - linux-32
+## The engines are the inital conda packages you want to run with
 engine:
  - python=2
  - python=3
@@ -35,8 +35,9 @@ env:
 #===============================================================================
 
 ## Run before the script
-# before_script:
-#   - echo "before_script!"
+before_script:
+  - conda update -n root conda-build
+  - conda config --add channels moble
 ## Put your main computations here!  
 script:
   - conda build .
