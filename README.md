@@ -29,6 +29,10 @@ Once `anaconda` is installed, this package may be installed with the command
 conda install --channel moble spinsfast
 ```
 
+(Note that the explanation for how to create and upload conda packages is
+contained in the [README](https://github.com/moble/fftw/blob/master/README.md)
+for my [FFTW installer](https://github.com/moble/fftw).)
+
 ## Manual installation
 
 Manual installation of this package is slightly more delicate.  The
