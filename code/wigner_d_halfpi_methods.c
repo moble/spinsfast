@@ -28,7 +28,7 @@ void Delta_initialize(int DeltaMethod,void * Deltawork) {
   if (DeltaMethod == WDHP_METHOD_RISBO) {
     wdhp_reset((wdhp *)Deltawork);
   } else if (DeltaMethod == WDHP_METHOD_TN) {
-    
+
   } else if (DeltaMethod == WDHP_METHOD_TN_PLANE) {
 
   }
@@ -39,7 +39,7 @@ void Delta_initialize(int DeltaMethod,void * Deltawork) {
 void Delta_getplane( int DeltaMethod, void * Deltawork, const double * restrict Deltal, int l) {
 
   // For supported methods, grab or compute the l-plane of Delta matrix
-  if (DeltaMethod == WDHP_METHOD_RISBO_PRECOMPUTE) { 
+  if (DeltaMethod == WDHP_METHOD_RISBO_PRECOMPUTE) {
     Deltal = &((double *)Deltawork)[wdhp_integer_idx(l, 0, 0)];
   } else if (DeltaMethod == WDHP_METHOD_TN_PLANE) {
     wdhp_get_quarter_plane(l, ((wdhp_TN_helper *)Deltawork)->sqt, ((wdhp_TN_helper *)Deltawork)->invsqt, ((wdhp_TN_helper *)Deltawork)->D_all_llm, ((wdhp_TN_helper *)Deltawork)->Dwork);
@@ -57,16 +57,16 @@ double *Delta_getrow( int DeltaMethod, void * Deltawork, const double * restrict
 
   // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
   if (DeltaMethod == WDHP_METHOD_RISBO) {
-    Delta_mp = wdhp_integer_getrow((wdhp *)Deltawork,mp);     
+    Delta_mp = wdhp_integer_getrow((wdhp *)Deltawork,mp);
   } else if (DeltaMethod == WDHP_METHOD_RISBO_PRECOMPUTE) {
-    Delta_mp = &Deltal[mp*twicelp1];     
+    Delta_mp = &Deltal[mp*twicelp1];
   } else if (DeltaMethod == WDHP_METHOD_TN) {
     wdhp_get_row_pos(l,mp, ((wdhp_TN_helper *)Deltawork)->sqt, ((wdhp_TN_helper *)Deltawork)->invsqt, ((wdhp_TN_helper *)Deltawork)->D_all_llm, ((wdhp_TN_helper *)Deltawork)->Dwork);
     Delta_mp = ((wdhp_TN_helper *)Deltawork)->Dwork;
   } else if (DeltaMethod == WDHP_METHOD_TN_PLANE) {
     Delta_mp = &(((wdhp_TN_helper *)Deltawork)->Dwork[mp*(l+1)]);
   }
-  
+
   return(Delta_mp);
 }
 
@@ -79,8 +79,8 @@ double *Delta_getrow( int DeltaMethod, void * Deltawork, const double * restrict
 void Delta_increment_l( int DeltaMethod, void * Deltawork) {
 
   // Increment Delta to next l if Risbo not precomputed
-  if ( (DeltaMethod==WDHP_METHOD_RISBO) ) {  
-    wdhp_jplus1((wdhp *)Deltawork); 
+  if ( (DeltaMethod==WDHP_METHOD_RISBO) ) {
+    wdhp_jplus1((wdhp *)Deltawork);
   }
-  
+
 }

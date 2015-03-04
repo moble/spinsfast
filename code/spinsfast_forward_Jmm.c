@@ -37,7 +37,7 @@ void spinsfast_forward_multi_Jmm(fftw_complex *f_set, int *spins, int Nmap, int 
   fftw_complex *Imm_set = fftw_malloc(Nmap*Nm*Nm*sizeof(fftw_complex));
 
   spinsfast_forward_multi_Imm (f_set,spins, Nmap, Ntheta, Nphi, lmax, Imm_set);
- 
+
 
 
   int imap;
@@ -48,11 +48,11 @@ void spinsfast_forward_multi_Jmm(fftw_complex *f_set, int *spins, int Nmap, int 
     fftw_complex *Jmm = &Jmm_set[imap*NJmm];
 
 
- 
- 
-  
+
+
+
   int negtos =  ((s & 1) == 0) ? 1 : -1; // = (-1)^s
-  
+
   int mp, m;
 
 
@@ -62,14 +62,14 @@ void spinsfast_forward_multi_Jmm(fftw_complex *f_set, int *spins, int Nmap, int 
     midx_helper[m+lmax] = (Nm + m) % Nm;
   }
   int * restrict midx = &midx_helper[lmax];
-  
+
 
 
 
   for (mp=0; mp<=lmax; mp++){
-    const int mpmod = midx[mp]; 
+    const int mpmod = midx[mp];
     const int negmpmod = midx[-mp];
-   
+
 
     for (m=-lmax; m<=lmax; m++){
       const int mmod = midx[m];
@@ -77,10 +77,10 @@ void spinsfast_forward_multi_Jmm(fftw_complex *f_set, int *spins, int Nmap, int 
 
 
       if (mp==0) {
-	//	if ((-10 < m) && (m < 10)) printf("%d %d %d\n",m, mmod,negtom);
-	Jmm[mp*Nm + mmod] = Imm[mpmod*Nm + mmod];
-      } else { 
-	Jmm[mp*Nm + mmod] = Imm[mpmod*Nm + mmod] + negtom*negtos*Imm[negmpmod*Nm + mmod];
+        //	if ((-10 < m) && (m < 10)) printf("%d %d %d\n",m, mmod,negtom);
+        Jmm[mp*Nm + mmod] = Imm[mpmod*Nm + mmod];
+      } else {
+        Jmm[mp*Nm + mmod] = Imm[mpmod*Nm + mmod] + negtom*negtos*Imm[negmpmod*Nm + mmod];
       }
 
     }

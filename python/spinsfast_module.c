@@ -35,19 +35,19 @@
 static PyObject *spinsfast_N_lm(PyObject *self, PyObject *args) {
 
   int lmax;
-  if (!PyArg_ParseTuple(args, "i", &lmax)) 
+  if (!PyArg_ParseTuple(args, "i", &lmax))
     return(NULL);
-    
+
   return Py_BuildValue("i", N_lm(lmax));
 }
 
 
 static PyObject *spinsfast_lm_ind(PyObject *self, PyObject *args) {
   int l,m, lmax;
-  
-  if (!PyArg_ParseTuple(args, "iii", &l,&m, &lmax)) 
+
+  if (!PyArg_ParseTuple(args, "iii", &l,&m, &lmax))
     return NULL;
- 
+
   return Py_BuildValue("i", lm_ind(l,m,lmax));
 
 }
@@ -57,20 +57,20 @@ static PyObject *spinsfast_ind_lm(PyObject *self, PyObject *args) {
 
   int i, lmax;
 
-  if (!PyArg_ParseTuple(args, "ii", &i, &lmax)) 
+  if (!PyArg_ParseTuple(args, "ii", &i, &lmax))
     return NULL;
-  
-  
+
+
   int nd = 1;
   npy_intp dims[1] = {2};
-  
+
   int *lm = calloc(2,sizeof(int));
-  
+
   ind_lm(i, &lm[0], &lm[1], lmax);
-  
+
   PyObject *arr = PyArray_SimpleNewFromData(nd, dims, NPY_INT, lm);
   Py_INCREF(arr);
-  
+
   return(arr);
 }
 
@@ -89,19 +89,19 @@ static PyObject *spinsfast_mod_salm2map(PyObject *self, PyObject *args) {
   int Ntheta = 0;
   int Nphi = 0;
 
-  if (!PyArg_ParseTuple(args, "Oiiii", &input_array, &s, &lmax, &Ntheta, &Nphi)) 
+  if (!PyArg_ParseTuple(args, "Oiiii", &input_array, &s, &lmax, &Ntheta, &Nphi))
     return NULL;
 
   fftw_complex *alm = PyArray_DATA(input_array);
   fftw_complex *f = calloc(Nphi*Ntheta,sizeof(fftw_complex));
-  
+
   spinsfast_salm2map(alm, f, s, Ntheta, Nphi, lmax);
-  
+
   npy_intp dims[2] = {Ntheta, Nphi};
 
   PyObject *arr = PyArray_SimpleNewFromData(2, dims, NPY_CDOUBLE, f);
   Py_INCREF(arr);
-  
+
   return(arr);
 
 }
@@ -112,7 +112,7 @@ static PyObject *spinsfast_mod_map2salm(PyObject *self, PyObject *args) {
   int lmax = 0;
   int s = 0;
 
-  if (!PyArg_ParseTuple(args, "Oii", &input_array, &s, &lmax)) 
+  if (!PyArg_ParseTuple(args, "Oii", &input_array, &s, &lmax))
     return NULL;
 
 
@@ -123,7 +123,7 @@ static PyObject *spinsfast_mod_map2salm(PyObject *self, PyObject *args) {
 
   npy_intp Nlm = N_lm(lmax);
 
-  
+
   fftw_complex *alm = calloc(Nlm,sizeof(fftw_complex));
   fftw_complex *f = PyArray_DATA(input_array);
 
@@ -131,7 +131,7 @@ static PyObject *spinsfast_mod_map2salm(PyObject *self, PyObject *args) {
 
   PyObject *arr = PyArray_SimpleNewFromData(1, &Nlm, NPY_CDOUBLE, alm);
   Py_INCREF(arr);
-  
+
   return(arr);
 
 }
@@ -141,19 +141,19 @@ static PyObject *spinsfast_mod_map2salm(PyObject *self, PyObject *args) {
 static PyObject *spinsfast_quad_weights(PyObject *self, PyObject *args) {
   int Ntheta;
 
-  if (!PyArg_ParseTuple(args, "i", &Ntheta)) 
+  if (!PyArg_ParseTuple(args, "i", &Ntheta))
     return NULL;
 
   int wsize = 2*(Ntheta-1);
   fftw_complex *W = calloc(wsize, sizeof(fftw_complex)); // fourier space weights
 
   spinsfast_quadrature_weights(W, wsize);
-  
+
   npy_intp N = wsize;
 
   PyObject *arr = PyArray_SimpleNewFromData(1, &N, NPY_CDOUBLE, W);
   Py_INCREF(arr);
-  
+
   return(arr);
 }
 
@@ -162,10 +162,10 @@ static PyObject *spinsfast_mod_f_extend_MW(PyObject *self, PyObject *args) {
   PyObject *input_array=NULL;
   int s = 0;
 
-  if (!PyArg_ParseTuple(args, "Oi", &input_array, &s)) 
+  if (!PyArg_ParseTuple(args, "Oi", &input_array, &s))
     return NULL;
 
-  
+
   fftw_complex *f = PyArray_DATA(input_array);
   npy_intp *dim = PyArray_DIMS(input_array);
   // int contig = PyArray_ISCONTIGUOUS(input_array);
@@ -174,14 +174,14 @@ static PyObject *spinsfast_mod_f_extend_MW(PyObject *self, PyObject *args) {
 
   int wsize = 2*(Ntheta-1);
   fftw_complex *F = fftw_malloc(wsize*Nphi*sizeof(fftw_complex));
-  
+
   spinsfast_f_extend_MW(f, F, s, Ntheta, Nphi);
 
   npy_intp N[] = {wsize,Nphi};
-  
+
   PyObject *arr = PyArray_SimpleNewFromData(2, N, NPY_CDOUBLE, F);
   Py_INCREF(arr);
-  
+
   return(arr);
 
 }
@@ -190,10 +190,10 @@ static PyObject *spinsfast_mod_f_extend_old(PyObject *self, PyObject *args) {
   PyObject *input_array=NULL;
   int s = 0;
 
-  if (!PyArg_ParseTuple(args, "Oi", &input_array, &s)) 
+  if (!PyArg_ParseTuple(args, "Oi", &input_array, &s))
     return NULL;
 
-  
+
   fftw_complex *f = PyArray_DATA(input_array);
   npy_intp *dim = PyArray_DIMS(input_array);
   // int contig = PyArray_ISCONTIGUOUS(input_array);
@@ -202,14 +202,14 @@ static PyObject *spinsfast_mod_f_extend_old(PyObject *self, PyObject *args) {
 
   int wsize = 2*(Ntheta-1);
   fftw_complex *F = fftw_malloc(wsize*Nphi*sizeof(fftw_complex));
-  
+
   spinsfast_f_extend_old(f, F, s, Ntheta, Nphi);
 
   npy_intp N[] = {wsize,Nphi};
-  
+
   PyObject *arr = PyArray_SimpleNewFromData(2, N, NPY_CDOUBLE, F);
   Py_INCREF(arr);
-  
+
   return(arr);
 
 }
@@ -219,30 +219,30 @@ static PyObject *spinsfast_mod_Imm(PyObject *self, PyObject *args) {
   PyObject *input_array=NULL;
   int lmax = 0;
   int s = 0;
-  
-  if (!PyArg_ParseTuple(args, "Oii", &input_array, &s, &lmax)) 
+
+  if (!PyArg_ParseTuple(args, "Oii", &input_array, &s, &lmax))
     return NULL;
-  
-  
+
+
   fftw_complex *f = PyArray_DATA(input_array);
   npy_intp *dim = PyArray_DIMS(input_array);
   // int contig = PyArray_ISCONTIGUOUS(input_array);
   int Ntheta = dim[0];
   int Nphi = dim[1];
-  
-  
+
+
   // int Npix = Nphi * Ntheta;
   int Nm = 2*lmax+1;
   fftw_complex *Imm = fftw_malloc(Nm*Nm*sizeof(fftw_complex));
-  
-  
+
+
   spinsfast_forward_multi_Imm (f, &s, 1, Ntheta, Nphi, lmax, Imm);
-  
+
   npy_intp N[] = {Nm,Nm};
-  
+
   PyObject *arr = PyArray_SimpleNewFromData(2, N, NPY_CDOUBLE, Imm);
   Py_INCREF(arr);
-  
+
   return(arr);
 
 }

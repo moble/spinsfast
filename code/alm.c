@@ -38,10 +38,10 @@ int lm_ind(int l, int m, int lmax) {
 
 void ind_lm(int i, int *l, int *m, int lmax) {
 
- 
+
   //  printf("%d %% %d = %d\n",i,Nalm,i % Nalm);
   (*l) = sqrt( i );
-  
+
   int  Nl = ((*l))*((*l));
   int im = ( i - Nl );
 

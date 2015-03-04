@@ -31,9 +31,9 @@
 int dump_cimage(fftw_complex *image, int Ntheta, int Nphi, const char *filename) {
   fitsfile *fptr;
   int status = 0;
-  
+
   fits_create_file(&fptr, filename, &status);
-  
+
   long fpixel[2] = {1,1};
   long naxes[2] = {Nphi*2, Ntheta};
 
@@ -59,15 +59,15 @@ int dump_cimage(fftw_complex *image, int Ntheta, int Nphi, const char *filename)
   //  printf("data[0] = %e\n",data[0]);
 
   fits_write_pix (fptr, TDOUBLE, fpixel, 2*Ntheta*Nphi, data, &status);
-  
+
   printf("%s status = %d\n",filename,status);
 
   fits_close_file(fptr,&status);
 
   free(data);
-  
+
   return(status);
-  
+
 }
 
 

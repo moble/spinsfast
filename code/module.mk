@@ -25,16 +25,16 @@ $(OBJDIR)/spinsfast_backward_Gmm.o : code/spinsfast_backward_Gmm.c  include/spin
 $(OBJDIR)/spinsfast_backward_Gmm_alm2iqu.o : code/spinsfast_backward_Gmm_alm2iqu.c  include/spinsfast_backward.h
 	$(CC) $(INC) -o $@ -c $<
 
-$(OBJDIR)/spinsfast_forward_transform.o : code/spinsfast_forward_transform.c include/spinsfast_forward.h include/wigner_d_halfpi*.h 
+$(OBJDIR)/spinsfast_forward_transform.o : code/spinsfast_forward_transform.c include/spinsfast_forward.h include/wigner_d_halfpi*.h
 	$(CC) $(INC) -o $@ -c $<
 
-$(OBJDIR)/spinsfast_forward_transform_eo.o : code/spinsfast_forward_transform_eo.c include/spinsfast_forward.h include/wigner_d_halfpi*.h 
+$(OBJDIR)/spinsfast_forward_transform_eo.o : code/spinsfast_forward_transform_eo.c include/spinsfast_forward.h include/wigner_d_halfpi*.h
 	$(CC) $(INC) -o $@ -c $<
 
-$(OBJDIR)/spinsfast_forward_transform_iqu2alm.o : code/spinsfast_forward_transform_iqu2alm.c include/spinsfast_forward.h include/wigner_d_halfpi*.h 
+$(OBJDIR)/spinsfast_forward_transform_iqu2alm.o : code/spinsfast_forward_transform_iqu2alm.c include/spinsfast_forward.h include/wigner_d_halfpi*.h
 	$(CC) $(INC) -o $@ -c $<
 
-$(OBJDIR)/spinsfast_forward_transform_from_Imm.o : code/spinsfast_forward_transform_from_Imm.c include/spinsfast_forward.h include/wigner_d_halfpi*.h 
+$(OBJDIR)/spinsfast_forward_transform_from_Imm.o : code/spinsfast_forward_transform_from_Imm.c include/spinsfast_forward.h include/wigner_d_halfpi*.h
 	$(CC) $(INC) -o $@ -c $<
 
 
@@ -44,5 +44,5 @@ $(OBJDIR)/spinsfast_forward_Imm.o : code/spinsfast_forward_Imm.c  include/spinsf
 $(OBJDIR)/spinsfast_forward_Jmm.o : code/spinsfast_forward_Jmm.c  include/spinsfast_forward.h
 	$(CC) $(INC) -o $@ -c $<
 
- $(OBJDIR)/healpix_convert.o :  code/healpix_convert.c 
+ $(OBJDIR)/healpix_convert.o :  code/healpix_convert.c
 	$(CC) $(INC) -o $@ -c $<
