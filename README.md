@@ -13,7 +13,7 @@ notify me.
 
 # Example Usage
 
-A convenient ipython notebook is found in the `examples` directory, and can also
+A convenient ipython notebook is found in the `example` directory, and can also
 be [viewed directly online](http://nbviewer.ipython.org/github/moble/spinsfast/blob/master/example/spinsfast.ipynb).
 It shows some example python code that can be used to run this module, and explains
 some of the conventions established by the `spinsfast` authors.
@@ -30,8 +30,11 @@ lmax = 8  # maximum ell value used
 Ntheta = 2*lmax+1  # Minimum value for accuracy
 Nphi = 2*lmax+1  # Minimum value for accuracy
 Nlm = spinsfast.N_lm(lmax);  # Total number of complex components of the mode decomposition
+
+# `alm` will hold the mode components as discussed in `example/spinsfast.ipynb`
+# Here we just fill it with some random numbers to test it
 seed(3124432)  # Seed the random-number generator, for reproducibility
-alm = normal(size=(Nlm,)) + 1j*normal(size=(Nlm,))  # Holds the a_{ell,m} mode components
+alm = normal(size=(Nlm,)) + 1j*normal(size=(Nlm,))
 
 # This is the key line, where spinsfast converts from (ell,m) modes to values in physical space
 f =  spinsfast.salm2map(alm,s,lmax,Ntheta,Nphi)
