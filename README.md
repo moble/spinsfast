@@ -11,6 +11,36 @@ writing.  Whenever I notice updates on their end, I will update this code, so
 feel free to open an [issue](https://github.com/moble/spinsfast/issues) to
 notify me.
 
+# Example Usage
+
+A convenient ipython notebook is found in the `examples` directory, and can also
+be [viewed directly online](http://nbviewer.ipython.org/github/moble/spinsfast/blob/master/example/spinsfast.ipynb).
+It shows some example python code that can be used to run this module, and explains
+some of the conventions established by the `spinsfast` authors.
+
+In the interests of a very short, explicit example, here is one using random `(ell,m)` modes:
+
+```python
+from numpy.random import normal, seed
+import spinsfast
+
+# Some boilerplate for setting things up:
+s = 1  # spin weight of the field
+lmax = 8  # maximum ell value used
+Ntheta = 2*lmax+1  # Minimum value for accuracy
+Nphi = 2*lmax+1  # Minimum value for accuracy
+Nlm = spinsfast.N_lm(lmax);  # Total number of complex components of the mode decomposition
+seed(3124432)  # Seed the random-number generator, for reproducibility
+alm = normal(size=(Nlm,)) + 1j*normal(size=(Nlm,))  # Holds the a_{ell,m} mode components
+
+# This is the key line, where spinsfast converts from (ell,m) modes to values in physical space
+f =  spinsfast.salm2map(alm,s,lmax,Ntheta,Nphi)
+
+# We can also convert in the opposite direction like this:
+alm2 = spinsfast.map2salm(f,s,lmax)
+```
+
+
 # Installation
 
 ## Anaconda
