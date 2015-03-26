@@ -6,11 +6,13 @@ This code is a lightly modified version of the code hosted
 by Huffenberger, based on work by
 [Huffenberger and Wandelt](http://stacks.iop.org/0067-0049/189/255).
 
-My modifications add python 3.x compatibility, makes it easier to install as a
-python module, and adds integration with [conda](http://conda.pydata.org/docs/)
-and [binstar](https://binstar.org/), so that this package is available for
-download as a binary (with the required code and GPL) on
-[binstar](https://binstar.org/moble/spinsfast) via `conda`.
+My modifications
+
+  * add python 3.x compatibility;
+  * make it easier to install as a python module;
+  * add integration with [conda](http://conda.pydata.org/docs/) and
+    [binstar](https://binstar.org/), for easy installation
+    ([see below](#Installation)).
 
 
 # License
@@ -24,8 +26,8 @@ which is current as of this writing.  Whenever I notice updates on their end, I
 will update this code, so feel free to open an
 [issue](https://github.com/moble/spinsfast/issues) to notify me.  To see more
 specifically what I've added, look through the
-[commits](https://github.com/moble/spinsfast/commits/master); basically
-everything since the original is my part.
+[commits](https://github.com/moble/spinsfast/commits/master); my contributions
+are just everything since the initial commit.
 
 
 # Example Usage
