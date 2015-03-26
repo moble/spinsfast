@@ -12,7 +12,7 @@ My modifications
   * make it easier to install as a python module;
   * add integration with [conda](http://conda.pydata.org/docs/) and
     [binstar](https://binstar.org/), for easy installation
-    ([see below](#Installation)).
+    ([see below](#installation)).
 
 
 # License
