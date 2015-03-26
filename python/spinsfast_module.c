@@ -266,8 +266,56 @@ static PyMethodDef spinsfastMethods[] = {
 };
 
 
-PyMODINIT_FUNC initspinsfast(void)
-{
-  (void) Py_InitModule("spinsfast", spinsfastMethods);
+
+#if PY_MAJOR_VERSION >= 3
+
+static struct PyModuleDef moduledef = {
+    PyModuleDef_HEAD_INIT,
+    "spinsfast",
+    NULL,
+    -1,
+    spinsfastMethods,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+};
+
+#define INITERROR return NULL
+
+// This is the initialization function that does the setup
+PyMODINIT_FUNC PyInit_spinsfast(void) {
+
+#else // PY_MAJOR_VERSION < 3
+
+#define INITERROR return
+
+// This is the initialization function that does the setup
+PyMODINIT_FUNC initspinsfast(void) {
+#endif
+
+  PyObject *module;
+
+  // Initialize a (for now, empty) module
+#if PY_MAJOR_VERSION >= 3
+  module = PyModule_Create(&moduledef);
+#else
+  module = Py_InitModule("spinsfast", spinsfastMethods);
+#endif
+  if(module==NULL) {
+    INITERROR;
+  }
+
   import_array();  // This is important for using the numpy_array api, otherwise segfaults!
+  if (PyErr_Occurred()) {
+    INITERROR;
+  }
+
+
+#if PY_MAJOR_VERSION >= 3
+  return module;
+#else
+  return;
+#endif
+
 }
