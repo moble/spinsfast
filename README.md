@@ -32,10 +32,11 @@ are just everything since the initial commit.
 
 # Example Usage
 
-A convenient ipython notebook is found in the `example` directory, and can also
-be [viewed directly online](http://nbviewer.ipython.org/github/moble/spinsfast/blob/master/example/spinsfast.ipynb).
-It shows some example python code that can be used to run this module, and explains
-some of the conventions established by the `spinsfast` authors.
+A convenient ipython/jupyter notebook is found in the `example` directory, and
+can also be
+[viewed directly online](http://nbviewer.ipython.org/github/moble/spinsfast/blob/master/example/spinsfast.ipynb).
+It shows some example python code that can be used to run this module, and
+explains some of the conventions established by the `spinsfast` authors.
 
 In the interests of a very short, explicit example, here is one using random `(ell,m)` modes:
 
