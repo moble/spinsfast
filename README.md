@@ -6,24 +6,25 @@ This code is a lightly modified version of the code hosted
 by Huffenberger, based on work by
 [Huffenberger and Wandelt](http://stacks.iop.org/0067-0049/189/255).
 
-My modifications
+My modifications are relatively superficial:
 
-  * add python 3.x compatibility;
-  * make it easier to install as a python module;
+  * add python 3.x compatibility to `python/spinsfast_module.c`;
+  * make it easier to install as a python module by trying to detect paths to
+    FFTW;
+  * include an ipython/jupyter notebook in the `example` directory;
   * add integration with [conda](http://conda.pydata.org/docs/) and
-    [binstar](https://binstar.org/), for easy installation
+    [anaconda.org](https://anaconda.org/moble/spinsfast), for easy installation
     ([see below](#installation)).
-
 
 # License
 
-The original work is licensed under GPL, so that's what I've had to license
-this under as well.  (I usually go for the more liberal MIT license, but GPL is
-cool too.)  See the LICENSE file in this directory for more details.
+The original work is licensed under GPL, so that's what I have to license this
+under as well.  (I usually go for the more liberal MIT license, but GPL is
+fine.)  See the `LICENSE` file in this directory for more details.
 
 I based my work on Huffenberger and Wandelt's "Revision 104, 13 Apr 2012",
-which is current as of this writing.  Whenever I notice updates on their end, I
-will update this code, so feel free to open an
+which is current as of this writing (August 2015).  Whenever I notice updates
+on their end, I will gladly update this code, so feel free to open an
 [issue](https://github.com/moble/spinsfast/issues) to notify me.  To see more
 specifically what I've added, look through the
 [commits](https://github.com/moble/spinsfast/commits/master); my contributions
