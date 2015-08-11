@@ -12,13 +12,13 @@ build:
 requirements:
   build:
     - python
-    - fftw
     - numpy
+    - fftw
 
   run:
     - python
-    - fftw
     - numpy
+    - fftw
 
 about:
   home: 'http://astrophysics.physics.fsu.edu/~huffenbe/research/spinsfast/index.html'
