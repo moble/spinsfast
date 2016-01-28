@@ -23,9 +23,9 @@ package: spinsfast
 engine:
  - python=2
  - python=3
-##The env param is an environment variable list
-env:
- - CONDA_NPY=19
+# ##The env param is an environment variable list
+# env:
+#  - CONDA_NPY=110
 
 
 #===============================================================================
