@@ -305,7 +305,7 @@ void spinsfast_forward_transform_iqu2alm(fftw_complex * restrict T,fftw_complex 
 
   free(midx_helper);
 
-  free(Itom_helper);
+  fftw_free(Itom_helper);
 
   free(ZI_);  free(OI_);  free(EI_);
   free(ZP_);  free(OP_);  free(EP_);

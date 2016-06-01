@@ -168,7 +168,7 @@ void spinsfast_forward_transform(fftw_complex * restrict a, const int Ntransform
 
   free(midx_helper);
 
-  free(Itom_helper);
+  fftw_free(Itom_helper);
 }
 
 
@@ -191,5 +191,5 @@ void spinsfast_map2salm(fftw_complex *f, fftw_complex *alm, int s, int Ntheta, i
   spinsfast_forward_transform(alm,  Ntransform, &s, lmax, Jmm, WDHP_METHOD_TN_PLANE,(void *)DeltaTN );
 
   wdhp_TN_helper_free(DeltaTN);
-  free(Jmm);
+  fftw_free(Jmm);
 }

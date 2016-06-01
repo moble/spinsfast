@@ -225,5 +225,5 @@ void spinsfast_backward_Gmm_alm2iqu(const fftw_complex * restrict T, const fftw_
 
   free(midx_helper);
 
-  free(Ito_helper);
+  fftw_free(Ito_helper);
 }

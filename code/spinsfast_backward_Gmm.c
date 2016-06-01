@@ -39,7 +39,6 @@ int spinsfast_backward_sign_parity(int m){
 void spinsfast_backward_Gmm(const fftw_complex * restrict a, int Ntransform, const int *spins,const int lmax, fftw_complex * restrict Gmm_set, int DeltaMethod, void *Deltawork) {
  int l,m,mp;
 
-
  int Nm = 2*lmax+1;
  double norml;
 
@@ -211,5 +210,5 @@ void spinsfast_backward_Gmm(const fftw_complex * restrict a, int Ntransform, con
 
  free(midx_helper);
 
- free(Ito_helper);
+ fftw_free(Ito_helper);
 }

@@ -119,5 +119,5 @@ void spinsfast_forward_transform_from_Imm(fftw_complex * restrict a, const int s
 
   free(midx_helper);
 
-  free(Itom_helper);
+  fftw_free(Itom_helper);
 }

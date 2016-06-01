@@ -244,5 +244,5 @@ void spinsfast_forward_transform_eo(fftw_complex * restrict a, const int Ntransf
 
   free(midx_helper);
 
-  free(Itom_helper);
+  fftw_free(Itom_helper);
 }

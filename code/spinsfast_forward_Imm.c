@@ -156,8 +156,8 @@ void spinsfast_f_extend_MW(fftw_complex *f, fftw_complex *F, int s, int Ntheta, 
   fftw_execute(fftthetaplan);
   fftw_destroy_plan(fftthetaplan);
 
-  free(fm);
-  free(Fm);
+  fftw_free(fm);
+  fftw_free(Fm);
   free(W);
 
 }
@@ -281,7 +281,7 @@ void spinsfast_forward_multi_Imm (fftw_complex *f_set, int *s, int Nmap, int Nth
 
   }
 
-  free(F);
+  fftw_free(F);
 }
 
 
@@ -417,5 +417,5 @@ void spinsfast_forward_multi_Imm_oldextension (fftw_complex *f_set, int *s, int 
 
 
   free(W);
-  free(F);
+  fftw_free(F);
 }

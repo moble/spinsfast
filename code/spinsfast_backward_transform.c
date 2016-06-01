@@ -114,6 +114,6 @@ void spinsfast_salm2map(fftw_complex *alm, fftw_complex *f, int s, int Ntheta, i
   spinsfast_backward_transform(f, Ntheta, Nphi, lmax, Gmm);
 
   wdhp_TN_helper_free(DeltaTN);
-  free(Gmm);
+  fftw_free(Gmm);
 
 }
