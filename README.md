@@ -8,6 +8,7 @@ by Huffenberger, based on work by
 
 My modifications are relatively superficial:
 
+  * fix segfaults due to use of `free` with `fftw_malloc` instead of `fftw_free`
   * add python 3.x compatibility to `python/spinsfast_module.c`;
   * make it easier to install as a python module by trying to detect paths to
     FFTW;
