@@ -25,7 +25,7 @@ script:
   - conda config --set anaconda_upload yes
   - conda install -n root conda-build anaconda-client
   - conda install -c moble fftw
-  - conda build --token "$ANACONDA_TOKEN" .
+  - conda build --token "$ANACONDA_TOKEN" conda
 
 # This uses the ANACONDA_TOKEN environment variable.  To create a token optionally log in first:
 #   > anaconda login
