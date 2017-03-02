@@ -21,10 +21,10 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then lsb_release -a ; fi
 
 script:
-  - PYTHON_VERSION="$TRAVIS_PYTHON_VERSION" CONDA_INSTALLER_OS="${TRAVIS_OS_NAME:-linux}" source travis_install_conda.sh numpy scipy numba;
+  - conda config --add channels moble
+  - PYTHON_VERSION="$TRAVIS_PYTHON_VERSION" CONDA_INSTALLER_OS="${TRAVIS_OS_NAME:-linux}" source travis_install_conda.sh numpy scipy numba fftw;
   - conda config --set anaconda_upload yes
   - conda install -n root conda-build anaconda-client
-  - conda install -c moble fftw
   - conda build --token "$ANACONDA_TOKEN" conda
 
 # This uses the ANACONDA_TOKEN environment variable.  To create a token optionally log in first:
