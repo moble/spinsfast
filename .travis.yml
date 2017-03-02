@@ -1,0 +1,37 @@
+sudo: false
+
+language: python
+
+matrix:
+  include:
+    - os: linux
+      python: '2.7'
+      env: CONDA=true
+    - os: linux
+      python: '3.6'
+      env: CONDA=true
+    - os: osx
+      language: generic
+      env: CONDA=true TRAVIS_PYTHON_VERSION=2.7
+    - os: osx
+      language: generic
+      env: CONDA=true TRAVIS_PYTHON_VERSION=3.6
+
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then lsb_release -a ; fi
+
+script:
+  - PYTHON_VERSION="$TRAVIS_PYTHON_VERSION" CONDA_INSTALLER_OS="${TRAVIS_OS_NAME:-linux}" source travis_install_conda.sh numpy scipy numba;
+  - conda config --set anaconda_upload yes
+  - conda install -n root conda-build anaconda-client
+  - conda install -c moble fftw
+  - conda build --token "$ANACONDA_TOKEN" .
+
+# This uses the ANACONDA_TOKEN environment variable.  To create a token optionally log in first:
+#   > anaconda login
+# Then, either check for a token you want to use with
+#   > anaconda auth -l
+# or just create a new one with
+#   > anaconda auth -c -n SOME_TOKEN_NAME --max-age 307584000 --url https://anaconda.org/moble/${PACKAGE_NAME} --scopes "api:write api:read"
+# Then go to the Travis-CI settings page for this package, and create the environment variable with that token.
+# I stole these ideas from Yoav Ram <https://gist.github.com/yoavram/05a3c04ddcf317a517d5>
