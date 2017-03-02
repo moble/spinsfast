@@ -35,3 +35,8 @@ script:
 #   > anaconda auth -c -n SOME_TOKEN_NAME --max-age 307584000 --url https://anaconda.org/moble/${PACKAGE_NAME} --scopes "api:write api:read"
 # Then go to the Travis-CI settings page for this package, and create the environment variable with that token.
 # I stole these ideas from Yoav Ram <https://gist.github.com/yoavram/05a3c04ddcf317a517d5>
+
+
+after_script:
+  # if we do not unset this before we terminate the travis teardown will mark the entire job as failed
+  - set +e
