@@ -21,8 +21,8 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then lsb_release -a ; fi
 
 script:
+  - PYTHON_VERSION="$TRAVIS_PYTHON_VERSION" CONDA_INSTALLER_OS="${TRAVIS_OS_NAME:-linux}" source travis_install_conda.sh numpy scipy numba;
   - conda config --add channels moble
-  - PYTHON_VERSION="$TRAVIS_PYTHON_VERSION" CONDA_INSTALLER_OS="${TRAVIS_OS_NAME:-linux}" source travis_install_conda.sh numpy scipy numba fftw;
   - conda config --set anaconda_upload yes
   - conda install -n root conda-build anaconda-client
   - conda build --token "$ANACONDA_TOKEN" conda
