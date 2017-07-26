@@ -31,3 +31,5 @@
 .cache
 spinsfast.zip
 conda/conversions
+build/lib*
+build/temp*
