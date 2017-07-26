@@ -256,8 +256,8 @@ static PyMethodDef spinsfastMethods[] = {
   {"N_lm",  spinsfast_N_lm, METH_VARARGS,"N_lm(lmax)"},
   {"ind_lm",  spinsfast_ind_lm, METH_VARARGS,"ind_lm(idx,lmax)"},
   {"lm_ind",  spinsfast_lm_ind, METH_VARARGS,"lm_ind(l,m,lmax)"},
-  {"salm2map",  spinsfast_mod_salm2map, METH_VARARGS,"salm2map(alm,s,lmax,Ntheta,Nphi)"},
-  {"map2salm",  spinsfast_mod_map2salm, METH_VARARGS,"map2salm(f,s,lmax)"},
+  {"_salm2map",  spinsfast_mod_salm2map, METH_VARARGS,"salm2map(alm,s,lmax,Ntheta,Nphi)"},
+  {"_map2salm",  spinsfast_mod_map2salm, METH_VARARGS,"map2salm(f,s,lmax)"},
   {"f_extend_MW",  spinsfast_mod_f_extend_MW, METH_VARARGS,"f_extend_MW(f,s)"},
   {"f_extend_old",  spinsfast_mod_f_extend_old, METH_VARARGS,"f_extend_MW(f,s)"},
   {"Imm",  spinsfast_mod_Imm, METH_VARARGS,"Imm(f,s,lmax)"},
@@ -284,14 +284,14 @@ static struct PyModuleDef moduledef = {
 #define INITERROR return NULL
 
 // This is the initialization function that does the setup
-PyMODINIT_FUNC PyInit_spinsfast(void) {
+PyMODINIT_FUNC PyInit_spinsfast_module(void) {
 
 #else // PY_MAJOR_VERSION < 3
 
 #define INITERROR return
 
 // This is the initialization function that does the setup
-PyMODINIT_FUNC initspinsfast(void) {
+PyMODINIT_FUNC initspinsfast_module(void) {
 #endif
 
   PyObject *module;

@@ -13,6 +13,8 @@ My modifications are relatively superficial:
   * make it easier to install as a python module by trying to detect paths to
     FFTW;
   * include an ipython/jupyter notebook in the `example` directory;
+  * create wrappers for the `map2salm` and `salm2map` functions to deal with inputs that are not
+    contiguous C arrays;
   * add integration with [conda](http://conda.pydata.org/docs/) and
     [anaconda.org](https://anaconda.org/moble/spinsfast), for easy installation
     ([see below](#installation)).
