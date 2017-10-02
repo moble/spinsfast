@@ -12,13 +12,14 @@ For examples, see here: <https://github.com/moble/spinsfast/blob/master/example/
 
 """
 
+from __future__ import absolute_import
 
-# import all the non-underscored functions
-from .spinsfast_module import *
+# import all the non-underscored functions (underscored functions get ignored)
+from .cextension import *
 
 # explicitly import functions with underscores (which will be wrapped)
-from .spinsfast_module import _salm2map, _map2salm
-    
+from .cextension import _salm2map, _map2salm
+
 
 def salm2map(alm, s, lmax, Ntheta, Nphi):
     """Convert mode weights of spin-weighted function to values on a grid

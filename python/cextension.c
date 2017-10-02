@@ -32,7 +32,7 @@
 
 ///  Indexing
 
-static PyObject *spinsfast_N_lm(PyObject *self, PyObject *args) {
+static PyObject *cextension_N_lm(PyObject *self, PyObject *args) {
 
   int lmax;
   if (!PyArg_ParseTuple(args, "i", &lmax))
@@ -42,7 +42,7 @@ static PyObject *spinsfast_N_lm(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *spinsfast_lm_ind(PyObject *self, PyObject *args) {
+static PyObject *cextension_lm_ind(PyObject *self, PyObject *args) {
   int l,m, lmax;
 
   if (!PyArg_ParseTuple(args, "iii", &l,&m, &lmax))
@@ -53,7 +53,7 @@ static PyObject *spinsfast_lm_ind(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *spinsfast_ind_lm(PyObject *self, PyObject *args) {
+static PyObject *cextension_ind_lm(PyObject *self, PyObject *args) {
 
   int i, lmax;
 
@@ -81,7 +81,7 @@ static PyObject *spinsfast_ind_lm(PyObject *self, PyObject *args) {
 ///  Transform wrappers  ////////////////
 
 
-static PyObject *spinsfast_mod_salm2map(PyObject *self, PyObject *args) {
+static PyObject *cextension_salm2map(PyObject *self, PyObject *args) {
 
   PyObject *input_array=NULL;
   int lmax = 0;
@@ -106,7 +106,7 @@ static PyObject *spinsfast_mod_salm2map(PyObject *self, PyObject *args) {
 
 }
 
-static PyObject *spinsfast_mod_map2salm(PyObject *self, PyObject *args) {
+static PyObject *cextension_map2salm(PyObject *self, PyObject *args) {
 
   PyObject *input_array=NULL;
   int lmax = 0;
@@ -138,7 +138,7 @@ static PyObject *spinsfast_mod_map2salm(PyObject *self, PyObject *args) {
 
 
 ///  Some helpers
-static PyObject *spinsfast_quad_weights(PyObject *self, PyObject *args) {
+static PyObject *cextension_quadrature_weights(PyObject *self, PyObject *args) {
   int Ntheta;
 
   if (!PyArg_ParseTuple(args, "i", &Ntheta))
@@ -157,7 +157,7 @@ static PyObject *spinsfast_quad_weights(PyObject *self, PyObject *args) {
   return(arr);
 }
 
-static PyObject *spinsfast_mod_f_extend_MW(PyObject *self, PyObject *args) {
+static PyObject *cextension_f_extend_MW(PyObject *self, PyObject *args) {
 
   PyObject *input_array=NULL;
   int s = 0;
@@ -185,7 +185,7 @@ static PyObject *spinsfast_mod_f_extend_MW(PyObject *self, PyObject *args) {
   return(arr);
 
 }
-static PyObject *spinsfast_mod_f_extend_old(PyObject *self, PyObject *args) {
+static PyObject *cextension_f_extend_old(PyObject *self, PyObject *args) {
 
   PyObject *input_array=NULL;
   int s = 0;
@@ -214,7 +214,7 @@ static PyObject *spinsfast_mod_f_extend_old(PyObject *self, PyObject *args) {
 
 }
 
-static PyObject *spinsfast_mod_Imm(PyObject *self, PyObject *args) {
+static PyObject *cextension_Imm(PyObject *self, PyObject *args) {
 
   PyObject *input_array=NULL;
   int lmax = 0;
@@ -253,15 +253,15 @@ static PyObject *spinsfast_mod_Imm(PyObject *self, PyObject *args) {
 
 
 static PyMethodDef spinsfastMethods[] = {
-  {"N_lm",  spinsfast_N_lm, METH_VARARGS,"N_lm(lmax)"},
-  {"ind_lm",  spinsfast_ind_lm, METH_VARARGS,"ind_lm(idx,lmax)"},
-  {"lm_ind",  spinsfast_lm_ind, METH_VARARGS,"lm_ind(l,m,lmax)"},
-  {"_salm2map",  spinsfast_mod_salm2map, METH_VARARGS,"salm2map(alm,s,lmax,Ntheta,Nphi)"},
-  {"_map2salm",  spinsfast_mod_map2salm, METH_VARARGS,"map2salm(f,s,lmax)"},
-  {"f_extend_MW",  spinsfast_mod_f_extend_MW, METH_VARARGS,"f_extend_MW(f,s)"},
-  {"f_extend_old",  spinsfast_mod_f_extend_old, METH_VARARGS,"f_extend_MW(f,s)"},
-  {"Imm",  spinsfast_mod_Imm, METH_VARARGS,"Imm(f,s,lmax)"},
-  {"quadrature_weights",  spinsfast_quad_weights, METH_VARARGS,"quadrature_weights(Ntheta)"},
+  {"N_lm", cextension_N_lm, METH_VARARGS, "N_lm(lmax)"},
+  {"ind_lm", cextension_ind_lm, METH_VARARGS, "ind_lm(idx,lmax)"},
+  {"lm_ind", cextension_lm_ind, METH_VARARGS, "lm_ind(l,m,lmax)"},
+  {"_salm2map", cextension_salm2map, METH_VARARGS, "salm2map(alm,s,lmax,Ntheta,Nphi)"},
+  {"_map2salm", cextension_map2salm, METH_VARARGS, "map2salm(f,s,lmax)"},
+  {"f_extend_MW", cextension_f_extend_MW, METH_VARARGS, "f_extend_MW(f,s)"},
+  {"f_extend_old", cextension_f_extend_old, METH_VARARGS, "f_extend_MW(f,s)"},
+  {"Imm",  cextension_Imm, METH_VARARGS, "Imm(f,s,lmax)"},
+  {"quadrature_weights", cextension_quadrature_weights, METH_VARARGS, "quadrature_weights(Ntheta)"},
   {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
@@ -271,7 +271,7 @@ static PyMethodDef spinsfastMethods[] = {
 
 static struct PyModuleDef moduledef = {
     PyModuleDef_HEAD_INIT,
-    "spinsfast",
+    "cextension",
     NULL,
     -1,
     spinsfastMethods,
@@ -284,14 +284,14 @@ static struct PyModuleDef moduledef = {
 #define INITERROR return NULL
 
 // This is the initialization function that does the setup
-PyMODINIT_FUNC PyInit_spinsfast_module(void) {
+PyMODINIT_FUNC PyInit_cextension(void) {
 
 #else // PY_MAJOR_VERSION < 3
 
 #define INITERROR return
 
 // This is the initialization function that does the setup
-PyMODINIT_FUNC initspinsfast_module(void) {
+PyMODINIT_FUNC initcextension(void) {
 #endif
 
   PyObject *module;
@@ -300,7 +300,7 @@ PyMODINIT_FUNC initspinsfast_module(void) {
 #if PY_MAJOR_VERSION >= 3
   module = PyModule_Create(&moduledef);
 #else
-  module = Py_InitModule("spinsfast", spinsfastMethods);
+  module = Py_InitModule("cextension", spinsfastMethods);
 #endif
   if(module==NULL) {
     INITERROR;
