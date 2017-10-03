@@ -33,3 +33,5 @@ spinsfast.zip
 conda/conversions
 build/lib*
 build/temp*
+dist
+spinsfast.egg-info
