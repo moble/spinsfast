@@ -5,7 +5,11 @@ import os
 import glob
 import time
 
-numpy_inc = os.path.join(get_python_lib(plat_specific=1), 'numpy', 'core', 'include')
+try:
+    import numpy
+    numpy_inc = numpy.get_include()
+except:
+    numpy_inc = os.path.join(get_python_lib(plat_specific=1), 'numpy', 'core', 'include')
 
 ## The following block is added for nicer behavior with `module`s on clusters
 from os import environ
