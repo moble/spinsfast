@@ -18,4 +18,4 @@ else
     export C_INCLUDE_PATH=$PREFIX/include
 fi
 
-python python/setup.py install
+python setup.py install
