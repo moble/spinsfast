@@ -14,6 +14,8 @@ For examples, see here: <https://github.com/moble/spinsfast/blob/master/example/
 
 from __future__ import absolute_import
 
+from ._version import __version__
+
 # import all the non-underscored functions (underscored functions get ignored)
 from .cextension import *
 
