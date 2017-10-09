@@ -98,7 +98,7 @@ very simple.  But the resulting header and library must be found by the
 compilation step for this package.  You can first simply try to run
 
 ```bash
-python python/setup.py install
+python setup.py install
 ```
 
 from the top directory of the `spinsfast` code.
@@ -111,10 +111,10 @@ something more like this:
 ```bash
 export LIBRARY_PATH=/path/to/fftw/lib
 export C_INCLUDE_PATH=/path/to/fftw/include
-python python/setup.py install
+python setup.py install
 ```
 
-Alternatively, you could try to alter `python/setup.py` to point to the right
+Alternatively, you could try to alter `setup.py` to point to the right
 paths.
 
 
