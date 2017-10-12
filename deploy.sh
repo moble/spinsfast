@@ -1,5 +1,10 @@
 #! /bin/bash
 
+if [ -z "$ANACONDA_API_TOKEN" ]; then
+    echo "The variable 'ANACONDA_API_TOKEN' cannot be empty"
+    exit 1
+fi
+
 export datetime=$(date +"%Y.%m.%d.%H.%M.%S")
 export package_version="104.${datetime}"
 
@@ -30,6 +35,7 @@ docker run -i -t \
 docker build -t manyconda --pull python/docker_miniconda
 docker run -i -t \
     -e package_version \
+    -e ANACONDA_API_TOKEN \
     -v ${HOME}/.condarc:/root/.condarc:ro \
     -v `pwd`:/code \
     manyconda bash -c 'conda build /code'
