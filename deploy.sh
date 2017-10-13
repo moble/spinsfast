@@ -38,4 +38,4 @@ docker run -i -t \
     -e ANACONDA_API_TOKEN \
     -v ${HOME}/.condarc:/root/.condarc:ro \
     -v `pwd`:/code \
-    manyconda bash -c 'conda build /code'
+    moble/miniconda-centos bash -c 'conda build /code'
