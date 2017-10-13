@@ -12,7 +12,7 @@ export package_version="104.${datetime}"
 python setup.py sdist upload
 
 # Create all the osx binary pip packages
-./python/build_macosx_wheels.sh
+./python/build_macosx_wheels.sh "${datetime}"
 
 # Create all the osx conda packages
 conda build .
@@ -39,3 +39,4 @@ docker run -i -t \
     -v ${HOME}/.condarc:/root/.condarc:ro \
     -v `pwd`:/code \
     moble/miniconda-centos bash -c 'conda build /code'
+
