@@ -32,7 +32,6 @@ docker run -i -t \
     quay.io/pypa/manylinux1_x86_64 /build_manylinux_wheels.sh "${datetime}"
 
 # Create all the linux binary conda packages on centos 6
-docker build -t manyconda --pull python/docker_miniconda
 docker run -i -t \
     -e package_version \
     -e ANACONDA_API_TOKEN \
