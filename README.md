@@ -15,8 +15,13 @@ My modifications are relatively superficial:
   * include an ipython/jupyter notebook in the `example` directory;
   * create wrappers for the `map2salm` and `salm2map` functions to deal with inputs that are not
     contiguous C arrays;
-  * add integration with [conda](http://conda.pydata.org/docs/) and
-    [anaconda.org](https://anaconda.org/moble/spinsfast), for easy installation
+
+  * add integration with [pip](https://pypi.python.org/pypi/pip)
+    and [pypi](https://pypi.python.org/pypi/spinsfast), for easy installation
+    ([see below](#installation)).
+
+  * add integration with [conda](https://conda.io/docs/)
+    and [anaconda.org](https://anaconda.org/moble/spinsfast), for easiest installation
     ([see below](#installation)).
 
 # License
@@ -89,6 +94,25 @@ conda install --channel moble spinsfast
 (Note that the explanation for how to create and upload conda packages is
 contained in the [README](https://github.com/moble/fftw/blob/master/README.md)
 for my [FFTW installer](https://github.com/moble/fftw).)
+
+
+## Pip
+
+While generally less robust, this package is also built for installation via `pip`:
+
+```bash
+pip install spinsfast
+```
+
+One advantage of this method is that it should work on older linux installations, since it requires
+only glibc 2.5, for example.  In particular, these binaries are built on CentOS 5, and should also
+run on anything newer.
+
+If possible, `pip` will install the binary distribution for your OS and architecture.  However, it
+may need to fall back to compiling the source, in which case you will need to have FFTW and a
+compiler installed.  Unfortunately, `pip` has no good way of handling these dependencies.  See below
+for environment variables you may need to set to get compilation working properly.
+
 
 ## Manual installation
 
