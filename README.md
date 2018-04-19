@@ -1,3 +1,5 @@
+<a href="https://zenodo.org/badge/latestdoi/30340582"><img align="right" src="https://zenodo.org/badge/30340582.svg" alt="DOI"></a>
+
 # spinsfast
 Fast and exact spin-s spherical-harmonic transforms
 
