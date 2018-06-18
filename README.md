@@ -8,20 +8,19 @@ This code is a lightly modified version of the code hosted
 by Huffenberger, based on work by
 [Huffenberger and Wandelt](http://stacks.iop.org/0067-0049/189/255).
 
-My modifications are relatively superficial:
+My modifications mostly deal with the user interface:
 
-  * fix segfaults due to use of `free` with `fftw_malloc` instead of `fftw_free`
+  * add `multi_map2salm` and `multi_salm2map` for running many similar transformations efficiently;
+  * create python wrappers for the `map2salm` and `salm2map` functions to deal with any (reasonable)
+    type or shape of input data, including multi-dimensional;
   * add python 3.x compatibility to `python/spinsfast_module.c`;
+  * fix segfaults due to use of `free` instead of `fftw_free` when `fftw_malloc` was used
   * make it easier to install as a python module by trying to detect paths to
     FFTW;
   * include an ipython/jupyter notebook in the `example` directory;
-  * create wrappers for the `map2salm` and `salm2map` functions to deal with inputs that are not
-    contiguous C arrays;
-
   * add integration with [pip](https://pypi.python.org/pypi/pip)
     and [pypi](https://pypi.python.org/pypi/spinsfast), for easy installation
-    ([see below](#installation)).
-
+    ([see below](#installation));
   * add integration with [conda](https://conda.io/docs/)
     and [anaconda.org](https://anaconda.org/moble/spinsfast), for easiest installation
     ([see below](#installation)).
