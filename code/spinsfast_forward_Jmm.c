@@ -38,8 +38,6 @@ void spinsfast_forward_multi_Jmm(fftw_complex *f_set, int *spins, int Nmap, int 
 
   spinsfast_forward_multi_Imm (f_set,spins, Nmap, Ntheta, Nphi, lmax, Imm_set);
 
-
-
   int imap;
   for (imap = 0; imap < Nmap; imap++) {
     int s = spins[imap];

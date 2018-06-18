@@ -20,7 +20,7 @@ from ._version import __version__
 from .cextension import *
 
 # explicitly import functions with underscores (which will be wrapped)
-from .cextension import _salm2map, _map2salm
+from .cextension import _salm2map, _multi_salm2map, _map2salm, _multi_map2salm
 
 
 def salm2map(alm, s, lmax, Ntheta, Nphi):
@@ -96,11 +96,17 @@ def salm2map(alm, s, lmax, Ntheta, Nphi):
                          + "than |s|={0}.".format(abs(s)))
     import numpy as np
     alm = np.ascontiguousarray(alm, dtype=np.complex128)
-    if alm.size < N_lm(lmax):
+    if alm.shape[-1] < N_lm(lmax):
         raise ValueError("The input `alm` size of {0} is too small for the stated `lmax` of {1}.  ".format(alm.size, lmax)
                          + "Perhaps you forgot to include the (zero) modes with ell<|s|.")
-    return _salm2map(alm, s, lmax, Ntheta, Nphi)
-    
+    if alm.ndim>1:
+        s = np.ascontiguousarray(s, dtype=np.intc)
+        if s.ndim != alm.ndim-1 or np.product(s.shape) != np.product(alm.shape[:-1]):
+            s = s*np.ones(alm.shape[:-1], dtype=np.intc)
+        return _multi_salm2map(alm, s, lmax, Ntheta, Nphi)
+    else:
+        return _salm2map(alm, s, lmax, Ntheta, Nphi)
+
 
 def map2salm(f, s, lmax):
     """Convert values of spin-weighted function on a grid to mode weights
@@ -165,4 +171,10 @@ def map2salm(f, s, lmax):
     """
     import numpy as np
     f = np.ascontiguousarray(f, dtype=np.complex128)
-    return _map2salm(f, s, lmax)
+    if f.ndim>2:
+        s = np.ascontiguousarray(s, dtype=np.intc)
+        if s.ndim != f.ndim-2 or np.product(s.shape) != np.product(f.shape[:-2]):
+            s = s*np.ones(f.shape[:-2], dtype=np.intc)
+        return _multi_map2salm(f, s, lmax)
+    else:
+        return _map2salm(f, s, lmax)

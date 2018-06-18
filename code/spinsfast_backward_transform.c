@@ -79,7 +79,7 @@ void spinsfast_backward_transform(fftw_complex  *f, int Ntheta, int Nphi, int lm
   //  printf ("dumping F status = %d\n", dump_cimage(F,2*(Ntheta-1),Nphi,"!output/eff.fits"));
 
 
-  fftw_plan fftplan = fftw_plan_dft_2d( 2*(Ntheta-1),Nphi, F, F, FFTW_BACKWARD, FFTW_ESTIMATE);
+  fftw_plan fftplan = fftw_plan_dft_2d(2*(Ntheta-1), Nphi, F, F, FFTW_BACKWARD, FFTW_ESTIMATE);
   fftw_execute(fftplan);
   fftw_destroy_plan(fftplan);
 
@@ -100,8 +100,72 @@ void spinsfast_backward_transform(fftw_complex  *f, int Ntheta, int Nphi, int lm
 }
 
 
+void spinsfast_backward_multi_transform(fftw_complex *f, const int Ntransform, int Ntheta, int Nphi, int lmax, fftw_complex *Gmm) {
+  // f is Ntheta by Nphi, access f[ itheta * Nphi + iphi ].
+  // F is  version of f extended to the whole sphere
+  // Works for pixelization where first ring is north pole and the last ring is the south pole
+  // ie theta = itheta*pi/(Ntheta-1)
+  //    phi   = iphi*pi/Nphi
+  //
+  // The number of theta rows in the extended version of F is 2*(Ntheta-1)
+  int itheta, iphi;
+  int m,mp;
+  fftw_complex *F = fftw_malloc(2*(Ntheta-1)*Nphi*sizeof(fftw_complex));
+  fftw_plan fftplan = fftw_plan_dft_2d(2*(Ntheta-1), Nphi, F, F, FFTW_BACKWARD, FFTW_ESTIMATE);
 
-void spinsfast_salm2map(fftw_complex *alm, fftw_complex *f, int s, int Ntheta, int Nphi, int lmax){
+  int NF = 2*(Ntheta-1)*Nphi;
+
+  // copy Imm values into F;
+
+  int Nm = 2*lmax + 1 ;
+  int NGmm = Nm*Nm;
+  int limit = lmax;
+
+  if ( 2*limit+1 > Nphi   ) {
+    printf("backtrans Nphi warning\n");
+    limit = (Nphi-1)/2;
+  }
+  if ( 2*limit+1 > 2*(Ntheta-1) ) {
+    printf("backtrans Ntheta warning\n");
+    limit = Ntheta-3;
+  }
+
+  for (int itransform=0; itransform<Ntransform; ++itransform) {
+    for (m=0;m<NF;m++)
+      F[m] = 0;
+    for (mp=0;mp<=limit;mp++) {
+      for (m=0;m<=limit;m++) {
+        // ++
+        F[ mp * Nphi + m] = Gmm[ itransform*NGmm + mp * Nm + m ] ;
+        // +-
+        if (m > 0)
+          F[ mp * Nphi + (Nphi - m) ] =	Gmm[ itransform*NGmm + mp * Nm + (Nm - m)];
+        // -+
+        if (mp > 0)
+          F[ (2*(Ntheta-1) - mp) * Nphi + m ] = Gmm[ itransform*NGmm + (Nm - mp) * Nm + m];
+        // --
+        if ( (mp > 0) && (m > 0) )
+          F[ (2*(Ntheta-1) - mp) * Nphi + (Nphi - m) ] = Gmm[ itransform*NGmm + (Nm - mp) * Nm + (Nm - m)];
+      }
+    }
+
+    fftw_execute(fftplan);
+
+    for (itheta = 0; itheta < Ntheta; itheta++) {
+      for (iphi = 0; iphi < Nphi; iphi++) {
+        f[ itransform*Ntheta*Nphi + itheta * Nphi + iphi ] =  F [ itheta * Nphi + iphi ];
+      }
+    }
+
+  }
+
+  fftw_destroy_plan(fftplan);
+  fftw_free(F);
+}
+
+
+
+void spinsfast_salm2map(fftw_complex *alm, fftw_complex *f, int s, int Ntheta, int Nphi, int lmax) {
   int Nm = 2*lmax+1;
   int NGmm = Nm*Nm;
 
@@ -117,3 +181,20 @@ void spinsfast_salm2map(fftw_complex *alm, fftw_complex *f, int s, int Ntheta, i
   fftw_free(Gmm);
 
 }
+
+
+void spinsfast_multi_salm2map(fftw_complex *alm, fftw_complex *f, int *s, const int Ntransform, int Ntheta, int Nphi, int lmax) {
+  int Nm = 2*lmax+1;
+  int NGmm = Nm*Nm;
+
+  wdhp_TN_helper *DeltaTN = wdhp_TN_helper_init(lmax);
+  fftw_complex *Gmm = fftw_malloc(Ntransform*NGmm*sizeof(fftw_complex));
+
+  spinsfast_backward_Gmm(alm, Ntransform, s, lmax, Gmm, WDHP_METHOD_TN_PLANE, (void *)DeltaTN);
+  spinsfast_backward_multi_transform(f, Ntransform, Ntheta, Nphi, lmax, Gmm);
+
+  wdhp_TN_helper_free(DeltaTN);
+  fftw_free(Gmm);
+
+}
+

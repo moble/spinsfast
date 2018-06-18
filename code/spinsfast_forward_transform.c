@@ -35,7 +35,7 @@ int spinsfast_forward_sign_parity(int m){
 
 
 
-void spinsfast_forward_transform(fftw_complex * restrict a, const int Ntransform, const int *spins,const int lmax, fftw_complex * restrict Jmm_set, int DeltaMethod, void *Deltawork) {
+void spinsfast_forward_transform(fftw_complex * restrict a, const int Ntransform, const int *spins, const int lmax, fftw_complex * restrict Jmm_set, int DeltaMethod, void *Deltawork) {
   int l,m,mp;
 
 
@@ -61,8 +61,22 @@ void spinsfast_forward_transform(fftw_complex * restrict a, const int Ntransform
   int Nlm = N_lm(lmax);
   int NJmm = (lmax+1)*Nm;
 
+  fprintf(stderr, "%s:%d.:spinsfast_forward_transform: lmax:%d, Nlm:%d, Ntransform:%d\n", __FILE__, __LINE__, lmax, Nlm, Ntransform);
+  for(int i=0; i<Ntransform; i++) {
+    fprintf(stderr, "\t%d: %g, %g, %g, %g, %g, %g\n", i,
+            ((double*)a)[i*2*Nlm+0], ((double*)a)[i*2*Nlm+1],
+            ((double*)a)[i*2*Nlm+2], ((double*)a)[i*2*Nlm+3],
+            ((double*)a)[i*2*Nlm+4], ((double*)a)[i*2*Nlm+5]);
+  }
   for (m=0;m<Nlm*Ntransform;m++) {
     a[m] = 0;
+  }
+  fprintf(stderr, "%s:%d.:spinsfast_forward_transform:\n", __FILE__, __LINE__);
+  for(int i=0; i<Ntransform; i++) {
+    fprintf(stderr, "\t%d: %g, %g, %g, %g, %g, %g\n", i,
+            ((double*)a)[i*2*Nlm+0], ((double*)a)[i*2*Nlm+1],
+            ((double*)a)[i*2*Nlm+2], ((double*)a)[i*2*Nlm+3],
+            ((double*)a)[i*2*Nlm+4], ((double*)a)[i*2*Nlm+5]);
   }
 
   // Set up Wigner Deltas
@@ -82,6 +96,12 @@ void spinsfast_forward_transform(fftw_complex * restrict a, const int Ntransform
 
           if (l >= abs(s)) {
             // shift to correct blocks
+
+fprintf(stderr, "%s:%d.:spinsfast_forward_transform: ispin:%d, s:%d, abs(s):%d, l:%d, lm_ind:%d\n", __FILE__, __LINE__, ispin, s, abs(s), l, lm_ind(l,0,lmax));
+fprintf(stderr, "\t%d: %g, %g, %g, %g, %g, %g\n", ispin,
+        ((double*)a)[ispin*2*Nlm+0], ((double*)a)[ispin*2*Nlm+1],
+        ((double*)a)[ispin*2*Nlm+2], ((double*)a)[ispin*2*Nlm+3],
+        ((double*)a)[ispin*2*Nlm+4], ((double*)a)[ispin*2*Nlm+5]);
             complex * restrict asl = &a[ispin*Nlm + lm_ind(l,0,lmax)];
             fftw_complex * restrict Jmm = &Jmm_set[ispin*NJmm];
 
@@ -147,6 +167,13 @@ void spinsfast_forward_transform(fftw_complex * restrict a, const int Ntransform
         }
   }
 
+  fprintf(stderr, "%s:%d.:spinsfast_forward_transform:\n", __FILE__, __LINE__);
+  for(int i=0; i<Ntransform; i++) {
+    fprintf(stderr, "\t%d: %g, %g, %g, %g, %g, %g\n", i,
+            ((double*)a)[i*2*Nlm+0], ((double*)a)[i*2*Nlm+1],
+            ((double*)a)[i*2*Nlm+2], ((double*)a)[i*2*Nlm+3],
+            ((double*)a)[i*2*Nlm+4], ((double*)a)[i*2*Nlm+5]);
+  }
 
   // Set the phases
 
@@ -175,7 +202,7 @@ void spinsfast_forward_transform(fftw_complex * restrict a, const int Ntransform
 
 
 
-void spinsfast_map2salm(fftw_complex *f, fftw_complex *alm, int s, int Ntheta, int Nphi, int lmax){
+void spinsfast_map2salm(fftw_complex *f, fftw_complex *alm, int s, int Ntheta, int Nphi, int lmax) {
   int Ntransform = 1;
   int Nm = 2*lmax+1;
   int NJmm = (lmax+1)*Nm;
@@ -185,10 +212,29 @@ void spinsfast_map2salm(fftw_complex *f, fftw_complex *alm, int s, int Ntheta, i
   wdhp_TN_helper *DeltaTN = wdhp_TN_helper_init(lmax);
 
   //  Transform to Jmm via modified FFT
-  spinsfast_forward_Jmm (f,s, Ntheta, Nphi, lmax, Jmm);
+  spinsfast_forward_Jmm(f, s, Ntheta, Nphi, lmax, Jmm);
 
   // Transform Jmm to alm (L^3 time)
-  spinsfast_forward_transform(alm,  Ntransform, &s, lmax, Jmm, WDHP_METHOD_TN_PLANE,(void *)DeltaTN );
+  spinsfast_forward_transform(alm, Ntransform, &s, lmax, Jmm, WDHP_METHOD_TN_PLANE, (void *)DeltaTN);
+
+  wdhp_TN_helper_free(DeltaTN);
+  fftw_free(Jmm);
+}
+
+
+void spinsfast_multi_map2salm(fftw_complex *f, fftw_complex *alm, int *s, const int Ntransform, int Ntheta, int Nphi, int lmax) {
+  int Nm = 2*lmax+1;
+  int NJmm = (lmax+1)*Nm;
+
+  fftw_complex *Jmm = fftw_malloc(Ntransform*NJmm*sizeof(fftw_complex));
+
+  wdhp_TN_helper *DeltaTN = wdhp_TN_helper_init(lmax);
+
+  //  Transform to Jmm via modified FFT
+  spinsfast_forward_multi_Jmm(f, s, Ntransform, Ntheta, Nphi, lmax, Jmm);
+
+  // Transform Jmm to alm (L^3 time)
+  spinsfast_forward_transform(alm, Ntransform, s, lmax, Jmm, WDHP_METHOD_TN_PLANE, (void *)DeltaTN);
 
   wdhp_TN_helper_free(DeltaTN);
   fftw_free(Jmm);

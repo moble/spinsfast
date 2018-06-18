@@ -33,8 +33,10 @@
 # define M_PI		3.14159265358979323846	/* pi */
 #endif
 
-void spinsfast_backward_transform(fftw_complex  *f, int Ntheta, int Nphi, int lmax, fftw_complex *Gmm);
+void spinsfast_backward_transform(fftw_complex *f, int Ntheta, int Nphi, int lmax, fftw_complex *Gmm);
+void spinsfast_backward_multi_transform(fftw_complex *f, const int Ntransform, int Ntheta, int Nphi, int lmax, fftw_complex *Gmm);
 void spinsfast_salm2map(fftw_complex *alm, fftw_complex *f, int s, int Ntheta, int Nphi, int lmax);
+void spinsfast_multi_salm2map(fftw_complex *alm, fftw_complex *f, int *s, const int Ntransform, int Ntheta, int Nphi, int lmax);
 
 void spinsfast_backward_Gmm(const fftw_complex * restrict a, int Ntransform, const int *spins,const int lmax, fftw_complex * restrict Gmm_set, int DeltaMethod, void *Deltawork);
 //void spinsfast_backward_Gmm(const fftw_complex * restrict a, const int s,const int lmax, fftw_complex * restrict Gmm, int DeltaMethod, void *Deltawork);

@@ -82,7 +82,6 @@ static PyObject *cextension_ind_lm(PyObject *self, PyObject *args) {
 
 
 static PyObject *cextension_salm2map(PyObject *self, PyObject *args) {
-
   PyObject *input_array=NULL;
   int lmax = 0;
   int s = 0;
@@ -93,17 +92,14 @@ static PyObject *cextension_salm2map(PyObject *self, PyObject *args) {
     return NULL;
 
   fftw_complex *alm = PyArray_DATA(input_array);
-  fftw_complex *f = calloc(Nphi*Ntheta,sizeof(fftw_complex));
+  fftw_complex *f = calloc(Nphi*Ntheta, sizeof(fftw_complex));
 
   spinsfast_salm2map(alm, f, s, Ntheta, Nphi, lmax);
 
   npy_intp dims[2] = {Ntheta, Nphi};
-
   PyObject *arr = PyArray_SimpleNewFromData(2, dims, NPY_CDOUBLE, f);
   Py_INCREF(arr);
-
   return(arr);
-
 }
 
 static PyObject *cextension_map2salm(PyObject *self, PyObject *args) {
@@ -115,25 +111,111 @@ static PyObject *cextension_map2salm(PyObject *self, PyObject *args) {
   if (!PyArg_ParseTuple(args, "Oii", &input_array, &s, &lmax))
     return NULL;
 
-
   npy_intp *dim = PyArray_DIMS(input_array);
   int Ntheta = dim[0];
   int Nphi = dim[1];
 
-
   npy_intp Nlm = N_lm(lmax);
 
-
-  fftw_complex *alm = calloc(Nlm,sizeof(fftw_complex));
+  fftw_complex *alm = calloc(Nlm, sizeof(fftw_complex));
   fftw_complex *f = PyArray_DATA(input_array);
 
+  fprintf(stderr, "%s:%d.:map2salm: %g, %g\n", __FILE__, __LINE__,
+          ((double*)alm)[0], ((double*)alm)[1]);
   spinsfast_map2salm(f, alm, s, Ntheta, Nphi, lmax);
+  fprintf(stderr, "%s:%d.:map2salm: %g, %g\n", __FILE__, __LINE__,
+          ((double*)alm)[0], ((double*)alm)[1]);
 
   PyObject *arr = PyArray_SimpleNewFromData(1, &Nlm, NPY_CDOUBLE, alm);
   Py_INCREF(arr);
-
   return(arr);
+}
 
+
+static PyObject *cextension_multi_map2salm(PyObject *self, PyObject *args) {
+
+  PyObject *input_array=NULL;
+  PyObject *s_array=NULL;
+  int lmax = 0;
+
+  if (!PyArg_ParseTuple(args, "OOi", &input_array, &s_array, &lmax))
+    return NULL;
+
+  int ndim = PyArray_NDIM(input_array);
+  npy_intp *dim = PyArray_DIMS(input_array);
+  npy_intp newdim[ndim-1];
+  int Ntransform = 1;
+  int Ntheta = dim[ndim-2];
+  int Nphi = dim[ndim-1];
+
+  npy_intp Nlm = N_lm(lmax);
+
+  for(int i=0; i<ndim-2; ++i) {
+    newdim[i] = dim[i];
+    Ntransform *= dim[i];
+  }
+  newdim[ndim-2] = Nlm;
+
+  fftw_complex *alm = calloc(Ntransform*Nlm, sizeof(fftw_complex));
+  fftw_complex *f = PyArray_DATA(input_array);
+  int *s = PyArray_DATA(s_array);
+
+  fprintf(stderr, "%s:%d.:multi_map2salm: sizeof(int):%u\n", __FILE__, __LINE__, sizeof(int));
+  for(int i=0; i<Ntransform; i++) {
+    fprintf(stderr, "\t%d: %g, %g, %g, %g, %g, %g\n", i,
+            ((double*)alm)[i*2*Nlm+0], ((double*)alm)[i*2*Nlm+1],
+            ((double*)alm)[i*2*Nlm+2], ((double*)alm)[i*2*Nlm+3],
+            ((double*)alm)[i*2*Nlm+4], ((double*)alm)[i*2*Nlm+5]);
+  }
+  spinsfast_multi_map2salm(f, alm, s, Ntransform, Ntheta, Nphi, lmax);
+  fprintf(stderr, "%s:%d.:multi_map2salm:\n", __FILE__, __LINE__);
+  for(int i=0; i<Ntransform; i++) {
+    fprintf(stderr, "\t%d: %g, %g, %g, %g, %g, %g\n", i,
+            ((double*)alm)[i*2*Nlm+0], ((double*)alm)[i*2*Nlm+1],
+            ((double*)alm)[i*2*Nlm+2], ((double*)alm)[i*2*Nlm+3],
+            ((double*)alm)[i*2*Nlm+4], ((double*)alm)[i*2*Nlm+5]);
+  }
+
+  PyObject *arr = PyArray_SimpleNewFromData(ndim-1, &newdim, NPY_CDOUBLE, alm);
+  Py_INCREF(arr);
+  return(arr);
+}
+
+
+static PyObject *cextension_multi_salm2map(PyObject *self, PyObject *args) {
+
+  PyObject *input_array=NULL;
+  PyObject *s_array=NULL;
+  int lmax = 0;
+  int Ntheta = 0;
+  int Nphi = 0;
+
+  if (!PyArg_ParseTuple(args, "OOiii", &input_array, &s_array, &lmax, &Ntheta, &Nphi))
+    return NULL;
+
+  int ndim = PyArray_NDIM(input_array);
+  npy_intp *dim = PyArray_DIMS(input_array);
+  npy_intp newdim[ndim+1];
+  int Ntransform = 1;
+
+  npy_intp Nlm = N_lm(lmax);
+
+  for(int i=0; i<ndim-1; ++i) {
+    newdim[i] = dim[i];
+    Ntransform *= dim[i];
+  }
+  newdim[ndim-1] = Ntheta;
+  newdim[ndim] = Nphi;
+
+  fftw_complex *alm = PyArray_DATA(input_array);
+  fftw_complex *s = PyArray_DATA(s_array);
+  fftw_complex *f = calloc(Ntransform*Ntheta*Nphi, sizeof(fftw_complex));
+
+  spinsfast_multi_salm2map(alm, f, s, Ntransform, Ntheta, Nphi, lmax);
+
+  PyObject *arr = PyArray_SimpleNewFromData(ndim+1, &newdim, NPY_CDOUBLE, f);
+  Py_INCREF(arr);
+  return(arr);
 }
 
 
@@ -257,11 +339,13 @@ static PyMethodDef spinsfastMethods[] = {
   {"ind_lm", cextension_ind_lm, METH_VARARGS, "ind_lm(idx,lmax)"},
   {"lm_ind", cextension_lm_ind, METH_VARARGS, "lm_ind(l,m,lmax)"},
   {"_salm2map", cextension_salm2map, METH_VARARGS, "salm2map(alm,s,lmax,Ntheta,Nphi)"},
+  {"_multi_salm2map", cextension_multi_salm2map, METH_VARARGS, "salm2map(alm,s,lmax,Ntheta,Nphi)"},
   {"_map2salm", cextension_map2salm, METH_VARARGS, "map2salm(f,s,lmax)"},
+  {"_multi_map2salm", cextension_multi_map2salm, METH_VARARGS, "map2salm(f,s,lmax)"},
   {"f_extend_MW", cextension_f_extend_MW, METH_VARARGS, "f_extend_MW(f,s)"},
   {"f_extend_old", cextension_f_extend_old, METH_VARARGS, "f_extend_MW(f,s)"},
-  {"Imm",  cextension_Imm, METH_VARARGS, "Imm(f,s,lmax)"},
-  {"quadrature_weights", cextension_quadrature_weights, METH_VARARGS, "quadrature_weights(Ntheta)"},
+  {"Imm",  cextension_Imm, METH_VARARGS, "Imm(f,s,lmax) [see Eq. (8) of Huffenberger & Wandelt]"},
+  {"quadrature_weights", cextension_quadrature_weights, METH_VARARGS, "quadrature_weights(Ntheta) [see Eq. (B6) of Huffenberger & Wandelt]"},
   {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
