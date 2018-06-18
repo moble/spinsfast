@@ -36,3 +36,4 @@ build/temp*
 dist
 spinsfast.egg-info
 python/_version.py
+.idea
