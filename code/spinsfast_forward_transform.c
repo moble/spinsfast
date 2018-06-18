@@ -61,22 +61,8 @@ void spinsfast_forward_transform(fftw_complex * restrict a, const int Ntransform
   int Nlm = N_lm(lmax);
   int NJmm = (lmax+1)*Nm;
 
-  fprintf(stderr, "%s:%d.:spinsfast_forward_transform: lmax:%d, Nlm:%d, Ntransform:%d\n", __FILE__, __LINE__, lmax, Nlm, Ntransform);
-  for(int i=0; i<Ntransform; i++) {
-    fprintf(stderr, "\t%d: %g, %g, %g, %g, %g, %g\n", i,
-            ((double*)a)[i*2*Nlm+0], ((double*)a)[i*2*Nlm+1],
-            ((double*)a)[i*2*Nlm+2], ((double*)a)[i*2*Nlm+3],
-            ((double*)a)[i*2*Nlm+4], ((double*)a)[i*2*Nlm+5]);
-  }
   for (m=0;m<Nlm*Ntransform;m++) {
     a[m] = 0;
-  }
-  fprintf(stderr, "%s:%d.:spinsfast_forward_transform:\n", __FILE__, __LINE__);
-  for(int i=0; i<Ntransform; i++) {
-    fprintf(stderr, "\t%d: %g, %g, %g, %g, %g, %g\n", i,
-            ((double*)a)[i*2*Nlm+0], ((double*)a)[i*2*Nlm+1],
-            ((double*)a)[i*2*Nlm+2], ((double*)a)[i*2*Nlm+3],
-            ((double*)a)[i*2*Nlm+4], ((double*)a)[i*2*Nlm+5]);
   }
 
   // Set up Wigner Deltas
@@ -96,12 +82,6 @@ void spinsfast_forward_transform(fftw_complex * restrict a, const int Ntransform
 
           if (l >= abs(s)) {
             // shift to correct blocks
-
-fprintf(stderr, "%s:%d.:spinsfast_forward_transform: ispin:%d, s:%d, abs(s):%d, l:%d, lm_ind:%d\n", __FILE__, __LINE__, ispin, s, abs(s), l, lm_ind(l,0,lmax));
-fprintf(stderr, "\t%d: %g, %g, %g, %g, %g, %g\n", ispin,
-        ((double*)a)[ispin*2*Nlm+0], ((double*)a)[ispin*2*Nlm+1],
-        ((double*)a)[ispin*2*Nlm+2], ((double*)a)[ispin*2*Nlm+3],
-        ((double*)a)[ispin*2*Nlm+4], ((double*)a)[ispin*2*Nlm+5]);
             complex * restrict asl = &a[ispin*Nlm + lm_ind(l,0,lmax)];
             fftw_complex * restrict Jmm = &Jmm_set[ispin*NJmm];
 
@@ -167,13 +147,6 @@ fprintf(stderr, "\t%d: %g, %g, %g, %g, %g, %g\n", ispin,
         }
   }
 
-  fprintf(stderr, "%s:%d.:spinsfast_forward_transform:\n", __FILE__, __LINE__);
-  for(int i=0; i<Ntransform; i++) {
-    fprintf(stderr, "\t%d: %g, %g, %g, %g, %g, %g\n", i,
-            ((double*)a)[i*2*Nlm+0], ((double*)a)[i*2*Nlm+1],
-            ((double*)a)[i*2*Nlm+2], ((double*)a)[i*2*Nlm+3],
-            ((double*)a)[i*2*Nlm+4], ((double*)a)[i*2*Nlm+5]);
-  }
 
   // Set the phases
 

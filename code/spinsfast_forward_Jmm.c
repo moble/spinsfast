@@ -45,14 +45,9 @@ void spinsfast_forward_multi_Jmm(fftw_complex *f_set, int *spins, int Nmap, int 
     fftw_complex *Imm = &Imm_set[imap*NImm];
     fftw_complex *Jmm = &Jmm_set[imap*NJmm];
 
-
-
-
-
   int negtos =  ((s & 1) == 0) ? 1 : -1; // = (-1)^s
 
   int mp, m;
-
 
   //  Compute indexing helper
   int *midx_helper = calloc(Nm,sizeof(int));
@@ -60,9 +55,6 @@ void spinsfast_forward_multi_Jmm(fftw_complex *f_set, int *spins, int Nmap, int 
     midx_helper[m+lmax] = (Nm + m) % Nm;
   }
   int * restrict midx = &midx_helper[lmax];
-
-
-
 
   for (mp=0; mp<=lmax; mp++){
     const int mpmod = midx[mp];

@@ -120,11 +120,7 @@ static PyObject *cextension_map2salm(PyObject *self, PyObject *args) {
   fftw_complex *alm = calloc(Nlm, sizeof(fftw_complex));
   fftw_complex *f = PyArray_DATA(input_array);
 
-  fprintf(stderr, "%s:%d.:map2salm: %g, %g\n", __FILE__, __LINE__,
-          ((double*)alm)[0], ((double*)alm)[1]);
   spinsfast_map2salm(f, alm, s, Ntheta, Nphi, lmax);
-  fprintf(stderr, "%s:%d.:map2salm: %g, %g\n", __FILE__, __LINE__,
-          ((double*)alm)[0], ((double*)alm)[1]);
 
   PyObject *arr = PyArray_SimpleNewFromData(1, &Nlm, NPY_CDOUBLE, alm);
   Py_INCREF(arr);
@@ -160,21 +156,7 @@ static PyObject *cextension_multi_map2salm(PyObject *self, PyObject *args) {
   fftw_complex *f = PyArray_DATA(input_array);
   int *s = PyArray_DATA(s_array);
 
-  fprintf(stderr, "%s:%d.:multi_map2salm: sizeof(int):%u\n", __FILE__, __LINE__, sizeof(int));
-  for(int i=0; i<Ntransform; i++) {
-    fprintf(stderr, "\t%d: %g, %g, %g, %g, %g, %g\n", i,
-            ((double*)alm)[i*2*Nlm+0], ((double*)alm)[i*2*Nlm+1],
-            ((double*)alm)[i*2*Nlm+2], ((double*)alm)[i*2*Nlm+3],
-            ((double*)alm)[i*2*Nlm+4], ((double*)alm)[i*2*Nlm+5]);
-  }
   spinsfast_multi_map2salm(f, alm, s, Ntransform, Ntheta, Nphi, lmax);
-  fprintf(stderr, "%s:%d.:multi_map2salm:\n", __FILE__, __LINE__);
-  for(int i=0; i<Ntransform; i++) {
-    fprintf(stderr, "\t%d: %g, %g, %g, %g, %g, %g\n", i,
-            ((double*)alm)[i*2*Nlm+0], ((double*)alm)[i*2*Nlm+1],
-            ((double*)alm)[i*2*Nlm+2], ((double*)alm)[i*2*Nlm+3],
-            ((double*)alm)[i*2*Nlm+4], ((double*)alm)[i*2*Nlm+5]);
-  }
 
   PyObject *arr = PyArray_SimpleNewFromData(ndim-1, &newdim, NPY_CDOUBLE, alm);
   Py_INCREF(arr);
