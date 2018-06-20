@@ -97,7 +97,7 @@ def salm2map(alm, s, lmax, Ntheta, Nphi):
     import numpy as np
     alm = np.ascontiguousarray(alm, dtype=np.complex128)
     if alm.shape[-1] < N_lm(lmax):
-        raise ValueError("The input `alm` size of {0} is too small for the stated `lmax` of {1}.  ".format(alm.size, lmax)
+        raise ValueError("The input `alm` array of shape {0} is too small for the stated `lmax` of {1}.  ".format(alm.shape, lmax)
                          + "Perhaps you forgot to include the (zero) modes with ell<|s|.")
     if alm.ndim>1:
         s = np.ascontiguousarray(s, dtype=np.intc)
