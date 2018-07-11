@@ -28,10 +28,16 @@ def salm2map(alm, s, lmax, Ntheta, Nphi):
 
     Parameters
     ----------
-    alm : array_like
-        Input array representing mode weights of the spin-weighted function.
-    s : int
-        Spin weight of the function.
+    alm : array_like, complex, shape (..., (lmax+1)**2)
+        Input array representing mode weights of the spin-weighted function.  This array may be
+        multi-dimensional, where initial dimensions may represent different times, for example.  The
+        final dimension should give the values of the mode weights, in the order described below in
+        the 'Notes' section.
+    s : int or array, int, shape (..., 1)
+        Spin weight of the function.  If `alm` is multidimensional and this is an array, its
+        dimensions must match the first dimensions of `alm`, and the different values are the spin
+        weights of the different functions represented by those dimensions.  Otherwise, if `alm` is
+        multidimensional, all functions are assumed to have the same spin weight.
     lmax : int
         The largest `ell` value present in the input array.
     Ntheta : int
@@ -42,8 +48,10 @@ def salm2map(alm, s, lmax, Ntheta, Nphi):
 
     Returns
     -------
-    map : 2-d array of complex
-        Values of the spin-weighted function on grid points of the sphere.
+    map : ndarray, complex, shape (..., Ntheta, Nphi)
+        Values of the spin-weighted function on grid points of the sphere.  This array is shaped
+        like the input `alm` array, but has one extra dimension.  The final two dimensions describe
+        the values of the function on the sphere.
 
 
     See also
@@ -58,13 +66,13 @@ def salm2map(alm, s, lmax, Ntheta, Nphi):
     (ell, m) = (0, 0) even if `s` is nonzero, proceeding to (1, -1), (1, 0), (1, 1), etc.
     Explicitly, the ordering should match this:
 
-        [[ell,m] for ell in range(lmax+1) for m in range(-ell, ell+1)]
+        [f_lm(ell, m) for ell in range(lmax+1) for m in range(-ell, ell+1)]
 
     The input is converted to a contiguous complex numpy array if necessary.
 
     The output data are presented on this grid of spherical coordinates:
 
-        np.array([[[theta, phi]
+        np.array([[f(theta, phi)
                    for phi in np.linspace(0.0, 2*np.pi, num=2*lmax+1, endpoint=False)]
                   for theta in np.linspace(0.0, np.pi, num=2*lmax+1, endpoint=True)])
 
@@ -113,18 +121,26 @@ def map2salm(f, s, lmax):
 
     Parameters
     ----------
-    f : array_like
-        Values of the spin-weighted function on grid points of the sphere.
-    s : int
-        Spin weight of the function.
+    f : array_like, complex, shape (..., Ntheta, Nphi)
+        Values of the spin-weighted function on grid points of the sphere.  This array may have more
+        than two dimensions, where initial dimensions may represent different times, for example, or
+        separate functions on the sphere.  The final two dimensions should give the values of the
+        function, in the order described below in the 'Notes' section.
+    s : int or array, int, shape (..., 1)
+        Spin weight of the function.  If `f` is multidimensional and this is an array, its
+        dimensions must match the first dimensions of `f`, and the different values are the spin
+        weights of the different functions represented by those dimensions.  Otherwise, if `f` is
+        multidimensional, all functions are assumed to have the same spin weight.
     lmax : int
         The largest `ell` value present in the input array.
 
 
     Returns
     -------
-    salm : 2-d array of complex
-        Mode weights of the spin-weighted function.
+    salm : ndarray, complex, shape (..., (lmax+1)**2)
+        Mode weights of the spin-weighted function.  This array is shaped like the input `f` array,
+        but has one less dimension.  The final dimension describes the values of the mode weights on
+        the corresponding sphere, as described below in the 'Notes' section.
 
 
     See also
@@ -137,7 +153,7 @@ def map2salm(f, s, lmax):
 
     The input data represent the values on this grid of spherical coordinates:
 
-        np.array([[[theta, phi]
+        np.array([[f(theta, phi)
                    for phi in np.linspace(0.0, 2*np.pi, num=2*lmax+1, endpoint=False)]
                   for theta in np.linspace(0.0, np.pi, num=2*lmax+1, endpoint=True)])
 
@@ -147,7 +163,7 @@ def map2salm(f, s, lmax):
     (ell, m) = (0, 0) even if `s` is nonzero, proceeding to (1, -1), (1, 0), (1, 1), etc.
     Explicitly, the ordering matches this:
 
-        [[ell,m] for ell in range(lmax+1) for m in range(-ell, ell+1)]
+        [f_lm(ell, m) for ell in range(lmax+1) for m in range(-ell, ell+1)]
 
     Note that `map2salm` and `salm2map` are not true inverses of each other for several reasons.
     First, modes with `ell < |s|` should always be zero; they are simply assumed to be zero on input
