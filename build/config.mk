@@ -3,7 +3,7 @@ INC+=
 ## See if FFTW3_HOME is set; if so, use it
 ifdef FFTW3_HOME
 	INC+=-I${FFTW3_HOME}/include
-	LIBFFTW=-L${FFTW3_HOME}/lib -lfftw3 -Wl,-rpath,${FFTW3_HOME}/lib
+	LIBFFTW=-L${FFTW3_HOME}/lib -lfftw3
 else
 	LIBFFTW=-lfftw3
 endif
