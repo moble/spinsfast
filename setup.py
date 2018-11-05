@@ -13,7 +13,7 @@ except:
 
 ## The following block is added for nicer behavior with `module`s on clusters
 from os import environ
-IncDirs = [numpy_inc, "include",]
+IncDirs = [numpy_inc, os.path.join(os.path.realpath(__file__), "include"),]
 LibDirs = ["lib",]
 ## See if GSL_HOME is set; if so, use it
 if "GSL_HOME" in environ :
@@ -43,15 +43,6 @@ else:
 with open('python/_version.py', 'w') as f:
     f.write('__version__ = "{0}"'.format(version))
 
-extension = Extension(
-    name = 'spinsfast.cextension',
-    sources = ['python/cextension.c'] + glob.glob('code/*.c'),
-    include_dirs=IncDirs,
-    libraries=['fftw3'],
-    library_dirs=LibDirs,
-    extra_compile_args=['-std=c99','-fPIC','-O3'],
-)
-
 setup(name = 'spinsfast',
       version = version,
       packages = ['spinsfast'],
@@ -65,7 +56,7 @@ setup(name = 'spinsfast',
           include_dirs=IncDirs,
           libraries=['fftw3'],
           library_dirs=LibDirs,
-          extra_compile_args=['-std=c99','-fPIC','-O3','-g'],
+          extra_compile_args=['-std=c99','-fPIC','-O3'],
           #extra_link_args=[fftw_rpath],
       )],
 )
