@@ -13,8 +13,12 @@ except:
 
 ## The following block is added for nicer behavior with `module`s on clusters
 from os import environ
-IncDirs = [numpy_inc, join(dirname(realpath(__file__)), "include"),]
+IncDirs = [numpy_inc, ]
 LibDirs = ["lib",]
+if "SRC_DIR" in environ:
+    IncDirs += [join(environ["SRC_DIR"], "include"),]
+else:
+    IncDirs += ["include",]
 ## See if GSL_HOME is set; if so, use it
 if "GSL_HOME" in environ :
     IncDirs += [environ["GSL_HOME"]+'/include']
