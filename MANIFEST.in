@@ -1,0 +1,10 @@
+include README.md
+include setup.py
+include build/config.mk
+include Makefile
+include COPYING
+include LICENSE
+recursive-include code *
+recursive-include example *
+recursive-include include *
+recursive-include python *
