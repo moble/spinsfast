@@ -1,4 +1,4 @@
-from os.path import isdir
+from os.path import isdir, join, dirname, realpath
 from setuptools import setup, Extension
 from distutils.sysconfig import get_python_lib
 import os
@@ -13,7 +13,7 @@ except:
 
 ## The following block is added for nicer behavior with `module`s on clusters
 from os import environ
-IncDirs = [numpy_inc, os.path.join(os.path.realpath(__file__), "include"),]
+IncDirs = [numpy_inc, join(dirname(realpath(__file__)), "include"),]
 LibDirs = ["lib",]
 ## See if GSL_HOME is set; if so, use it
 if "GSL_HOME" in environ :
