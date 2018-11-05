@@ -7,11 +7,11 @@ wheelhouse="${HOME}/Research/Temp/wheelhouse"
 /bin/rm -rf "${wheelhouse}"
 mkdir -p "${wheelhouse}"
 
-CONDA_ENVS=( py27 py35 py36 )
+CONDA_ENVS=( py27 py35 py36 py37 )
 
 # Update conda envs
 for CONDA_ENV in "${CONDA_ENVS[@]}"; do
-    source activate "${CONDA_ENV}"
+    conda activate "${CONDA_ENV}"
     conda update -y --all
     conda install -y fftw
     pip install --upgrade pip

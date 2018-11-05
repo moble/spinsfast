@@ -90,30 +90,24 @@ And updates are trivial.
 Once `anaconda` is installed, this package may be installed with the command
 
 ```bash
-conda install --channel moble spinsfast
+conda install --channel conda-forge spinsfast
 ```
 
-(Note that the explanation for how to create and upload conda packages is
-contained in the [README](https://github.com/moble/fftw/blob/master/README.md)
-for my [FFTW installer](https://github.com/moble/fftw).)
+Note this may also install `numpy` and `fftw` automatically.
 
 
 ## Pip
 
-While generally less robust, this package is also built for installation via `pip`:
+While generally less robust, this package is also available via `pip`:
 
 ```bash
 pip install spinsfast
 ```
 
-One advantage of this method is that it should work on older linux installations, since it requires
-only glibc 2.5, for example.  In particular, these binaries are built on CentOS 5, and should also
-run on anything newer.
-
-If possible, `pip` will install the binary distribution for your OS and architecture.  However, it
-may need to fall back to compiling the source, in which case you will need to have FFTW and a
-compiler installed.  Unfortunately, `pip` has no good way of handling these dependencies.  See below
-for environment variables you may need to set to get compilation working properly.
+Unfortunately, maintaining binary distributions on pip is too time-consuming, so `pip` will try to
+compile the source code for you, in which case you will need to have FFTW and a compiler installed.
+Unfortunately, `pip` has no good way of handling these dependencies.  See below for environment
+variables you may need to set to get compilation working properly.
 
 
 ## Manual installation

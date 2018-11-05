@@ -4,7 +4,7 @@ export datetime=$(date +"%Y.%m.%d.%H.%M.%S")
 
 python setup.py sdist upload
 
-# ./python/build_macosx_wheels.sh
+./python/build_macosx_wheels.sh ${datetime}
 
 # open --hide --background -a Docker
 # while ! (docker ps > /dev/null 2>&1); do
