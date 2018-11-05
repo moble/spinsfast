@@ -79,7 +79,7 @@ double *Delta_getrow( int DeltaMethod, void * Deltawork, const double * restrict
 void Delta_increment_l( int DeltaMethod, void * Deltawork) {
 
   // Increment Delta to next l if Risbo not precomputed
-  if ( (DeltaMethod==WDHP_METHOD_RISBO) ) {
+  if (DeltaMethod==WDHP_METHOD_RISBO) {
     wdhp_jplus1((wdhp *)Deltawork);
   }
 

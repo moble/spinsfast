@@ -8,7 +8,7 @@ else
 	LIBFFTW=-lfftw3
 endif
 
-CFLAGS:=-Wall  -g -std=c99 -O3 -fpic -fstrict-aliasing -Wstrict-aliasing -D_GNU_SOURCE
+CFLAGS:=-Wall -g -std=c99 -O3 -fpic -fstrict-aliasing -Wstrict-aliasing -D_GNU_SOURCE -Wl,-rpath,${FFTW3_HOME}/lib
 
 # Optional portions of code
 #CFLAGS+= -DUSE_FITSIO

@@ -76,6 +76,7 @@ void spinsfast_forward_multi_Jmm(fftw_complex *f_set, int *spins, int Nmap, int 
     }
   }
 
+  free(midx_helper);
   }
 
   fftw_free(Imm_set);

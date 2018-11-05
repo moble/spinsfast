@@ -28,9 +28,11 @@
 *.x86_64
 *.hex
 
+bin
 .cache
 spinsfast.zip
 conda/conversions
+build/bdist*
 build/lib*
 build/temp*
 dist

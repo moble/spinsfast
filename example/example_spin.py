@@ -26,7 +26,7 @@ sys.path.append('lib')
 
 from numpy import zeros, complex
 from numpy.random import normal,seed
-from matplotlib.pyplot import *
+# from matplotlib.pyplot import *
 
 import spinsfast
 
@@ -70,10 +70,10 @@ alm2 = spinsfast.map2salm(f,s,lmax)
 diff_max = max((alm-alm2))
 print("max(alm2-alm) = "+str(diff_max))
 
-figure()
-imshow(f.real,interpolation='nearest')
-colorbar()
-title("Real part of f")
-xlabel("iphi")
-ylabel("itheta")
-show()
+# figure()
+# imshow(f.real,interpolation='nearest')
+# colorbar()
+# title("Real part of f")
+# xlabel("iphi")
+# ylabel("itheta")
+# show()

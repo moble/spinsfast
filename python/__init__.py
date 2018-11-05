@@ -23,21 +23,22 @@ from .cextension import *
 from .cextension import _salm2map, _multi_salm2map, _map2salm, _multi_map2salm
 
 
-def salm2map(alm, s, lmax, Ntheta, Nphi):
+def salm2map(salm, s, lmax, Ntheta, Nphi):
     """Convert mode weights of spin-weighted function to values on a grid
 
     Parameters
     ----------
-    alm : array_like, complex, shape (..., (lmax+1)**2)
+    salm : array_like, complex, shape (..., (lmax+1)**2)
         Input array representing mode weights of the spin-weighted function.  This array may be
-        multi-dimensional, where initial dimensions may represent different times, for example.  The
-        final dimension should give the values of the mode weights, in the order described below in
-        the 'Notes' section.
-    s : int or array, int, shape (..., 1)
-        Spin weight of the function.  If `alm` is multidimensional and this is an array, its
-        dimensions must match the first dimensions of `alm`, and the different values are the spin
-        weights of the different functions represented by those dimensions.  Otherwise, if `alm` is
-        multidimensional, all functions are assumed to have the same spin weight.
+        multi-dimensional, where initial dimensions may represent different times, for example, or
+        separate functions on the sphere.  The final dimension should give the values of the mode
+        weights, in the order described below in the 'Notes' section.
+    s : int or array, int, shape (...)
+        Spin weight of the function.  If `salm` is multidimensional and this is an array, its
+        dimensions must match the first dimensions of `salm`, and the different values are the spin
+        weights of the different functions represented by those dimensions.  Otherwise, if `salm` is
+        multidimensional and `s` is a single integer, all functions are assumed to have the same
+        spin weight.
     lmax : int
         The largest `ell` value present in the input array.
     Ntheta : int
@@ -50,7 +51,7 @@ def salm2map(alm, s, lmax, Ntheta, Nphi):
     -------
     map : ndarray, complex, shape (..., Ntheta, Nphi)
         Values of the spin-weighted function on grid points of the sphere.  This array is shaped
-        like the input `alm` array, but has one extra dimension.  The final two dimensions describe
+        like the input `salm` array, but has one extra dimension.  The final two dimensions describe
         the values of the function on the sphere.
 
 
@@ -62,7 +63,7 @@ def salm2map(alm, s, lmax, Ntheta, Nphi):
     Notes
     -----
 
-    The input `alm` data should be given in increasing order of `ell` value, always starting with
+    The input `salm` data should be given in increasing order of `ell` value, always starting with
     (ell, m) = (0, 0) even if `s` is nonzero, proceeding to (1, -1), (1, 0), (1, 1), etc.
     Explicitly, the ordering should match this:
 
@@ -103,34 +104,37 @@ def salm2map(alm, s, lmax, Ntheta, Nphi):
                          + "is not allowed; it must be greater than 0 and should be greater "
                          + "than |s|={0}.".format(abs(s)))
     import numpy as np
-    alm = np.ascontiguousarray(alm, dtype=np.complex128)
-    if alm.shape[-1] < N_lm(lmax):
-        raise ValueError("The input `alm` array of shape {0} is too small for the stated `lmax` of {1}.  ".format(alm.shape, lmax)
+    salm = np.ascontiguousarray(salm, dtype=np.complex128)
+    if salm.shape[-1] < N_lm(lmax):
+        raise ValueError("The input `salm` array of shape {0} is too small for the stated `lmax` of {1}.  ".format(salm.shape, lmax)
                          + "Perhaps you forgot to include the (zero) modes with ell<|s|.")
-    if alm.ndim>1:
+    map = np.empty(salm.shape[:-1]+(Ntheta, Nphi), dtype=np.complex128)
+    if salm.ndim>1:
         s = np.ascontiguousarray(s, dtype=np.intc)
-        if s.ndim != alm.ndim-1 or np.product(s.shape) != np.product(alm.shape[:-1]):
-            s = s*np.ones(alm.shape[:-1], dtype=np.intc)
-        return _multi_salm2map(alm, s, lmax, Ntheta, Nphi)
+        if s.ndim != salm.ndim-1 or np.product(s.shape) != np.product(salm.shape[:-1]):
+            s = s*np.ones(salm.shape[:-1], dtype=np.intc)
+        _multi_salm2map(salm, map, s, lmax, Ntheta, Nphi)
     else:
-        return _salm2map(alm, s, lmax, Ntheta, Nphi)
+        _salm2map(salm, map, s, lmax, Ntheta, Nphi)
+    return map
 
 
-def map2salm(f, s, lmax):
+def map2salm(map, s, lmax):
     """Convert values of spin-weighted function on a grid to mode weights
 
     Parameters
     ----------
-    f : array_like, complex, shape (..., Ntheta, Nphi)
+    map : array_like, complex, shape (..., Ntheta, Nphi)
         Values of the spin-weighted function on grid points of the sphere.  This array may have more
         than two dimensions, where initial dimensions may represent different times, for example, or
         separate functions on the sphere.  The final two dimensions should give the values of the
         function, in the order described below in the 'Notes' section.
-    s : int or array, int, shape (..., 1)
-        Spin weight of the function.  If `f` is multidimensional and this is an array, its
-        dimensions must match the first dimensions of `f`, and the different values are the spin
-        weights of the different functions represented by those dimensions.  Otherwise, if `f` is
-        multidimensional, all functions are assumed to have the same spin weight.
+    s : int or array, int, shape (...)
+        Spin weight of the function.  If `amp` is multidimensional and this is an array, its
+        dimensions must match the first dimensions of `map`, and the different values are the spin
+        weights of the different functions represented by those dimensions.  Otherwise, if `map` is
+        multidimensional and `s` is a single integer, all functions are assumed to have the same
+        spin weight.
     lmax : int
         The largest `ell` value present in the input array.
 
@@ -138,7 +142,7 @@ def map2salm(f, s, lmax):
     Returns
     -------
     salm : ndarray, complex, shape (..., (lmax+1)**2)
-        Mode weights of the spin-weighted function.  This array is shaped like the input `f` array,
+        Mode weights of the spin-weighted function.  This array is shaped like the input `map` array,
         but has one less dimension.  The final dimension describes the values of the mode weights on
         the corresponding sphere, as described below in the 'Notes' section.
 
@@ -153,7 +157,7 @@ def map2salm(f, s, lmax):
 
     The input data represent the values on this grid of spherical coordinates:
 
-        np.array([[f(theta, phi)
+        np.array([[map(theta, phi)
                    for phi in np.linspace(0.0, 2*np.pi, num=2*lmax+1, endpoint=False)]
                   for theta in np.linspace(0.0, np.pi, num=2*lmax+1, endpoint=True)])
 
@@ -163,15 +167,15 @@ def map2salm(f, s, lmax):
     (ell, m) = (0, 0) even if `s` is nonzero, proceeding to (1, -1), (1, 0), (1, 1), etc.
     Explicitly, the ordering matches this:
 
-        [f_lm(ell, m) for ell in range(lmax+1) for m in range(-ell, ell+1)]
+        [map_lm(ell, m) for ell in range(lmax+1) for m in range(-ell, ell+1)]
 
     Note that `map2salm` and `salm2map` are not true inverses of each other for several reasons.
     First, modes with `ell < |s|` should always be zero; they are simply assumed to be zero on input
-    to `salm2map`.  It is also possible to define a `map` function that violates this assumption --
-    for example, having a nonzero average value over the sphere, if the function has nonzero spin
-    `s`, this is impossible.  Also, it is possible to define a map of a function with so much
-    angular dependence that it cannot be captured with the given `lmax` value.  For example, a
-    discontinuous function will never be perfectly resolved.
+    to `salm2map`.  It is possible to define a `map` function that violates this assumption -- for
+    example, having a nonzero average value over the sphere, if the function has nonzero spin `s`,
+    this is impossible.  Also, it is possible to define a map of a function with so much angular
+    dependence that it cannot be captured with the given `lmax` value.  For example, a discontinuous
+    function will never be perfectly resolved.
 
 
     Example
@@ -181,16 +185,18 @@ def map2salm(f, s, lmax):
     >>> theta_phi = np.array([[[theta, phi]
                                for phi in np.linspace(0.0, 2*np.pi, num=2*lmax+1, endpoint=False)]
                               for theta in np.linspace(0.0, np.pi, num=2*lmax+1, endpoint=True)])
-    >>> f = np.array([[np.sqrt(3/(8*np.pi)) * np.sin(tp[0]) for tp in _] for _ in theta_phi])
-    >>> salm = spinsfast.map2salm(f, s, lmax)
+    >>> map = np.array([[np.sqrt(3/(8*np.pi)) * np.sin(tp[0]) for tp in _] for _ in theta_phi])
+    >>> salm = spinsfast.map2salm(map, s, lmax)
 
     """
     import numpy as np
-    f = np.ascontiguousarray(f, dtype=np.complex128)
-    if f.ndim>2:
+    map = np.ascontiguousarray(map, dtype=np.complex128)
+    salm = np.empty(map.shape[:-2]+(N_lm(lmax),), dtype=np.complex128)
+    if map.ndim>2:
         s = np.ascontiguousarray(s, dtype=np.intc)
-        if s.ndim != f.ndim-2 or np.product(s.shape) != np.product(f.shape[:-2]):
-            s = s*np.ones(f.shape[:-2], dtype=np.intc)
-        return _multi_map2salm(f, s, lmax)
+        if s.ndim != map.ndim-2 or np.product(s.shape) != np.product(map.shape[:-2]):
+            s = s*np.ones(map.shape[:-2], dtype=np.intc)
+        _multi_map2salm(map, salm, s, lmax)
     else:
-        return _map2salm(f, s, lmax)
+        _map2salm(map, salm, s, lmax)
+    return salm

@@ -238,24 +238,24 @@ void spinsfast_forward_transform_iqu2alm(fftw_complex * restrict T,fftw_complex 
     }
 
 
-    if (0) {
-      for (m=-l;m<=l;m++) {
-        printf("I| % d % d: ",l,m);
-        printf("Z % e % e | ",creal(ZI[m]),cimag(ZI[m]));
-        printf("O % e % e | ",creal(OI[m]),cimag(OI[m]));
-        printf("E % e % e |\n",creal(EI[m]),cimag(EI[m]));
-      }
-      printf("\n");
-    }
-    if (0) {
-      for (m=-l;m<=l;m++) {
-        printf("P| % d % d: ",l,m);
-        printf("Z % e % e | ",creal(ZP[m]),cimag(ZP[m]));
-        printf("O % e % e | ",creal(OP[m]),cimag(OP[m]));
-        printf("E % e % e |\n",creal(EP[m]),cimag(EP[m]));
-      }
-      printf("\n");
-    }
+    /* if (0) { */
+    /*   for (m=-l;m<=l;m++) { */
+    /*     printf("I| % d % d: ",l,m); */
+    /*     printf("Z % e % e | ",creal(ZI[m]),cimag(ZI[m])); */
+    /*     printf("O % e % e | ",creal(OI[m]),cimag(OI[m])); */
+    /*     printf("E % e % e |\n",creal(EI[m]),cimag(EI[m])); */
+    /*   } */
+    /*   printf("\n"); */
+    /* } */
+    /* if (0) { */
+    /*   for (m=-l;m<=l;m++) { */
+    /*     printf("P| % d % d: ",l,m); */
+    /*     printf("Z % e % e | ",creal(ZP[m]),cimag(ZP[m])); */
+    /*     printf("O % e % e | ",creal(OP[m]),cimag(OP[m])); */
+    /*     printf("E % e % e |\n",creal(EP[m]),cimag(EP[m])); */
+    /*   } */
+    /*   printf("\n"); */
+    /* } */
 
     // Collect even and odd terms
     for (m=0;m<=l;m++) {
@@ -272,7 +272,7 @@ void spinsfast_forward_transform_iqu2alm(fftw_complex * restrict T,fftw_complex 
 
     // Increment Delta to next l if Risbo not precomputed
     if (l<lmax) {
-      if ( (DeltaMethod==WDHP_METHOD_RISBO) ) {
+      if (DeltaMethod==WDHP_METHOD_RISBO) {
         Delta_increment_l(DeltaMethod, Deltawork);
       }
     }

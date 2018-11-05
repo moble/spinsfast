@@ -14,9 +14,10 @@ My modifications mostly deal with the user interface:
   * create python wrappers for the `map2salm` and `salm2map` functions to deal with any (reasonable)
     type or shape of input data, including multi-dimensional;
   * add python 3.x compatibility to `python/spinsfast_module.c`;
-  * fix segfaults due to use of `free` instead of `fftw_free` when `fftw_malloc` was used
+  * fix segfaults due to use of `free` instead of `fftw_free` when `fftw_malloc` was used;
   * make it easier to install as a python module by trying to detect paths to
     FFTW;
+  * fix numerous massive memory leaks in python extension module;
   * include an ipython/jupyter notebook in the `example` directory;
   * add integration with [pip](https://pypi.python.org/pypi/pip)
     and [pypi](https://pypi.python.org/pypi/spinsfast), for easy installation

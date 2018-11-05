@@ -159,6 +159,12 @@ int main(int argc, char *argv[]) {
 		    lmax);  
   }
     
+  wdhp_TN_helper_free(DeltaTN);
+  free(Gmm);
+  free(Jmm);
+  free(alm2);
+  free(alm);
+  free(f);
   return(0);
 }
 

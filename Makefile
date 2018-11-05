@@ -7,7 +7,7 @@
 
 
 # define the software modules to be built
-MODULES := code obj example python
+MODULES := code obj example
 
 # location for programs / object files
 EXECDIR := bin

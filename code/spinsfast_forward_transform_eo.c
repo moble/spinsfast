@@ -211,7 +211,7 @@ void spinsfast_forward_transform_eo(fftw_complex * restrict a, const int Ntransf
 
         // Increment Delta to next l if Risbo not precomputed
         if (l<lmax) {
-          if ( (DeltaMethod==WDHP_METHOD_RISBO) ) {
+          if (DeltaMethod==WDHP_METHOD_RISBO) {
             Delta_increment_l(DeltaMethod, Deltawork);
           }
         }

@@ -34,7 +34,7 @@
 #endif
 
 void spinsfast_map2salm(fftw_complex *f, fftw_complex *alm, int s, int Ntheta, int Nphi, int lmax);
-
+void spinsfast_multi_map2salm(fftw_complex *f, fftw_complex *alm, int *s, const int Ntransform, int Ntheta, int Nphi, int lmax);
 
 
 int indx2p (int ip, int Ntheta);
