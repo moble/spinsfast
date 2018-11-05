@@ -3,12 +3,12 @@ INC+=
 ## See if FFTW3_HOME is set; if so, use it
 ifdef FFTW3_HOME
 	INC+=-I${FFTW3_HOME}/include
-	LIBFFTW=-L${FFTW3_HOME}/lib -lfftw3
+	LIBFFTW=-L${FFTW3_HOME}/lib -lfftw3 -Wl,-rpath,${FFTW3_HOME}/lib
 else
 	LIBFFTW=-lfftw3
 endif
 
-CFLAGS:=-Wall -g -std=c99 -O3 -fpic -fstrict-aliasing -Wstrict-aliasing -D_GNU_SOURCE -Wl,-rpath,${FFTW3_HOME}/lib
+CFLAGS:=-Wall -g -std=c99 -O3 -fpic -fstrict-aliasing -Wstrict-aliasing -D_GNU_SOURCE
 
 # Optional portions of code
 #CFLAGS+= -DUSE_FITSIO

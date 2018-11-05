@@ -23,7 +23,7 @@ if "GSL_HOME" in environ :
 if "FFTW3_HOME" in environ :
     IncDirs += [environ["FFTW3_HOME"]+'/include']
     LibDirs += [environ["FFTW3_HOME"]+'/lib']
-    fftw_rpath = '-Wl,-rpath,{FFTW3_HOME}/lib'.format(FFTW3_HOME=environ["FFTW3_HOME"])
+    # fftw_rpath = '-Wl,-rpath,{FFTW3_HOME}/lib'.format(FFTW3_HOME=environ["FFTW3_HOME"])
 # If /opt/local directories exist, use them
 if isdir('/opt/local/include'):
     IncDirs += ['/opt/local/include']
@@ -63,6 +63,6 @@ setup(name = 'spinsfast',
           libraries=['fftw3'],
           library_dirs=LibDirs,
           extra_compile_args=['-std=c99','-fPIC','-O3','-g'],
-          extra_link_args=[fftw_rpath]),
-      ],
+          #extra_link_args=[fftw_rpath],
+      )],
 )
