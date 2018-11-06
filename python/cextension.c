@@ -33,55 +33,38 @@
 ///  Indexing
 
 static PyObject *cextension_N_lm(PyObject *self, PyObject *args) {
-
   int lmax;
   if (!PyArg_ParseTuple(args, "i", &lmax))
     return(NULL);
-
   return Py_BuildValue("i", N_lm(lmax));
 }
 
 
 static PyObject *cextension_lm_ind(PyObject *self, PyObject *args) {
   int l,m, lmax;
-
   if (!PyArg_ParseTuple(args, "iii", &l,&m, &lmax))
     return NULL;
-
   return Py_BuildValue("i", lm_ind(l,m,lmax));
-
 }
 
 
 static PyObject *cextension_ind_lm(PyObject *self, PyObject *args) {
-
   int i, lmax;
+  PyObject *output_array = NULL;
 
-  if (!PyArg_ParseTuple(args, "ii", &i, &lmax))
+  if (!PyArg_ParseTuple(args, "iiO", &i, &lmax, &output_array))
     return NULL;
 
-
-  int nd = 1;
-  npy_intp dims[1] = {2};
-
-  int *lm = calloc(2,sizeof(int));
+  int *lm = PyArray_DATA((PyArrayObject *)output_array);
 
   ind_lm(i, &lm[0], &lm[1], lmax);
 
-  PyObject *arr = PyArray_SimpleNewFromData(nd, dims, NPY_INT, lm);
-  ((PyArrayObject *)arr)->flags |= NPY_ARRAY_OWNDATA;
-  Py_INCREF(arr);
-
-  return(arr);
+  Py_INCREF(output_array);
+  return(output_array);
 }
 
 
-
-
-
-///  Transform wrappers  ////////////////
-
-
+// Transform wrappers //
 static PyObject *cextension_salm2map(PyObject *self, PyObject *args) {
   PyObject *input_array = NULL;
   PyObject *output_array = NULL;
@@ -93,8 +76,8 @@ static PyObject *cextension_salm2map(PyObject *self, PyObject *args) {
   if (!PyArg_ParseTuple(args, "OOiiii", &input_array, &output_array, &s, &lmax, &Ntheta, &Nphi))
     return NULL;
 
-  fftw_complex *salm = PyArray_DATA(input_array);
-  fftw_complex *map = PyArray_DATA(output_array);
+  fftw_complex *salm = PyArray_DATA((PyArrayObject *)input_array);
+  fftw_complex *map = PyArray_DATA((PyArrayObject *)output_array);
 
   spinsfast_salm2map(salm, map, s, Ntheta, Nphi, lmax);
 
@@ -111,12 +94,12 @@ static PyObject *cextension_map2salm(PyObject *self, PyObject *args) {
   if (!PyArg_ParseTuple(args, "OOii", &input_array, &output_array, &s, &lmax))
     return NULL;
 
-  npy_intp *dim = PyArray_DIMS(input_array);
+  npy_intp *dim = PyArray_DIMS((PyArrayObject *)input_array);
   int Ntheta = dim[0];
   int Nphi = dim[1];
 
-  fftw_complex *map = PyArray_DATA(input_array);
-  fftw_complex *salm = PyArray_DATA(output_array);
+  fftw_complex *map = PyArray_DATA((PyArrayObject *)input_array);
+  fftw_complex *salm = PyArray_DATA((PyArrayObject *)output_array);
 
   spinsfast_map2salm(map, salm, s, Ntheta, Nphi, lmax);
 
@@ -136,16 +119,16 @@ static PyObject *cextension_multi_salm2map(PyObject *self, PyObject *args) {
   if (!PyArg_ParseTuple(args, "OOOiii", &input_array, &output_array, &s_array, &lmax, &Ntheta, &Nphi))
     return NULL;
 
-  int ndim = PyArray_NDIM(input_array);
-  npy_intp *dim = PyArray_DIMS(input_array);
+  int ndim = PyArray_NDIM((PyArrayObject *)input_array);
+  npy_intp *dim = PyArray_DIMS((PyArrayObject *)input_array);
   int Ntransform = 1;
   for(int i=0; i<ndim-1; ++i) {
     Ntransform *= dim[i];
   }
 
-  fftw_complex *salm = PyArray_DATA(input_array);
-  fftw_complex *map = PyArray_DATA(output_array);
-  int *s = PyArray_DATA(s_array);
+  fftw_complex *salm = PyArray_DATA((PyArrayObject *)input_array);
+  fftw_complex *map = PyArray_DATA((PyArrayObject *)output_array);
+  int *s = PyArray_DATA((PyArrayObject *)s_array);
 
   spinsfast_multi_salm2map(salm, map, s, Ntransform, Ntheta, Nphi, lmax);
 
@@ -163,8 +146,8 @@ static PyObject *cextension_multi_map2salm(PyObject *self, PyObject *args) {
   if (!PyArg_ParseTuple(args, "OOOi", &input_array, &output_array, &s_array, &lmax))
     return NULL;
 
-  int ndim = PyArray_NDIM(input_array);
-  npy_intp *dim = PyArray_DIMS(input_array);
+  int ndim = PyArray_NDIM((PyArrayObject *)input_array);
+  npy_intp *dim = PyArray_DIMS((PyArrayObject *)input_array);
   int Ntransform = 1;
   for(int i=0; i<ndim-2; ++i) {
     Ntransform *= dim[i];
@@ -172,9 +155,9 @@ static PyObject *cextension_multi_map2salm(PyObject *self, PyObject *args) {
   int Ntheta = dim[ndim-2];
   int Nphi = dim[ndim-1];
 
-  fftw_complex *map = PyArray_DATA(input_array);
-  fftw_complex *salm = PyArray_DATA(output_array);
-  int *s = PyArray_DATA(s_array);
+  fftw_complex *map = PyArray_DATA((PyArrayObject *)input_array);
+  fftw_complex *salm = PyArray_DATA((PyArrayObject *)output_array);
+  int *s = PyArray_DATA((PyArrayObject *)s_array);
 
   spinsfast_multi_map2salm(map, salm, s, Ntransform, Ntheta, Nphi, lmax);
 
@@ -186,117 +169,88 @@ static PyObject *cextension_multi_map2salm(PyObject *self, PyObject *args) {
 ///  Some helpers
 static PyObject *cextension_quadrature_weights(PyObject *self, PyObject *args) {
   int Ntheta;
+  PyObject *output_array = NULL;
 
-  if (!PyArg_ParseTuple(args, "i", &Ntheta))
+  if (!PyArg_ParseTuple(args, "iO", &Ntheta, &output_array))
     return NULL;
 
   int wsize = 2*(Ntheta-1);
-  fftw_complex *W = calloc(wsize, sizeof(fftw_complex)); // fourier space weights
+  fftw_complex *W = PyArray_DATA((PyArrayObject *)output_array);
 
   spinsfast_quadrature_weights(W, wsize);
 
-  npy_intp N = wsize;
-
-  PyObject *arr = PyArray_SimpleNewFromData(1, &N, NPY_CDOUBLE, W);
-  ((PyArrayObject *)arr)->flags |= NPY_ARRAY_OWNDATA;
-  Py_INCREF(arr);
-
-  return(arr);
+  Py_INCREF(output_array);
+  return(output_array);
 }
 
 static PyObject *cextension_f_extend_MW(PyObject *self, PyObject *args) {
-
   PyObject *input_array = NULL;
+  PyObject *output_array = NULL;
   int s = 0;
 
-  if (!PyArg_ParseTuple(args, "Oi", &input_array, &s))
+  if (!PyArg_ParseTuple(args, "OOi", &input_array, &output_array, &s))
     return NULL;
 
-
-  fftw_complex *f = PyArray_DATA(input_array);
-  npy_intp *dim = PyArray_DIMS(input_array);
-  // int contig = PyArray_ISCONTIGUOUS(input_array);
+  fftw_complex *f = PyArray_DATA((PyArrayObject *)input_array);
+  npy_intp *dim = PyArray_DIMS((PyArrayObject *)input_array);
+  // int contig = PyArray_ISCONTIGUOUS((PyArrayObject *)input_array);
   int Ntheta = dim[0];
   int Nphi = dim[1];
 
-  int wsize = 2*(Ntheta-1);
-  fftw_complex *F = fftw_malloc(wsize*Nphi*sizeof(fftw_complex));
+  fftw_complex *F = PyArray_DATA((PyArrayObject *)output_array);
 
   spinsfast_f_extend_MW(f, F, s, Ntheta, Nphi);
 
-  npy_intp N[] = {wsize,Nphi};
-
-  PyObject *arr = PyArray_SimpleNewFromData(2, N, NPY_CDOUBLE, F);
-  ((PyArrayObject *)arr)->flags |= NPY_ARRAY_OWNDATA;
-  Py_INCREF(arr);
-
-  return(arr);
-
+  Py_INCREF(output_array);
+  return(output_array);
 }
-static PyObject *cextension_f_extend_old(PyObject *self, PyObject *args) {
 
+static PyObject *cextension_f_extend_old(PyObject *self, PyObject *args) {
   PyObject *input_array = NULL;
+  PyObject *output_array = NULL;
   int s = 0;
 
-  if (!PyArg_ParseTuple(args, "Oi", &input_array, &s))
+  if (!PyArg_ParseTuple(args, "OOi", &input_array, &output_array, &s))
     return NULL;
 
-
-  fftw_complex *f = PyArray_DATA(input_array);
-  npy_intp *dim = PyArray_DIMS(input_array);
-  // int contig = PyArray_ISCONTIGUOUS(input_array);
+  fftw_complex *f = PyArray_DATA((PyArrayObject *)input_array);
+  npy_intp *dim = PyArray_DIMS((PyArrayObject *)input_array);
+  // int contig = PyArray_ISCONTIGUOUS((PyArrayObject *)input_array);
   int Ntheta = dim[0];
   int Nphi = dim[1];
 
-  int wsize = 2*(Ntheta-1);
-  fftw_complex *F = fftw_malloc(wsize*Nphi*sizeof(fftw_complex));
+  fftw_complex *F = PyArray_DATA((PyArrayObject *)output_array);
 
   spinsfast_f_extend_old(f, F, s, Ntheta, Nphi);
 
-  npy_intp N[] = {wsize,Nphi};
-
-  PyObject *arr = PyArray_SimpleNewFromData(2, N, NPY_CDOUBLE, F);
-  ((PyArrayObject *)arr)->flags |= NPY_ARRAY_OWNDATA;
-  Py_INCREF(arr);
-
-  return(arr);
-
+  Py_INCREF(output_array);
+  return(output_array);
 }
 
 static PyObject *cextension_Imm(PyObject *self, PyObject *args) {
 
   PyObject *input_array = NULL;
+  PyObject *output_array = NULL;
   int lmax = 0;
   int s = 0;
 
-  if (!PyArg_ParseTuple(args, "Oii", &input_array, &s, &lmax))
+  if (!PyArg_ParseTuple(args, "OOii", &input_array, &output_array, &s, &lmax))
     return NULL;
 
 
-  fftw_complex *f = PyArray_DATA(input_array);
-  npy_intp *dim = PyArray_DIMS(input_array);
-  // int contig = PyArray_ISCONTIGUOUS(input_array);
+  fftw_complex *f = PyArray_DATA((PyArrayObject *)input_array);
+  npy_intp *dim = PyArray_DIMS((PyArrayObject *)input_array);
+  // int contig = PyArray_ISCONTIGUOUS((PyArrayObject *)input_array);
   int Ntheta = dim[0];
   int Nphi = dim[1];
 
+  fftw_complex *Imm = PyArray_DATA((PyArrayObject *)output_array);
 
-  // int Npix = Nphi * Ntheta;
-  int Nm = 2*lmax+1;
-  fftw_complex *Imm = fftw_malloc(Nm*Nm*sizeof(fftw_complex));
+  spinsfast_forward_multi_Imm(f, &s, 1, Ntheta, Nphi, lmax, Imm);
 
-
-  spinsfast_forward_multi_Imm (f, &s, 1, Ntheta, Nphi, lmax, Imm);
-
-  npy_intp N[] = {Nm,Nm};
-
-  PyObject *arr = PyArray_SimpleNewFromData(2, N, NPY_CDOUBLE, Imm);
-  ((PyArrayObject *)arr)->flags |= NPY_ARRAY_OWNDATA;
-  Py_INCREF(arr);
-
-  return(arr);
-
+  Py_INCREF(output_array);
+  return(output_array);
 }
-
 
 
 /////////////////// Module info /////////////////////////////
@@ -304,16 +258,16 @@ static PyObject *cextension_Imm(PyObject *self, PyObject *args) {
 
 static PyMethodDef spinsfastMethods[] = {
   {"N_lm", cextension_N_lm, METH_VARARGS, "N_lm(lmax)"},
-  {"ind_lm", cextension_ind_lm, METH_VARARGS, "ind_lm(idx,lmax)"},
-  {"lm_ind", cextension_lm_ind, METH_VARARGS, "lm_ind(l,m,lmax)"},
+  {"_ind_lm", cextension_ind_lm, METH_VARARGS, "ind_lm(idx,lmax)"},
+  {"_lm_ind", cextension_lm_ind, METH_VARARGS, "lm_ind(l,m,lmax)"},
   {"_salm2map", cextension_salm2map, METH_VARARGS, "salm2map(alm,s,lmax,Ntheta,Nphi)"},
   {"_multi_salm2map", cextension_multi_salm2map, METH_VARARGS, "salm2map(alm,s,lmax,Ntheta,Nphi)"},
   {"_map2salm", cextension_map2salm, METH_VARARGS, "map2salm(f,s,lmax)"},
   {"_multi_map2salm", cextension_multi_map2salm, METH_VARARGS, "map2salm(f,s,lmax)"},
-  {"f_extend_MW", cextension_f_extend_MW, METH_VARARGS, "f_extend_MW(f,s)"},
-  {"f_extend_old", cextension_f_extend_old, METH_VARARGS, "f_extend_MW(f,s)"},
-  {"Imm",  cextension_Imm, METH_VARARGS, "Imm(f,s,lmax) [see Eq. (8) of Huffenberger & Wandelt]"},
-  {"quadrature_weights", cextension_quadrature_weights, METH_VARARGS, "quadrature_weights(Ntheta) [see Eq. (B6) of Huffenberger & Wandelt]"},
+  {"_f_extend_MW", cextension_f_extend_MW, METH_VARARGS, "f_extend_MW(f,s)"},
+  {"_f_extend_old", cextension_f_extend_old, METH_VARARGS, "f_extend_MW(f,s)"},
+  {"_Imm",  cextension_Imm, METH_VARARGS, "Imm(f,s,lmax) [see Eq. (8) of Huffenberger & Wandelt]"},
+  {"_quadrature_weights", cextension_quadrature_weights, METH_VARARGS, "quadrature_weights(Ntheta) [see Eq. (B6) of Huffenberger & Wandelt]"},
   {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 

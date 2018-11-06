@@ -16,11 +16,25 @@ from __future__ import absolute_import
 
 from ._version import __version__
 
-# import all the non-underscored functions (underscored functions get ignored)
-from .cextension import *
-
 # explicitly import functions with underscores (which will be wrapped)
-from .cextension import _salm2map, _multi_salm2map, _map2salm, _multi_map2salm
+from .cextension import (
+    N_lm, _ind_lm, _lm_ind,
+    _salm2map, _multi_salm2map, _map2salm, _multi_map2salm,
+    _f_extend_MW, _f_extend_old, _Imm, _quadrature_weights
+)
+
+
+def ind_lm(index, lmax):
+    """Convert single index to corresponding (ell, m) pair"""
+    import numpy as np
+    lm = np.empty(2, dtype=np.float64)
+    _ind_lm(index, lmax, lm)
+    return lm
+
+
+def lm_ind(l, m, lmax):
+    """Convert (ell, m) pair to corresponding single index"""
+    return _ind_lm(l, m, lmax)
 
 
 def salm2map(salm, s, lmax, Ntheta, Nphi):
@@ -200,3 +214,63 @@ def map2salm(map, s, lmax):
     else:
         _map2salm(map, salm, s, lmax)
     return salm
+
+
+def f_extend_MW(map, s):
+    """Extend map of function to cover sphere "twice" up to theta=2pi
+
+    This introduces new points when Nphi is odd, and duplicates values when Nphi is even, making it
+    easier to perform certain transformation operations.
+
+    This is mostly an internal function, included here for backwards compatibility.  See map2salm
+    and salm2map for more useful functions.
+
+    """
+    import numpy as np
+    map = np.ascontiguousarray(map, dtype=np.complex128)
+    extended_map = np.empty((2*(map.shape[0]-1), map.shape[1],), dtype=np.complex128)
+    _f_extend_MW(map, extended_map, s)
+    return extended_map
+
+
+def f_extend_old(map, s):
+    """Extend map of function to cover sphere "twice" up to theta=2pi
+
+    This introduces new points when Nphi is odd, and duplicates values when Nphi is even, making it
+    easier to perform certain transformation operations.
+
+    This is mostly an internal function, included here for backwards compatibility.  See map2salm
+    and salm2map for more useful functions.
+
+    """
+    import numpy as np
+    map = np.ascontiguousarray(map, dtype=np.complex128)
+    extended_map = np.empty((2*(map.shape[0]-1), map.shape[1],), dtype=np.complex128)
+    _f_extend_old(map, extended_map, s)
+    return extended_map
+
+def Imm(extended_map, s, lmax):
+    """Take the fft of the theta extended map, then zero pad and reorganize it
+
+    This is mostly an internal function, included here for backwards compatibility.  See map2salm
+    and salm2map for more useful functions.
+
+    """
+    import numpy as np
+    extended_map = np.ascontiguousarray(extended_map, dtype=np.complex128)
+    NImm = (2*lmax + 1)**2
+    imm = np.empty(NImm, dtype=np.complex128)
+    _Imm(extended_map, imm, s, lmax)
+    return imm
+
+def quadrature_weights(Ntheta):
+    """Fourier-space weights needed to evaluate I_{mm'}
+
+    This is mostly an internal function, included here for backwards compatibility.  See map2salm
+    and salm2map for more useful functions.
+
+    """
+    import numpy as np
+    weights = np.empty(2*(Ntheta-1), dtype=np.complex128)
+    _quadrature_weights(Ntheta, weights)
+    return weights

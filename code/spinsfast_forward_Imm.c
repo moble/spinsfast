@@ -41,13 +41,11 @@ void spinsfast_forward_Imm (fftw_complex *f, int s, int Ntheta, int Nphi, int lm
 void spinsfast_quadrature_weights(fftw_complex *W, int wsize) {
   fftw_complex *w = calloc(wsize, sizeof(fftw_complex)); // fourier space weights
 
-
   // Create weights
   int ip,p;
   int eo;
   for (ip=0; ip<wsize;ip++) {
     p = indx2p(ip,wsize);
-
     eo = abs(p % 2);
     if (p == -1) {
       w[ip] = I * M_PI/2.;
@@ -58,25 +56,13 @@ void spinsfast_quadrature_weights(fftw_complex *W, int wsize) {
     } else {
       w[ip] = 0;
     }
-
   }
 
   fftw_plan wplan = fftw_plan_dft_1d(wsize, w, W, FFTW_BACKWARD, FFTW_ESTIMATE);
   fftw_execute(wplan);
   fftw_destroy_plan(wplan);
 
-
-
-  /*  FILE *fp = fopen("checkwW","w"); */
-  /*   for (ip=0; ip<wsize;ip++) { */
-  /*     p = indx2p(ip,wsize); */
-
-  /*     fprintf(fp,"%d %d %d %e %e %e %e\n", ip, p, abs(p % 2), creal(w[ip]), cimag(w[ip]),creal(W[ip]), cimag(W[ip]) ); */
-  /*   } */
-  /*   fclose(fp); */
-
   free(w);
-
 }
 
 
@@ -124,7 +110,6 @@ void spinsfast_f_extend_MW(fftw_complex *f, fftw_complex *F, int s, int Ntheta, 
   fftw_destroy_plan(fftphiplan);
 
 
-
   // Now loop over theta and fill in Fm to extend theta to 2pi
   int signs = pow(-1,s);
   for (itheta = 0; itheta < Ntheta; itheta++) {
@@ -159,7 +144,6 @@ void spinsfast_f_extend_MW(fftw_complex *f, fftw_complex *F, int s, int Ntheta, 
   fftw_free(fm);
   fftw_free(Fm);
   free(W);
-
 }
 
 

@@ -30,9 +30,10 @@ if isdir('/opt/local/include'):
 if isdir('/opt/local/lib'):
     LibDirs += ['/opt/local/lib']
 
+
 # Construct the version number, starting with spinsfast's own version (104) and appending the date
 # and time this python version was created.
-from os import environ, devnull
+from os import environ
 from sys import platform
 on_windows = ('win' in platform.lower() and not 'darwin' in platform.lower())
 if "package_version" in environ:
@@ -47,14 +48,19 @@ else:
             version = check_output("""git log -1 --format=%cd --date=format:'%Y.%m.%d.%H.%M.%S'""", shell=False)
             version = version.decode('ascii').strip().replace('.0', '.').replace("'", "")
         else:
-            version = check_output("""git log -1 --format=%cd --date=format:'%Y.%-m.%-d.%-H.%-M.%-S'""", shell=True, stderr=devnull)
+            try:
+                from subprocess import DEVNULL as devnull
+                version = check_output("""git log -1 --format=%cd --date=format:'%Y.%-m.%-d.%-H.%-M.%-S'""", shell=True, stderr=devnull)
+            except AttributeError:
+                from os import devnull
+                version = check_output("""git log -1 --format=%cd --date=format:'%Y.%-m.%-d.%-H.%-M.%-S'""", shell=True, stderr=devnull)
             version = version.decode('ascii').rstrip()
         print("Setup.py using git log version='{0}'".format(version))
     except Exception:
         # For cases where this isn't being installed from git.  This gives the wrong version number,
         # but at least it provides some information.
-        #import traceback
-        #print(traceback.format_exc())
+        # import traceback
+        # print(traceback.format_exc())
         try:
             from time import strftime, gmtime
             try:
@@ -73,7 +79,7 @@ with open('python/_version.py', 'w') as f:
 if on_windows:
     extra_compile_args = ['/O2']
 else:
-    extra_compile_args = ['-fPIC', '-O3']
+    extra_compile_args = ['-fPIC', '-O3', '-DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION']
 
 
 setup(name = 'spinsfast',
