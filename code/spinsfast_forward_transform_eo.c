@@ -97,10 +97,8 @@ void spinsfast_forward_transform_eo(fftw_complex * restrict a, const int Ntransf
             {
               const int signnegm = spinsfast_forward_sign_parity(l); // = (1-)^(l+mp)
 
-              const double * restrict Delta_mp = NULL;
-
               // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
-              Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
+              const double * restrict Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
 
               // Get Delta_{mp s} from Delta_{mp |s|}
               const int s_sign_fudge = (s<0) ? 1 : spinsfast_forward_sign_parity(l);
@@ -141,10 +139,8 @@ void spinsfast_forward_transform_eo(fftw_complex * restrict a, const int Ntransf
             for (mp=1; mp<=l; mp+=2){ // Odd mp > 0
               const int signnegm = spinsfast_forward_sign_parity(l+1); // = (1-)^(l+mp)
 
-              const double * restrict Delta_mp = NULL;
-
               // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
-              Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
+              const double * restrict Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
 
               // Get Delta_{mp s} from Delta_{mp |s|}
               const int s_sign_fudge = (s<0) ? 1 : spinsfast_forward_sign_parity(l+1);
@@ -167,10 +163,8 @@ void spinsfast_forward_transform_eo(fftw_complex * restrict a, const int Ntransf
             for (mp=2; mp<=l; mp+=2){ // Even mp > 0
               const int signnegm = spinsfast_forward_sign_parity(l); // = (1-)^(l+mp)
 
-              const double * restrict Delta_mp = NULL;
-
               // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
-              Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
+              const double * restrict Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
 
               // Get Delta_{mp s} from Delta_{mp |s|}
               const int s_sign_fudge = (s<0) ? 1 : spinsfast_forward_sign_parity(l);

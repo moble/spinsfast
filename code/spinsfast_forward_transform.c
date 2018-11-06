@@ -96,10 +96,8 @@ void spinsfast_forward_transform(fftw_complex * restrict a, const int Ntransform
 
               const int signnegm =  negtol*negtomp; // = (1-)^(l+mp)
 
-              const double * restrict Delta_mp = NULL;
-
               // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
-              Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
+              const double * restrict Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
 
               // Get Delta_{mp s} from Delta_{mp |s|}
               const int s_sign_fudge = (s>=0) ? 1 : spinsfast_forward_sign_parity(l+mp);

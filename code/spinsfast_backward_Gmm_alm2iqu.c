@@ -85,11 +85,9 @@ void spinsfast_backward_Gmm_alm2iqu(const fftw_complex * restrict T, const fftw_
 
       for (mp=0; mp<=l; mp++){
 
-        const double * restrict Delta_mp = NULL;
-
         // Grab the proper row (a 1-d array) of the Wigner-d Delta matrix,
         // however it has been computed.
-        Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
+        const double * restrict Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
 
         //     if (l==17) {
         //  printf("%d %e\n",mp,Delta_mp[0]);

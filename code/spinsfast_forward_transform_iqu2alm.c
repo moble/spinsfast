@@ -112,10 +112,8 @@ void spinsfast_forward_transform_iqu2alm(fftw_complex * restrict T,fftw_complex 
    {
       const int signnegm = spinsfast_forward_sign_parity(l); // = (-1)^(l+mp)
 
-      const double * restrict Delta_mp = NULL;
-
       // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
-      Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
+      const double * restrict Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
 
       // Get Delta_{mp -s} from Delta_{mp |s|}
       const double Deltamp0_norml = Delta_mp[0] * norml;
@@ -155,127 +153,123 @@ void spinsfast_forward_transform_iqu2alm(fftw_complex * restrict T,fftw_complex 
       for (mp=1; mp<=l; mp+=2){ // Odd mp > 0
         const int signnegm = spinsfast_forward_sign_parity(l+1); // = (-1)^(l+mp)
 
-      const double * restrict Delta_mp = NULL;
+        // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
+        const double * restrict Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
 
-      // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
-      Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
+        // Get Delta_{mp -s} from Delta_{mp |s|}
+        const double Deltamp0_norml = Delta_mp[0] * norml;
+        const double Deltamp2_norml = Delta_mp[2] * norml * spinsfast_forward_sign_parity(l+1);
 
-      // Get Delta_{mp -s} from Delta_{mp |s|}
-      const double Deltamp0_norml = Delta_mp[0] * norml;
-      const double Deltamp2_norml = Delta_mp[2] * norml * spinsfast_forward_sign_parity(l+1);
+        const complex * restrict Jmp_I = &Jmm_I[mp*Nm];
+        const complex * restrict Jmp_P = &Jmm_P[mp*Nm];
 
-      const complex * restrict Jmp_I = &Jmm_I[mp*Nm];
-      const complex * restrict Jmp_P = &Jmm_P[mp*Nm];
+        // I, mp odd
+        if (isOdd(l)) {  for (m=0; m<=l; m++){
+            const double Delta_mpm = Delta_mp[m];
+            const complex Jmpm_I = Jmp_I[midx[m]];
+            //	const complex Jmpnegm_I = Jmp_I[midx[-m]];
 
-      // I, mp odd
-     if (isOdd(l)) {  for (m=0; m<=l; m++){
-        const double Delta_mpm = Delta_mp[m];
-        const complex Jmpm_I = Jmp_I[midx[m]];
-        //	const complex Jmpnegm_I = Jmp_I[midx[-m]];
+            const double fact0 = (Delta_mpm * Deltamp0_norml);
 
-        const double fact0 = (Delta_mpm * Deltamp0_norml);
-
-        OI[m] +=  fact0*Jmpm_I;
-        //	OI[-m] += fact0*Jmpnegm_I*signnegm;
-      }
-     }
-
-      // P, mp odd
-      if (l>=2)
-        for (m=0; m<=l; m++){
-          const double Delta_mpm = Delta_mp[m];
-          const complex Jmpm_P = Jmp_P[midx[m]];
-          const complex Jmpnegm_P = Jmp_P[midx[-m]];
-
-          const double fact2 = (Delta_mpm * Deltamp2_norml);
-
-          OP[m] +=  fact2*Jmpm_P;
-          OP[-m] += fact2*Jmpnegm_P*signnegm;
+            OI[m] +=  fact0*Jmpm_I;
+            //	OI[-m] += fact0*Jmpnegm_I*signnegm;
+          }
         }
-    }
+
+        // P, mp odd
+        if (l>=2)
+          for (m=0; m<=l; m++){
+            const double Delta_mpm = Delta_mp[m];
+            const complex Jmpm_P = Jmp_P[midx[m]];
+            const complex Jmpnegm_P = Jmp_P[midx[-m]];
+
+            const double fact2 = (Delta_mpm * Deltamp2_norml);
+
+            OP[m] +=  fact2*Jmpm_P;
+            OP[-m] += fact2*Jmpnegm_P*signnegm;
+          }
+      }
 
 
 
       for (mp=2; mp<=l; mp+=2){ // Even mp > 0
-      const int signnegm = spinsfast_forward_sign_parity(l); // = (-1)^(l+mp)
+        const int signnegm = spinsfast_forward_sign_parity(l); // = (-1)^(l+mp)
 
-      const double * restrict Delta_mp = NULL;
+        // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
+        const double * restrict Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
 
-      // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
-      Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
+        // Get Delta_{mp -s} from Delta_{mp |s|}
+        const double Deltamp0_norml = Delta_mp[0] * norml;
+        const double Deltamp2_norml = Delta_mp[2] * norml * spinsfast_forward_sign_parity(l);
 
-      // Get Delta_{mp -s} from Delta_{mp |s|}
-      const double Deltamp0_norml = Delta_mp[0] * norml;
-      const double Deltamp2_norml = Delta_mp[2] * norml * spinsfast_forward_sign_parity(l);
+        const complex * restrict Jmp_I = &Jmm_I[mp*Nm];
+        const complex * restrict Jmp_P = &Jmm_P[mp*Nm];
 
-      const complex * restrict Jmp_I = &Jmm_I[mp*Nm];
-      const complex * restrict Jmp_P = &Jmm_P[mp*Nm];
-
-      // I, even mp > 0
-    if (!isOdd(l)) {   for (m=0; m<=l; m++){
-        const double Delta_mpm = Delta_mp[m];
-        const complex Jmpm_I = Jmp_I[midx[m]];
-        //	const complex Jmpnegm_I = Jmp_I[midx[-m]];
-        const double fact0 = (Delta_mpm * Deltamp0_norml);
+        // I, even mp > 0
+        if (!isOdd(l)) {   for (m=0; m<=l; m++){
+            const double Delta_mpm = Delta_mp[m];
+            const complex Jmpm_I = Jmp_I[midx[m]];
+            //	const complex Jmpnegm_I = Jmp_I[midx[-m]];
+            const double fact0 = (Delta_mpm * Deltamp0_norml);
 
 
-        EI[m] +=  fact0*Jmpm_I;
-        //	EI[-m] += fact0*Jmpnegm_I*signnegm;
-      }
-    }
-
-      // P, even mp > 0
-      if (l>=2)
-        for (m=0; m<=l; m++){
-          const double Delta_mpm = Delta_mp[m];
-          const complex Jmpm_P = Jmp_P[midx[m]];
-          const complex Jmpnegm_P = Jmp_P[midx[-m]];
-          const double fact2 = (Delta_mpm * Deltamp2_norml);
-
-          EP[m] +=  fact2*Jmpm_P;
-          EP[-m] += fact2*Jmpnegm_P*signnegm;
+            EI[m] +=  fact0*Jmpm_I;
+            //	EI[-m] += fact0*Jmpnegm_I*signnegm;
+          }
         }
-    }
 
+        // P, even mp > 0
+        if (l>=2)
+          for (m=0; m<=l; m++){
+            const double Delta_mpm = Delta_mp[m];
+            const complex Jmpm_P = Jmp_P[midx[m]];
+            const complex Jmpnegm_P = Jmp_P[midx[-m]];
+            const double fact2 = (Delta_mpm * Deltamp2_norml);
 
-    /* if (0) { */
-    /*   for (m=-l;m<=l;m++) { */
-    /*     printf("I| % d % d: ",l,m); */
-    /*     printf("Z % e % e | ",creal(ZI[m]),cimag(ZI[m])); */
-    /*     printf("O % e % e | ",creal(OI[m]),cimag(OI[m])); */
-    /*     printf("E % e % e |\n",creal(EI[m]),cimag(EI[m])); */
-    /*   } */
-    /*   printf("\n"); */
-    /* } */
-    /* if (0) { */
-    /*   for (m=-l;m<=l;m++) { */
-    /*     printf("P| % d % d: ",l,m); */
-    /*     printf("Z % e % e | ",creal(ZP[m]),cimag(ZP[m])); */
-    /*     printf("O % e % e | ",creal(OP[m]),cimag(OP[m])); */
-    /*     printf("E % e % e |\n",creal(EP[m]),cimag(EP[m])); */
-    /*   } */
-    /*   printf("\n"); */
-    /* } */
-
-    // Collect even and odd terms
-    for (m=0;m<=l;m++) {
-      Tl[m] = ZI[m] + EI[m] + OI[m];
-      Tl[-m] =  spinsfast_forward_sign_parity(m)*(creal(Tl[m]) - I*cimag(Tl[m]));
-    }
-
-    for (m=-l;m<=l;m++) {
-      P2l[m] = ZP[m] + EP[m] + OP[m];
-    }
-
-    // We are now done looping over m' and m
-    //
-
-    // Increment Delta to next l if Risbo not precomputed
-    if (l<lmax) {
-      if (DeltaMethod==WDHP_METHOD_RISBO) {
-        Delta_increment_l(DeltaMethod, Deltawork);
+            EP[m] +=  fact2*Jmpm_P;
+            EP[-m] += fact2*Jmpnegm_P*signnegm;
+          }
       }
-    }
+
+
+      /* if (0) { */
+      /*   for (m=-l;m<=l;m++) { */
+      /*     printf("I| % d % d: ",l,m); */
+      /*     printf("Z % e % e | ",creal(ZI[m]),cimag(ZI[m])); */
+      /*     printf("O % e % e | ",creal(OI[m]),cimag(OI[m])); */
+      /*     printf("E % e % e |\n",creal(EI[m]),cimag(EI[m])); */
+      /*   } */
+      /*   printf("\n"); */
+      /* } */
+      /* if (0) { */
+      /*   for (m=-l;m<=l;m++) { */
+      /*     printf("P| % d % d: ",l,m); */
+      /*     printf("Z % e % e | ",creal(ZP[m]),cimag(ZP[m])); */
+      /*     printf("O % e % e | ",creal(OP[m]),cimag(OP[m])); */
+      /*     printf("E % e % e |\n",creal(EP[m]),cimag(EP[m])); */
+      /*   } */
+      /*   printf("\n"); */
+      /* } */
+
+      // Collect even and odd terms
+      for (m=0;m<=l;m++) {
+        Tl[m] = ZI[m] + EI[m] + OI[m];
+        Tl[-m] =  spinsfast_forward_sign_parity(m)*(creal(Tl[m]) - I*cimag(Tl[m]));
+      }
+
+      for (m=-l;m<=l;m++) {
+        P2l[m] = ZP[m] + EP[m] + OP[m];
+      }
+
+      // We are now done looping over m' and m
+      //
+
+      // Increment Delta to next l if Risbo not precomputed
+      if (l<lmax) {
+        if (DeltaMethod==WDHP_METHOD_RISBO) {
+          Delta_increment_l(DeltaMethod, Deltawork);
+        }
+      }
   }
 
 

@@ -51,23 +51,20 @@ void Delta_getplane( int DeltaMethod, void * Deltawork, const double * restrict 
 
 
 
-double *Delta_getrow( int DeltaMethod, void * Deltawork, const double * restrict Deltal, int l,int twicelp1, int mp) {
-
-  double *Delta_mp = NULL;
-
+const double *Delta_getrow( int DeltaMethod, void * Deltawork, const double * restrict Deltal, int l,int twicelp1, int mp) {
   // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
   if (DeltaMethod == WDHP_METHOD_RISBO) {
-    Delta_mp = wdhp_integer_getrow((wdhp *)Deltawork,mp);
+    return wdhp_integer_getrow((wdhp *)Deltawork,mp);
   } else if (DeltaMethod == WDHP_METHOD_RISBO_PRECOMPUTE) {
-    Delta_mp = &Deltal[mp*twicelp1];
+    return &Deltal[mp*twicelp1];
   } else if (DeltaMethod == WDHP_METHOD_TN) {
     wdhp_get_row_pos(l,mp, ((wdhp_TN_helper *)Deltawork)->sqt, ((wdhp_TN_helper *)Deltawork)->invsqt, ((wdhp_TN_helper *)Deltawork)->D_all_llm, ((wdhp_TN_helper *)Deltawork)->Dwork);
-    Delta_mp = ((wdhp_TN_helper *)Deltawork)->Dwork;
+    return ((wdhp_TN_helper *)Deltawork)->Dwork;
   } else if (DeltaMethod == WDHP_METHOD_TN_PLANE) {
-    Delta_mp = &(((wdhp_TN_helper *)Deltawork)->Dwork[mp*(l+1)]);
+    return &(((wdhp_TN_helper *)Deltawork)->Dwork[mp*(l+1)]);
+  } else {
+    return NULL;
   }
-
-  return(Delta_mp);
 }
 
 

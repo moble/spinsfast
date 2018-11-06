@@ -29,6 +29,6 @@
 
 
 void Delta_initialize(int DeltaMethod,void * Deltawork);
-void Delta_getplane( int DeltaMethod, void * Deltawork, const double * restrict Deltal, int l);
-double *Delta_getrow( int DeltaMethod, void * Deltawork, const double * restrict Deltal, int l,int twicelp1, int mp);
-void Delta_increment_l( int DeltaMethod, void * Deltawork);
+void Delta_getplane(int DeltaMethod, void * Deltawork, const double * restrict Deltal, int l);
+const double *Delta_getrow(int DeltaMethod, void * Deltawork, const double * restrict Deltal, int l,int twicelp1, int mp);
+void Delta_increment_l(int DeltaMethod, void * Deltawork);
