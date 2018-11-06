@@ -1,6 +1,6 @@
 #! /bin/bash
 set -e
-export datetime="${1:-$(date +'%Y.%m.%d.%H.%M.%S')}"
+export package_version="${1:-$(date +'%Y.%m.%d.%H.%M.%S')}"
 
 wheelhouse="${HOME}/Research/Temp/wheelhouse"
 

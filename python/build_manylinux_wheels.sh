@@ -1,6 +1,6 @@
 #! /bin/bash
 set -e -x
-export datetime="${1:-$(date +'%Y.%m.%d.%H.%M.%S')}"
+export package_version="${1:-$(date +'%Y.%m.%d.%H.%M.%S')}"
 
 
 ### NOTE: This script is designed to be written in the standard pypa/manylinux1 docker container.
@@ -19,7 +19,7 @@ export datetime="${1:-$(date +'%Y.%m.%d.%H.%M.%S')}"
 ###
 ### You can also add an argument at the end of that line containing a specialized version string.
 ### This defaults to the date and time in '%Y.%m.%d.%H.%M.%S' format, which is made available to the
-### setup.py script as the `datetime` environment variable for incorporation into the pip version
+### setup.py script as the `package_version` environment variable for incorporation into the pip version
 ### string.  Passing this explicitly is nice because it allows other builds to have the same
 ### version, which means pypi will display them on the same screen, and pip will treat them equally.
 
