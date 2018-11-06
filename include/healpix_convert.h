@@ -26,6 +26,8 @@
 #include <math.h>
 #include <chealpix.h>
 #include <complex.h>
+#undef complex
+#define complex _Complex double
 
 #ifndef M_PI
 # define M_PI		3.14159265358979323846	/* pi */

@@ -215,8 +215,7 @@ void spinsfast_f_extend_old(fftw_complex *f, fftw_complex *F, int s, int Ntheta,
 void spinsfast_forward_multi_Imm (fftw_complex *f_set, int *s, int Nmap, int Ntheta, int Nphi, int lmax, fftw_complex *Imm_set) {
   // This function takes the fft of the theta extended map, then zero pads and reorganizes it.
 
-  int itheta, iphi, opp_iphi;
-  int m,mp,im;
+  int m, mp;
 
   int Nm = 2*lmax + 1 ;
   int NImm = Nm*Nm;
@@ -232,7 +231,7 @@ void spinsfast_forward_multi_Imm (fftw_complex *f_set, int *s, int Nmap, int Nth
 
 
   int imap;
-  double norm =  M_PI/Nphi/(Ntheta-1);; // = 2pi/Nphi/Ntheta_extended
+  /* double norm =  M_PI/Nphi/(Ntheta-1);; // = 2pi/Nphi/Ntheta_extended */
 
   for (imap = 0;imap < Nmap;imap++) {
     fftw_complex *f = &f_set[imap*Ntheta*Nphi];

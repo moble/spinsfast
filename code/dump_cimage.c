@@ -25,6 +25,8 @@
 
 
 #include <complex.h>
+#undef complex
+#define complex _Complex double
 #include <fftw3.h>
 #include <cfitsio/fitsio.h>
 

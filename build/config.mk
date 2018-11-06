@@ -8,7 +8,8 @@ else
 	LIBFFTW=-lfftw3
 endif
 
-CFLAGS:=-Wall -g -std=c99 -O3 -fpic -fstrict-aliasing -Wstrict-aliasing -D_GNU_SOURCE
+#CFLAGS:=-Wall -g -std=c99 -O3 -fpic -fstrict-aliasing -Wstrict-aliasing -D_GNU_SOURCE
+CFLAGS:=-Wall -O3 -fpic -fstrict-aliasing -Wstrict-aliasing
 
 # Optional portions of code
 #CFLAGS+= -DUSE_FITSIO

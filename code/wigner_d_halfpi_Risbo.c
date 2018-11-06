@@ -179,8 +179,8 @@ void wdhp_jplushalf(wdhp *wd) {
     //    sign[1] = -1
     // Then (-1)^n = sign[n%2]
     // or   (-1)^n = sign[n&1]
-    const int const signhelp[3] = {-1,1,-1};
-    const int const *sign = &signhelp[1];
+    const int signhelp[3] = {-1,1,-1};
+    const int *sign = &signhelp[1];
 
     // Copy dd array to d, using the symmetries.
     //  This took forever to figure out.

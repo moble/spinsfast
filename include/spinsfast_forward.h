@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <complex.h>
+#undef complex
+#define complex _Complex double
 #include <fftw3.h>
 #include <wigner_d_halfpi.h>
 #include <alm.h>
