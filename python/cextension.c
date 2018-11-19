@@ -122,7 +122,8 @@ static PyObject *cextension_multi_salm2map(PyObject *self, PyObject *args) {
   int ndim = PyArray_NDIM((PyArrayObject *)input_array);
   npy_intp *dim = PyArray_DIMS((PyArrayObject *)input_array);
   int Ntransform = 1;
-  for(int i=0; i<ndim-1; ++i) {
+  int i=0;
+  for(i=0; i<ndim-1; ++i) {
     Ntransform *= dim[i];
   }
 
@@ -149,7 +150,8 @@ static PyObject *cextension_multi_map2salm(PyObject *self, PyObject *args) {
   int ndim = PyArray_NDIM((PyArrayObject *)input_array);
   npy_intp *dim = PyArray_DIMS((PyArrayObject *)input_array);
   int Ntransform = 1;
-  for(int i=0; i<ndim-2; ++i) {
+  int i=0;
+  for(i=0; i<ndim-2; ++i) {
     Ntransform *= dim[i];
   }
   int Ntheta = dim[ndim-2];
