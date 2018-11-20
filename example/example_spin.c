@@ -43,24 +43,28 @@ void printf_diff(complex *a, complex *a2, int lmax);
 
 int main(int argc, char *argv[]) {
 
+  int iarg, s, lmax, Nphi, Ntheta, Npix, Nlm;
+  fftw_complex *f, *alm, *alm2;
+  int i,l,m;
+
   if (argc!=5) {
     printf(USAGE);
     abort();
   }
   
-  int iarg=1;
-  int s = atoi(argv[iarg++]);
-  int lmax = atoi(argv[iarg++]);
-  int Nphi = atoi(argv[iarg++]);
-  int Ntheta = 1+atoi(argv[iarg++]);
+  iarg=1;
+  s = atoi(argv[iarg++]);
+  lmax = atoi(argv[iarg++]);
+  Nphi = atoi(argv[iarg++]);
+  Ntheta = 1+atoi(argv[iarg++]);
 
 
-  // Sizes of various data objects
-  int Npix = Nphi * Ntheta;
-  int Nlm = N_lm(lmax);
+  /*  Sizes of various data objects */
+  Npix = Nphi * Ntheta;
+  Nlm = N_lm(lmax);
 
   
-  // Report the sizes
+  /*  Report the sizes */
   printf("lmax = %d\n",lmax);
   printf("Nphi = %d\n",Nphi);
   printf("Ntheta = %d\n",Ntheta);
@@ -70,29 +74,28 @@ int main(int argc, char *argv[]) {
   printf("Nm = %d\n",2*lmax+1);
   printf("Nlm = %d\n",Nlm);
 
-  //////////////////////////////
-  //
-  // Allocate data objects
-  //
-  /////////////////////////////
+  /* //////////////////////////// */
+  /*  */
+  /*  Allocate data objects */
+  /*  */
+  /* /////////////////////////// */
 
-  // Real space function
+  /*  Real space function */
 
-  fftw_complex *f = calloc(Nphi*Ntheta,sizeof(fftw_complex));
+  f = calloc(Nphi*Ntheta,sizeof(fftw_complex));
  
 
-  // Harmonic space coeffients
+  /*  Harmonic space coeffients */
   
-  fftw_complex *alm = calloc(Nlm,sizeof(fftw_complex));
-  fftw_complex *alm2 = calloc(Nlm,sizeof(fftw_complex));
+  alm = calloc(Nlm,sizeof(fftw_complex));
+  alm2 = calloc(Nlm,sizeof(fftw_complex));
 
-  ////////////////////////////////
-  //
-  // Generate some random harmonic coefficients 
-  //
-  ////////////////////////////////
+  /* ////////////////////////////// */
+  /*  */
+  /*  Generate some random harmonic coefficients  */
+  /*  */
+  /* ////////////////////////////// */
   
-  int i,l,m;
   srand48(524398);
 
   for (i=0; i< Nlm; i++) {
@@ -102,33 +105,33 @@ int main(int argc, char *argv[]) {
     }
   }
   
-  ////////////////////////////////////
-  //
-  //  Set up & execute backward transform: harmonic -> real space
-  //
-  ////////////////////////////////////
+  /* ////////////////////////////////// */
+  /*  */
+  /*   Set up & execute backward transform: harmonic -> real space */
+  /*  */
+  /* ////////////////////////////////// */
 
   printf("Computing s = %d transform\n",s);
   spinsfast_salm2map(alm, f, s, Ntheta, Nphi, lmax);
 
-  ////////////////////////////////////
-  //
-  //  Set up & execute foreward transform: real -> harmonic space
-  //
-  ////////////////////////////////////
+  /* ////////////////////////////////// */
+  /*  */
+  /*   Set up & execute foreward transform: real -> harmonic space */
+  /*  */
+  /* ////////////////////////////////// */
   
   spinsfast_map2salm(f, alm2, s, Ntheta, Nphi, lmax);
 
   
-  ////////////////////////////////////
-  //
-  //  Examine difference in the coefficients from backward/forward transform pair 
-  //
-  ////////////////////////////////////
+  /* ////////////////////////////////// */
+  /*  */
+  /*   Examine difference in the coefficients from backward/forward transform pair  */
+  /*  */
+  /* ////////////////////////////////// */
   
   printf_diff(alm, alm2, lmax);
 
-  // clean up
+  /*  clean up */
 
   free(alm);
   free(alm2);
@@ -155,7 +158,7 @@ void printf_diff(complex *a, complex *a2, int lmax) {
 
   for (i=0; i< N_lm(lmax); i++) {
     ind_lm(i, &l, &m, lmax);
-    //    printf("% d % d % d % e % e | %e %e\n",s,l,m,creal(a2[i]),cimag(a2[i]),creal(a[i]),cimag(a[i]));
+    /*     printf("% d % d % d % e % e | %e %e\n",s,l,m,creal(a2[i]),cimag(a2[i]),creal(a[i]),cimag(a[i])); */
     
     diff = a2[i] - a[i];
     rmsdiff += cabs(diff)*cabs(diff);

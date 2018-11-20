@@ -43,30 +43,34 @@ void printf_diff(complex *a, complex *a2, int lmax);
 
 int main(int argc, char *argv[]) {
 
+  int iarg, lmax, Nphi, Ntheta, Ntransform, ispin, Npix, Nlm, Nm, NJmm, NGmm, i, l, m;
+  int spins[] = {-3,0,1,2,17};
+  fftw_complex *f, *alm, *alm2, *Jmm, *Gmm;
+  wdhp_TN_helper *DeltaTN;
+
   if (argc!=4) {
     printf(USAGE);
     abort();
   }
   
-  int iarg=1;
-  int lmax = atoi(argv[iarg++]);
-  int Nphi = atoi(argv[iarg++]);
-  int Ntheta = 1+atoi(argv[iarg++]);
+  iarg=1;
+  lmax = atoi(argv[iarg++]);
+  Nphi = atoi(argv[iarg++]);
+  Ntheta = 1+atoi(argv[iarg++]);
 
-  int spins[] = {-3,0,1,2,17};
-  int Ntransform = 5;
-  int ispin;
-
-  
-  // Sizes of various data objects
-  int Npix = Nphi * Ntheta;
-  int Nlm = N_lm(lmax);
-  int Nm = 2*lmax+1;
-  int NJmm = (lmax+1)*Nm;
-  int NGmm = Nm*Nm;
+  Ntransform = 5;
+  ispin = 0;
 
   
-  // Report the sizes
+  /*  Sizes of various data objects */
+  Npix = Nphi * Ntheta;
+  Nlm = N_lm(lmax);
+  Nm = 2*lmax+1;
+  NJmm = (lmax+1)*Nm;
+  NGmm = Nm*Nm;
+
+  
+  /*  Report the sizes */
   printf("lmax = %d\n",lmax);
   printf("Nphi = %d\n",Nphi);
   printf("Ntheta = %d\n",Ntheta);
@@ -76,30 +80,29 @@ int main(int argc, char *argv[]) {
   printf("Nlm = %d\n",Nlm);
 
 
-  // Real space function
+  /*  Real space function */
 
-  fftw_complex *f = calloc(Ntransform*Nphi*Ntheta,sizeof(fftw_complex));
+  f = calloc(Ntransform*Nphi*Ntheta,sizeof(fftw_complex));
   
  
-  // Harmonic space coeffients
+  /*  Harmonic space coeffients */
 
-  fftw_complex *alm = calloc(Ntransform*Nlm,sizeof(fftw_complex));
-  fftw_complex *alm2 = calloc(Ntransform*Nlm,sizeof(fftw_complex));
-
-  
-  // Ancillary harmonic objects, G and J
-  
-  fftw_complex *Jmm = calloc(Ntransform*NJmm,sizeof(fftw_complex));
-  fftw_complex *Gmm = calloc(Ntransform*NGmm,sizeof(fftw_complex));
+  alm = calloc(Ntransform*Nlm,sizeof(fftw_complex));
+  alm2 = calloc(Ntransform*Nlm,sizeof(fftw_complex));
 
   
-  ////////////////////////////////
-  //
-  // Generate some white noise harmonic coefficients 
-  //
-  ////////////////////////////////
+  /*  Ancillary harmonic objects, G and J */
   
-  int i,l,m;
+  Jmm = calloc(Ntransform*NJmm,sizeof(fftw_complex));
+  Gmm = calloc(Ntransform*NGmm,sizeof(fftw_complex));
+
+  
+  /* ////////////////////////////// */
+  /*  */
+  /*  Generate some white noise harmonic coefficients  */
+  /*  */
+  /* ////////////////////////////// */
+  
   srand48(524398);
   
   for (ispin = 0; ispin < Ntransform; ispin++) {
@@ -115,44 +118,44 @@ int main(int argc, char *argv[]) {
   }
   
 
-  ////////////////////////////////////
-  //
-  //  Set up & execute backward transform: harmonic -> real space
-  //
-  ////////////////////////////////////
+  /* ////////////////////////////////// */
+  /*  */
+  /*   Set up & execute backward transform: harmonic -> real space */
+  /*  */
+  /* ////////////////////////////////// */
 
-  //  Initialize the wigner Delta functions
-  wdhp_TN_helper *DeltaTN = wdhp_TN_helper_init(lmax);
+  /*   Initialize the wigner Delta functions */
+  DeltaTN = wdhp_TN_helper_init(lmax);
 
-  //  Transform alm to Gmm (L^3 time)
+  /*   Transform alm to Gmm (L^3 time) */
   spinsfast_backward_Gmm(alm, Ntransform, spins, lmax, Gmm, WDHP_METHOD_TN_PLANE, (void *)DeltaTN); 
   
-  //  Transform to real space via FFT
+  /*   Transform to real space via FFT */
   for (ispin = 0; ispin < Ntransform; ispin++) {    
     spinsfast_backward_transform(&f[ispin*Ntheta*Nphi], Ntheta, Nphi, lmax, &Gmm[ispin*NGmm]);
   }
   
 
-  ////////////////////////////////////
-  //
-  //  Set up & execute foreward transform: real -> harmonic space
-  //
-  ////////////////////////////////////
+  /* ////////////////////////////////// */
+  /*  */
+  /*   Set up & execute foreward transform: real -> harmonic space */
+  /*  */
+  /* ////////////////////////////////// */
  
   
-  //  Transform to Jmm via modified FFT
+  /*   Transform to Jmm via modified FFT */
   for (ispin = 0; ispin < Ntransform; ispin++) {    
     spinsfast_forward_Jmm (&f[ispin*Ntheta*Nphi],spins[ispin], Ntheta, Nphi, lmax, &Jmm[ispin*NJmm]);
   }
   
-  // Transform Jmm to alm (L^3 time)
+  /*  Transform Jmm to alm (L^3 time) */
   spinsfast_forward_transform(alm2,  Ntransform, spins, lmax, Jmm, WDHP_METHOD_TN_PLANE,(void *)DeltaTN );
 
-  ////////////////////////////////////
-  //
-  //  Examine the output of the transform pair
-  //
-  ////////////////////////////////////
+  /* ////////////////////////////////// */
+  /*  */
+  /*   Examine the output of the transform pair */
+  /*  */
+  /* ////////////////////////////////// */
 
   for (ispin = 0; ispin < Ntransform; ispin++) {
     printf("s = %+d\n",spins[ispin]);
@@ -187,7 +190,7 @@ void printf_diff(complex *a, complex *a2, int lmax) {
 
   for (i=0; i< N_lm(lmax); i++) {
     ind_lm(i, &l, &m, lmax);
-    //    printf("% d % d % d % e % e | %e %e\n",s,l,m,creal(a2[i]),cimag(a2[i]),creal(a[i]),cimag(a[i]));
+    /*     printf("% d % d % d % e % e | %e %e\n",s,l,m,creal(a2[i]),cimag(a2[i]),creal(a[i]),cimag(a[i])); */
     
     diff = a2[i] - a[i];
     rmsdiff += cabs(diff)*cabs(diff);

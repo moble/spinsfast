@@ -54,7 +54,7 @@ void spinsfast_forward_transform_from_Imm(fftw_complex * restrict a, const int s
 
   wdhp *aDelta = NULL;
 
-  // If Delta not precomputed, initialize it here
+  /*  If Delta not precomputed, initialize it here */
   if (pre == 0) {
     aDelta = (wdhp *)Deltawork;
     wdhp_reset(aDelta);
@@ -66,7 +66,7 @@ void spinsfast_forward_transform_from_Imm(fftw_complex * restrict a, const int s
   for (l=s;l<=lmax;l++) {
     complex * restrict asl = &a[lm_ind(l,0,lmax)];
 
-    // if precomputed, grab the correct block from the precomputed matrix
+    /*  if precomputed, grab the correct block from the precomputed matrix */
     const double * restrict Deltal = NULL;
     if (pre == 1) Deltal = &((double *)Deltawork)[wdhp_integer_idx(l, 0, 0)];
 
@@ -79,7 +79,7 @@ void spinsfast_forward_transform_from_Imm(fftw_complex * restrict a, const int s
 
       const double * restrict Delta_mp = NULL;
 
-      // Grab the proper row of the Wigner-d Delta matrix, on-fly or precomputed
+      /*  Grab the proper row of the Wigner-d Delta matrix, on-fly or precomputed */
       if (pre == 0) Delta_mp = wdhp_integer_getrow(aDelta,mp);
       else Delta_mp = &Deltal[mp*twicelp1];
 
@@ -103,13 +103,13 @@ void spinsfast_forward_transform_from_Imm(fftw_complex * restrict a, const int s
 
     }
 
-    // Increment Delta to next l if not precomputed
+    /*  Increment Delta to next l if not precomputed */
     if ( (pre==0) && (l<lmax) ) wdhp_jplus1(aDelta);
   }
 
-  //wdhp_free(aDelta);
+  /* wdhp_free(aDelta); */
 
-  // Set the phase
+  /*  Set the phase */
   for (l=s;l<=lmax;l++) {
     complex * restrict asl = &a[lm_ind(l,0,lmax)];
     for (m=-l; m<=l; m++){

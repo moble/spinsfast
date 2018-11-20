@@ -60,7 +60,7 @@ void spinsfast_forward_multi_Jmm(fftw_complex *f_set, int *spins, int Nmap, int 
 
 void spinsfast_forward_transform(fftw_complex * restrict a, const int Ntransform, const int *spins,const int lmax, fftw_complex * restrict Jmm_set, int DeltaMethod, void *Deltawork);
 void spinsfast_forward_transform_eo(fftw_complex * restrict a, const int Ntransform, const int *spins,const int lmax, fftw_complex * restrict Jmm_set, int DeltaMethod, void *Deltawork);
-//void spinsfast_forward_transform(fftw_complex * restrict a, const int s,const int lmax, fftw_complex * restrict Jmm, int pre, void *Deltawork);
+/* void spinsfast_forward_transform(fftw_complex * restrict a, const int s,const int lmax, fftw_complex * restrict Jmm, int pre, void *Deltawork); */
 void spinsfast_forward_transform_from_Imm(fftw_complex * restrict a, const int s,const int smax,const int lmax, fftw_complex * restrict Imm, int pre, void *Deltawork);
 void spinsfast_forward_transform_preDelta(fftw_complex * restrict a, const int s,const int smax,const int lmax, fftw_complex * restrict Imm,const double * restrict Delta) ;
 void spinsfast_forward_transform_iqu2alm(fftw_complex * restrict T,fftw_complex * P2,const int lmax, fftw_complex * restrict Jmm_I, fftw_complex * restrict Jmm_P, int DeltaMethod, void *Deltawork);

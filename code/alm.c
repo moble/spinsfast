@@ -24,34 +24,28 @@
 #include <alm.h>
 
 int lm_ind(int l, int m, int lmax) {
-
   int im = m + l;
   int Nl = l*l;
 
-  // printf("is = %d Nl = %d im = %d\n",is,Nl,im);
-
+  /* printf("is = %d Nl = %d im = %d\n",is,Nl,im); */
   return(Nl + im );
-
 }
 
 
 
 void ind_lm(int i, int *l, int *m, int lmax) {
+  int Nl, im;
 
-
-  //  printf("%d %% %d = %d\n",i,Nalm,i % Nalm);
+  /* printf("%d %% %d = %d\n",i,Nalm,i % Nalm); */
   (*l) = sqrt( i );
 
-  int  Nl = ((*l))*((*l));
-  int im = ( i - Nl );
+  Nl = ((*l))*((*l));
+  im = ( i - Nl );
 
   (*m) = im - (*l);
-
 }
 
 
-int N_lm(int lmax){
-
+int N_lm(int lmax) {
   return( 1 + lm_ind(lmax, lmax, lmax) );
-
 }

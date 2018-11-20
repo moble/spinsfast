@@ -23,6 +23,8 @@
 
 #include <spinsfast_forward.h>
 
+void spinsfast_forward_multi_Imm_oldextension(fftw_complex *f_set, int *s, int Nmap, int Ntheta, int Nphi, int lmax, fftw_complex *Imm_set);
+
 int indx2p (int ip, int wsize) {
   return( (ip > wsize/2) ?  ip-wsize : ip );
 }
@@ -39,9 +41,9 @@ void spinsfast_forward_Imm (fftw_complex *f, int s, int Ntheta, int Nphi, int lm
 
 
 void spinsfast_quadrature_weights(fftw_complex *W, int wsize) {
-  fftw_complex *w = calloc(wsize, sizeof(fftw_complex)); // fourier space weights
+  fftw_complex *w = calloc(wsize, sizeof(fftw_complex)); /*  fourier space weights */
 
-  // Create weights
+  /*  Create weights */
   int ip,p;
   int eo;
   for (ip=0; ip<wsize;ip++) {
@@ -67,19 +69,19 @@ void spinsfast_quadrature_weights(fftw_complex *W, int wsize) {
 
 
 void spinsfast_f_extend_MW(fftw_complex *f, fftw_complex *F, int s, int Ntheta, int Nphi) {
-  // Make a fourier transform of f extended to the whole sphere.
-  //
-  // Works for pixelization where first ring is north pole and the last ring is the south pole
-  // ie theta = itheta*pi/(Ntheta-1)
-  //    phi   = iphi*pi/Nphi
-  //
-  // This extends the function using the method of McEwen & Wiaux, first taking fft in phi to get f_m(theta), then extending
-  // to F_m(theta) = f_m(theta) for theta <= pi and
-  //    F_m(theta) = (-1)^(m+s) f_m(2pi - theta)
-  //
-  // This allows the function to be extended for odd values of Nphi, but I think returns numerically identical
-  // results to the old method when Nphi is even.
-  //
+  /*  Make a fourier transform of f extended to the whole sphere. */
+  /*  */
+  /*  Works for pixelization where first ring is north pole and the last ring is the south pole */
+  /*  ie theta = itheta*pi/(Ntheta-1) */
+  /*     phi   = iphi*pi/Nphi */
+  /*  */
+  /*  This extends the function using the method of McEwen & Wiaux, first taking fft in phi to get f_m(theta), then extending */
+  /*  to F_m(theta) = f_m(theta) for theta <= pi and */
+  /*     F_m(theta) = (-1)^(m+s) f_m(2pi - theta) */
+  /*  */
+  /*  This allows the function to be extended for odd values of Nphi, but I think returns numerically identical */
+  /*  results to the old method when Nphi is even. */
+  /*  */
 
   int itheta;
   int m,im;
@@ -87,13 +89,13 @@ void spinsfast_f_extend_MW(fftw_complex *f, fftw_complex *F, int s, int Ntheta, 
 
   fftw_complex *fm = fftw_malloc(Ntheta*Nphi*sizeof(fftw_complex));
   fftw_complex *Fm = fftw_malloc(wsize*Nphi*sizeof(fftw_complex));
-  fftw_complex *W = calloc(wsize, sizeof(fftw_complex)); // for real space version of w
+  fftw_complex *W = calloc(wsize, sizeof(fftw_complex)); /*  for real space version of w */
 
-  double norm =  M_PI/Nphi/(Ntheta-1);; // = 2pi/Nphi/Ntheta_extended
+  double norm =  M_PI/Nphi/(Ntheta-1);; /*  = 2pi/Nphi/Ntheta_extended */
 
   spinsfast_quadrature_weights(W, wsize);
 
-  // First take fft in phi for each row of theta
+  /*  First take fft in phi for each row of theta */
   int rank = 1;
   int n = Nphi;
   int howmany = Ntheta;
@@ -110,12 +112,12 @@ void spinsfast_f_extend_MW(fftw_complex *f, fftw_complex *F, int s, int Ntheta, 
   fftw_destroy_plan(fftphiplan);
 
 
-  // Now loop over theta and fill in Fm to extend theta to 2pi
+  /*  Now loop over theta and fill in Fm to extend theta to 2pi */
   int signs = pow(-1,s);
   for (itheta = 0; itheta < Ntheta; itheta++) {
     for (im=0;im<Nphi;im++) {
 
-      m = (im <= Nphi/2) ? im : (im - Nphi); // convert index of m to m value
+      m = (im <= Nphi/2) ? im : (im - Nphi); /*  convert index of m to m value */
       int signm = pow(-1,m);
 
       Fm[ itheta * Nphi + im ] = creal(W[itheta]) * fm [ itheta * Nphi + im ] * norm;;
@@ -126,7 +128,7 @@ void spinsfast_f_extend_MW(fftw_complex *f, fftw_complex *F, int s, int Ntheta, 
     }
   }
 
-  // Finally take fft in phi for each column of m
+  /*  Finally take fft in phi for each column of m */
   rank = 1;
   n = wsize;
   howmany = Nphi;
@@ -148,23 +150,23 @@ void spinsfast_f_extend_MW(fftw_complex *f, fftw_complex *F, int s, int Ntheta, 
 
 
 void spinsfast_f_extend_old(fftw_complex *f, fftw_complex *F, int s, int Ntheta, int Nphi) {
-  // F is complex version of f, extended to the whole sphere
-  // Works for pixelization where first ring is north pole and the last ring is the south pole
-  // ie theta = itheta*pi/(Ntheta-1)
-  //    phi   = iphi*pi/Nphi
-  //
-  // The number of theta rows in F, the extended version of f, is 2*(Ntheta-1)
-  // Extend f with F(theta > pi, phi) = (-1)^s f(2pi - theta, phi + pi)
+  /*  F is complex version of f, extended to the whole sphere */
+  /*  Works for pixelization where first ring is north pole and the last ring is the south pole */
+  /*  ie theta = itheta*pi/(Ntheta-1) */
+  /*     phi   = iphi*pi/Nphi */
+  /*  */
+  /*  The number of theta rows in F, the extended version of f, is 2*(Ntheta-1) */
+  /*  Extend f with F(theta > pi, phi) = (-1)^s f(2pi - theta, phi + pi) */
 
-  // finally we return the fft of F
+  /*  finally we return the fft of F */
 
   int itheta, iphi, opp_iphi;
   int wsize = 2*(Ntheta-1);
   int signs = pow(-1,s);
 
-  fftw_complex *W = calloc(wsize, sizeof(fftw_complex)); // for real space version of w
+  fftw_complex *W = calloc(wsize, sizeof(fftw_complex)); /*  for real space version of w */
 
-  double norm =  M_PI/Nphi/(Ntheta-1);; // = 2pi/Nphi/Ntheta_extended
+  double norm =  M_PI/Nphi/(Ntheta-1);; /*  = 2pi/Nphi/Ntheta_extended */
 
   spinsfast_quadrature_weights(W, wsize);
 
@@ -173,17 +175,17 @@ void spinsfast_f_extend_old(fftw_complex *f, fftw_complex *F, int s, int Ntheta,
     for (iphi = 0; iphi < Nphi; iphi++) {
 
       F[ itheta * Nphi + iphi ] = creal(W[itheta]) * f [ itheta * Nphi + iphi ] * norm;
-      //F[ itheta * Nphi + iphi ] = 0;
-      //      if ( s % 2 == 0) {
+      /* F[ itheta * Nphi + iphi ] = 0; */
+      /*       if ( s % 2 == 0) { */
       opp_iphi = (iphi + Nphi/2) % Nphi;
-      //      } else {
-      //opp_iphi = iphi;
-      //      }
+      /*       } else { */
+      /* opp_iphi = iphi; */
+      /*       } */
 
 
       if ( (itheta > 0) && (itheta < Ntheta) ) {
         F[ (2*(Ntheta-1) - itheta) * Nphi + opp_iphi ] = signs*creal(W[2*(Ntheta-1) - itheta]) * f[itheta * Nphi + iphi] * norm;
-        //    F[ (2*(Ntheta-1) - itheta) * Nphi + opp_iphi ] = 0;
+        /*     F[ (2*(Ntheta-1) - itheta) * Nphi + opp_iphi ] = 0; */
       }
 
     }
@@ -197,7 +199,7 @@ void spinsfast_f_extend_old(fftw_complex *f, fftw_complex *F, int s, int Ntheta,
 
 
 void spinsfast_forward_multi_Imm (fftw_complex *f_set, int *s, int Nmap, int Ntheta, int Nphi, int lmax, fftw_complex *Imm_set) {
-  // This function takes the fft of the theta extended map, then zero pads and reorganizes it.
+  /*  This function takes the fft of the theta extended map, then zero pads and reorganizes it. */
 
   int m, mp;
 
@@ -206,11 +208,11 @@ void spinsfast_forward_multi_Imm (fftw_complex *f_set, int *s, int Nmap, int Nth
 
   int wsize = 2*(Ntheta-1);
 
-  //  fftw_complex *fm = fftw_malloc(Ntheta*Nphi*sizeof(fftw_complex));
-  //  fftw_complex *Fm = fftw_malloc(wsize*Nphi*sizeof(fftw_complex));
+  /*   fftw_complex *fm = fftw_malloc(Ntheta*Nphi*sizeof(fftw_complex)); */
+  /*   fftw_complex *Fm = fftw_malloc(wsize*Nphi*sizeof(fftw_complex)); */
   fftw_complex *F = fftw_malloc(wsize*Nphi*sizeof(fftw_complex));
-  //  fftw_complex *F2 = fftw_malloc(wsize*Nphi*sizeof(fftw_complex));
-  //  fftw_complex *W = calloc(wsize, sizeof(fftw_complex)); // for real space version of w
+  /*   fftw_complex *F2 = fftw_malloc(wsize*Nphi*sizeof(fftw_complex)); */
+  /*   fftw_complex *W = calloc(wsize, sizeof(fftw_complex)); // for real space version of w */
 
 
 
@@ -220,12 +222,12 @@ void spinsfast_forward_multi_Imm (fftw_complex *f_set, int *s, int Nmap, int Nth
   for (imap = 0;imap < Nmap;imap++) {
     fftw_complex *f = &f_set[imap*Ntheta*Nphi];
 
-    //    spinsfast_f_extend_old(f, F, s[imap], Ntheta, Nphi);
+    /*     spinsfast_f_extend_old(f, F, s[imap], Ntheta, Nphi); */
     spinsfast_f_extend_MW(f, F, s[imap], Ntheta, Nphi);
 
 
 
-    // copy FT to Imm
+    /*  copy FT to Imm */
     int limit = lmax;
     fftw_complex *Imm = &Imm_set[imap*NImm];
     for (mp=0;mp<NImm;mp++) {
@@ -244,18 +246,18 @@ void spinsfast_forward_multi_Imm (fftw_complex *f_set, int *s, int Nmap, int Nth
     for (mp=0;mp<=limit;mp++) {
       for (m=0;m<=limit;m++) {
 
-        // ++
+        /*  ++ */
         Imm[ mp * Nm + m ] = F[ mp * Nphi + m];
 
-        // +-
+        /*  +- */
         if (m > 0)
           Imm[ mp * Nm + (Nm - m)] = F[ mp * Nphi + (Nphi - m) ];
 
-        // -+
+        /*  -+ */
         if (mp > 0)
           Imm[ (Nm - mp) * Nm + m] = F[ (wsize - mp) * Nphi + m ];
 
-        // --
+        /*  -- */
         if ( (mp > 0) && (m > 0) )
           Imm[ (Nm - mp) * Nm + (Nm - m)] = F[ (wsize - mp) * Nphi + (Nphi - m) ];
 
@@ -269,15 +271,15 @@ void spinsfast_forward_multi_Imm (fftw_complex *f_set, int *s, int Nmap, int Nth
 
 
 void spinsfast_forward_multi_Imm_oldextension (fftw_complex *f_set, int *s, int Nmap, int Ntheta, int Nphi, int lmax, fftw_complex *Imm_set) {
-  // F is complex version of f, extended to the whole sphere
-  // Works for pixelization where first ring is north pole and the last ring is the south pole
-  // ie theta = itheta*pi/(Ntheta-1)
-  //    phi   = iphi*pi/Nphi
-  //
-  // The number of theta rows in F, the extended version of f, is 2*(Ntheta-1)
-  // Extend f with F(theta > pi, phi) = (-1)^s f(2pi - theta, phi + pi)
+  /*  F is complex version of f, extended to the whole sphere */
+  /*  Works for pixelization where first ring is north pole and the last ring is the south pole */
+  /*  ie theta = itheta*pi/(Ntheta-1) */
+  /*     phi   = iphi*pi/Nphi */
+  /*  */
+  /*  The number of theta rows in F, the extended version of f, is 2*(Ntheta-1) */
+  /*  Extend f with F(theta > pi, phi) = (-1)^s f(2pi - theta, phi + pi) */
 
-  // How is Imm indexed?
+  /*  How is Imm indexed? */
 
   int itheta, iphi, opp_iphi;
   int m,mp;
@@ -287,14 +289,14 @@ void spinsfast_forward_multi_Imm_oldextension (fftw_complex *f_set, int *s, int 
   int wsize = 2*(Ntheta-1);
 
   fftw_complex *F = fftw_malloc(wsize*Nphi*sizeof(fftw_complex));
-  fftw_complex *W = calloc(wsize, sizeof(fftw_complex)); // for real space version of w
+  fftw_complex *W = calloc(wsize, sizeof(fftw_complex)); /*  for real space version of w */
 
   spinsfast_quadrature_weights(W, wsize);
 
 
 
-  double norm =  M_PI/Nphi/(Ntheta-1);; // = 2pi/Nphi/Ntheta_extended
-  // double norm = 1.0;
+  double norm =  M_PI/Nphi/(Ntheta-1);; /*  = 2pi/Nphi/Ntheta_extended */
+  /*  double norm = 1.0; */
 
 /*   printf("==========================================\n"); */
 /*   for (mp=0;mp<8;mp++) { */
@@ -312,17 +314,17 @@ void spinsfast_forward_multi_Imm_oldextension (fftw_complex *f_set, int *s, int 
 
     int signs = pow(-1,s[imap]);
 
-    // copy f to F
+    /*  copy f to F */
     for (itheta = 0; itheta < Ntheta; itheta++) {
       for (iphi = 0; iphi < Nphi; iphi++) {
 
         F[ itheta * Nphi + iphi ] = creal(W[itheta]) * f [ itheta * Nphi + iphi ] * norm;
 
-        //      if ( s % 2 == 0) {
+        /*       if ( s % 2 == 0) { */
         opp_iphi = (iphi + Nphi/2) % Nphi;
-        //      } else {
-        //opp_iphi = iphi;
-        //      }
+        /*       } else { */
+        /* opp_iphi = iphi; */
+        /*       } */
 
 
         if ( (itheta > 0) && (itheta < Ntheta) ) {
@@ -357,7 +359,7 @@ void spinsfast_forward_multi_Imm_oldextension (fftw_complex *f_set, int *s, int 
 
 
 
-    // copy FT to Imm
+    /*  copy FT to Imm */
     int limit = lmax;
     fftw_complex *Imm = &Imm_set[imap*NImm];
     for (mp=0;mp<NImm;mp++) {
@@ -376,18 +378,18 @@ void spinsfast_forward_multi_Imm_oldextension (fftw_complex *f_set, int *s, int 
     for (mp=0;mp<=limit;mp++) {
       for (m=0;m<=limit;m++) {
 
-        // ++
+        /*  ++ */
         Imm[ mp * Nm + m ] = F[ mp * Nphi + m];
 
-        // +-
+        /*  +- */
         if (m > 0)
           Imm[ mp * Nm + (Nm - m)] = F[ mp * Nphi + (Nphi - m) ];
 
-        // -+
+        /*  -+ */
         if (mp > 0)
           Imm[ (Nm - mp) * Nm + m] = F[ (wsize - mp) * Nphi + m ];
 
-        // --
+        /*  -- */
         if ( (mp > 0) && (m > 0) )
           Imm[ (Nm - mp) * Nm + (Nm - m)] = F[ (wsize - mp) * Nphi + (Nphi - m) ];
 

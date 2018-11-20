@@ -27,18 +27,18 @@
 #include <math.h>
 
 #ifndef M_SQRT1_2l
-#define M_SQRT1_2l	0.7071067811865475244008443621048490L  /* 1/sqrt(2) */
+#define M_SQRT1_2l 0.7071067811865475244008443621048490L /* 1/sqrt(2) */
 #endif
 
 #define FPTYPE long double
-//#define FPTYPE double
+/* #define FPTYPE double */
 
 
-// For use w/ pos m1 m2
+/*  For use w/ pos m1 m2 */
 
 
-// members of this structure can be used with  wdhp_get_row_pos and wdhp_get_col_pos
-// after initialization with wdhp_TN_helper_init.
+/*  members of this structure can be used with  wdhp_get_row_pos and wdhp_get_col_pos */
+/*  after initialization with wdhp_TN_helper_init. */
 typedef struct {
 
   int lmax;
@@ -55,15 +55,13 @@ void wdhp_TN_helper_free(wdhp_TN_helper *w);
 
 int wdhp_lmind_pos(int l,int m);
 
-
 FPTYPE wdhp_get_ll0(int l);
 FPTYPE wdhp_get_llm(int l,int m);
-FPTYPE wdhp_get_lm1m2_pos(int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt); // more accurate if m2 >= m1
-FPTYPE wdhp_get_lm1m2_pos2(int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt); // always uses shorter recurrence for accuracy
+FPTYPE wdhp_get_lm1m2_pos(int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt); /*  more accurate if m2 >= m1 */
+FPTYPE wdhp_get_lm1m2_pos2(int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt); /*  always uses shorter recurrence for accuracy */
 
 FPTYPE *wdhp_init_sqt(int lmax);
 FPTYPE *wdhp_init_invsqt(int lmax, FPTYPE *sqt);
-
 
 void wdhp_get_all_llm(int lmax,FPTYPE *D_all_llm);
 void wdhp_get_all_llm2(int lmax,FPTYPE *D_all_llm,FPTYPE *sqt, FPTYPE *invsqt);
@@ -71,4 +69,4 @@ void wdhp_get_all_llm2(int lmax,FPTYPE *D_all_llm,FPTYPE *sqt, FPTYPE *invsqt);
 void wdhp_get_col_pos(int l,int m2, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_llm, double *Dcol);
 void wdhp_get_row_pos(int l,int m1, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_llm, double *Drow);
 void wdhp_get_quarter_plane(int l, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_llm, double *D);
-void wdhp_get_quarter_plane2(int l, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_llm, double *D); // This is same as wdhp_get_row_pos for m2>m1
+void wdhp_get_quarter_plane2(int l, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_llm, double *D); /*  This is same as wdhp_get_row_pos for m2>m1 */

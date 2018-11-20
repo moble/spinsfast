@@ -22,16 +22,17 @@
 /* Code revision: 104, 2012-04-13 13:00:16 -0400 (Fri, 13 Apr 2012) */
 
 #include <spinsfast_backward.h>
+#include <inline.h>
 
 
-//inline
-int spinsfast_backward_sign_parity(int m){
-  // returns  (-1)^m,
-  // = 1 if even
-  // = -1 if odd.
+inline int spinsfast_backward_sign_parity(int m);
 
+inline
+int spinsfast_backward_sign_parity(int m) {
+  /*  returns  (-1)^m, */
+  /*  = 1 if even */
+  /*  = -1 if odd. */
   int eo = (m & 1);
-
   return( 1 - eo - eo );
 }
 
@@ -65,15 +66,15 @@ void spinsfast_backward_Gmm(const fftw_complex * restrict a, int Ntransform, con
   int * restrict midx = &midx_helper[lmax];
 
 
-  // Set up Wigner Deltas
-  // If Delta not precomputed, initialize it here
+  /*  Set up Wigner Deltas */
+  /*  If Delta not precomputed, initialize it here */
   Delta_initialize(DeltaMethod,Deltawork);
 
 
-  // Compute Gm'm for m' >= 0
+  /*  Compute Gm'm for m' >= 0 */
   for (l=0;l<=lmax;l++) {
 
-    // For supported methods, grab or compute the l-plane of Delta matrix
+    /*  For supported methods, grab or compute the l-plane of Delta matrix */
     const double * restrict Deltal = NULL;
     Delta_getplane(DeltaMethod, Deltawork, Deltal, l);
 
@@ -82,7 +83,7 @@ void spinsfast_backward_Gmm(const fftw_complex * restrict a, int Ntransform, con
       s = spins[ispin];
 
       if (l>=s) {
-        // shift to correct blocks
+        /*  shift to correct blocks */
         const complex * restrict asl = &a[ispin*Nlm + lm_ind(l,0,lmax)];
         fftw_complex * restrict Gmm = &Gmm_set[ispin*NGmm];
 
@@ -96,39 +97,39 @@ void spinsfast_backward_Gmm(const fftw_complex * restrict a, int Ntransform, con
 
         for (mp=0; mp<=l; mp++){
 
-          // Grab the proper row (a 1-d array) of the Wigner-d Delta matrix,
-          // however it has been computed.
+          /*  Grab the proper row (a 1-d array) of the Wigner-d Delta matrix, */
+          /*  however it has been computed. */
           const double * restrict Delta_mp = Delta_getrow(DeltaMethod, Deltawork, Deltal, l, twicelp1, mp);
 
-          //     if (l==17) {
-          //  printf("%d %e\n",mp,Delta_mp[0]);
-          // }
+          /*      if (l==17) { */
+          /*   printf("%d %e\n",mp,Delta_mp[0]); */
+          /*  } */
 
 
 
           int mpmod = midx[mp];
 
           complex * restrict Gmp = &Gmm[mpmod*Nm];
-          //     double *Delta_minusmp = &Delta[wdhp_integer_idx(l, -mp, 0)];
+          /*      double *Delta_minusmp = &Delta[wdhp_integer_idx(l, -mp, 0)]; */
 
-          // Get Delta_{mp s} from Delta_{mp |s|}
+          /*  Get Delta_{mp s} from Delta_{mp |s|} */
           const int s_sign_fudge = (s>=0) ? 1 : spinsfast_backward_sign_parity(l+mp);
           const double Deltamps_norml = s_sign_fudge * Delta_mp[abs(s)] * norml ;
-          const double Deltamps_norml_negtol = Deltamps_norml * negtol; //  includes 1^(-1)
+          const double Deltamps_norml_negtol = Deltamps_norml * negtol; /*   includes 1^(-1) */
 
-          // printf("l = %d -mp = %d\n",l,-mp);
+          /*  printf("l = %d -mp = %d\n",l,-mp); */
 
           Gmp[midx[0]] += Delta_mp[0] * Deltamps_norml_negtol * asl[0];
-          //#pragma omp parallel for private(m)
+          /* #pragma omp parallel for private(m) */
           for (m=1; m<=l; m++){
-            //      for (m=-l; m<=l; m++){
+            /*       for (m=-l; m<=l; m++){ */
             const int mmod = midx[m];
             const int negmmod = midx[-m];
             const double Delta_mpm = Delta_mp[m];
             const complex aslm = asl[m];
             const complex aslnegm = asl[-m];
 
-            //printf("%e %e\n",Delta_minusmp[m],Delta_minusmp1[m]);
+            /* printf("%e %e\n",Delta_minusmp[m],Delta_minusmp1[m]); */
 
 
             const double fact = (Delta_mpm * Deltamps_norml_negtol);
@@ -150,7 +151,7 @@ void spinsfast_backward_Gmm(const fftw_complex * restrict a, int Ntransform, con
 
       }
     }
-         // Increment Delta to next l if Risbo not precomputed
+         /*  Increment Delta to next l if Risbo not precomputed */
          if (l<lmax) {
            if (DeltaMethod==WDHP_METHOD_RISBO) {
              Delta_increment_l(DeltaMethod, Deltawork);
@@ -163,15 +164,15 @@ void spinsfast_backward_Gmm(const fftw_complex * restrict a, int Ntransform, con
     s = spins[ispin];
     fftw_complex * restrict Gmm = &Gmm_set[ispin*NGmm];
 
-    // Set the phase for m' >= 0
+    /*  Set the phase for m' >= 0 */
     for (mp=0; mp<=lmax; mp++){
       int mpmod = midx[mp];
       complex *Gmp = &Gmm[mpmod*Nm];
 
-      //   for (m=0; m<=lmax; m++){
+      /*    for (m=0; m<=lmax; m++){ */
       for (m=-lmax; m<=lmax; m++){
         int mmod = midx[m];
-        Gmp[mmod]*= Ito[s]*Ito[m];//*spinsfast_backward_sign_parity(mp+m);
+        Gmp[mmod]*= Ito[s]*Ito[m];/* *spinsfast_backward_sign_parity(mp+m); */
       }
 
       for (m=0; m<=lmax; m++){
@@ -185,7 +186,7 @@ void spinsfast_backward_Gmm(const fftw_complex * restrict a, int Ntransform, con
     }
 
 
-    /*  // Use symmetry G_(-m')m = (-1)^(m+s) G_m'm */
+    /* Use symmetry G_(-m')m = (-1)^(m+s) G_m'm */
     const int sign_helper[3] = {-1,1,-1};
     const int *sign = &sign_helper[1];
 

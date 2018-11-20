@@ -22,27 +22,30 @@
 /* Code revision: 104, 2012-04-13 13:00:16 -0400 (Fri, 13 Apr 2012) */
 
 #include <wigner_d_halfpi_TN.h>
+#include <inline.h>
 
 
+inline int wdhp_lmind_pos(int l,int m);
+inline int wdhp_sign_parity(int m);
+inline FPTYPE wdhp_rowrecurs_coef1(int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt);
+inline FPTYPE wdhp_rowrecurs_coef2(int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt);
+inline FPTYPE wdhp_rowrecurs(FPTYPE D1, FPTYPE D2, int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt);
 
-
-//inline
-int wdhp_lmind_pos(int l,int m){
+inline
+int wdhp_lmind_pos(int l,int m) {
   return((l*(l+1))/2 + m);
 }
 
-
-//inline
-int wdhp_sign_parity(int m){
-  // returns  (-1)^m,
-  // = 1 if even
-  // = -1 if odd.
+inline
+int wdhp_sign_parity(int m) {
+  /*  returns  (-1)^m, */
+  /*  = 1 if even */
+  /*  = -1 if odd. */
 
   int eo = (m & 1);
 
   return( 1 - eo - eo );
 }
-
 
 FPTYPE wdhp_get_ll0(int l) {
 
@@ -53,7 +56,7 @@ FPTYPE wdhp_get_ll0(int l) {
     FPTYPE fact = -sqrtl( 1.0 - 1.0/(2*lp) );
     D *= fact;
 
-    //  printf("fact = %e D = %e\n",fact,D);
+    /*   printf("fact = %e D = %e\n",fact,D); */
   }
 
   return(D);
@@ -64,11 +67,11 @@ FPTYPE wdhp_get_ll0(int l) {
 
 FPTYPE wdhp_get_llm(int l,int m) {
 
-  FPTYPE D =  wdhp_get_ll0(l-m); // Returns Delta^(l-m)_{(l-m) 0}
+  FPTYPE D =  wdhp_get_ll0(l-m); /*  Returns Delta^(l-m)_{(l-m) 0} */
 
   int lp, mp;
 
-  // printf("%d %d 0 : %e\n", l-m,l-m,D);
+  /*  printf("%d %d 0 : %e\n", l-m,l-m,D); */
 
   for (mp=1;mp<=m;mp++) {
     lp = l-m+mp;
@@ -79,9 +82,9 @@ FPTYPE wdhp_get_llm(int l,int m) {
 
     FPTYPE fact = sqrtl( (1-0.5*ool) / ( (1+mol)*(1+mol-ool) ));
 
-    //  FPTYPE fact = sqrtl( (lp/2.0)*(2*lp-1)/(FPTYPE)((lp+mp)*(lp+mp-1)) );
+    /*   FPTYPE fact = sqrtl( (lp/2.0)*(2*lp-1)/(FPTYPE)((lp+mp)*(lp+mp-1)) ); */
 
-    //     printf("%d %d | %d %d | ",l,m,lp,mp);  printf("ool = %e mol = %e | ",(double)ool,(double)mol);       printf("fact = %e\n",(double)fact);
+    /*      printf("%d %d | %d %d | ",l,m,lp,mp);  printf("ool = %e mol = %e | ",(double)ool,(double)mol);       printf("fact = %e\n",(double)fact); */
 
     D *=fact;
   }
@@ -109,11 +112,11 @@ void wdhp_get_all_llm2(int lmax,FPTYPE *D_all_llm, FPTYPE *sqt, FPTYPE *invsqt) 
   int l, ll0;
 
 
-  //////
-  //
-  // Fill in all Delta_^l_l0
-  //
-  ///////
+  /* //// */
+  /*  */
+  /*  Fill in all Delta_^l_l0 */
+  /*  */
+  /* ///// */
 
 
   FPTYPE D = 1.0;
@@ -130,11 +133,11 @@ void wdhp_get_all_llm2(int lmax,FPTYPE *D_all_llm, FPTYPE *sqt, FPTYPE *invsqt) 
     D_all_llm[ll0] = D;
   }
 
-  ///////
-  //
-  //  Trace down diagonals to fill out llm
-  //
-  ////////
+  /* ///// */
+  /*  */
+  /*   Trace down diagonals to fill out llm */
+  /*  */
+  /* ////// */
   int lp;
   int m,llm;
 
@@ -152,7 +155,7 @@ void wdhp_get_all_llm2(int lmax,FPTYPE *D_all_llm, FPTYPE *sqt, FPTYPE *invsqt) 
       int n2 = lplusm*(lplusm-1);
 
       FPTYPE fact = sqt[n1]*invsqt[n2]*M_SQRT1_2l;
-      //     printf("%d %d %d %d %e\n",l,m,n1,n2,(double)fact);
+      /*      printf("%d %d %d %d %e\n",l,m,n1,n2,(double)fact); */
 
       D *= fact;
 
@@ -196,42 +199,29 @@ FPTYPE *wdhp_init_invsqt(int lmax, FPTYPE *sqt) {
   return(invsqt);
 }
 
-
-
-//inline
-FPTYPE wdhp_rowrecurs_coef1(int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt){
+inline
+FPTYPE wdhp_rowrecurs_coef1(int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt) {
   int n = (l-m1)*(l+m1+1);
-
-  // FPTYPE invs = ;
-
-  return( 2*m2*invsqt[n] );
+  return (2*m2*invsqt[n]);
 }
 
-//inline
-FPTYPE wdhp_rowrecurs_coef2(int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt){
-
+inline
+FPTYPE wdhp_rowrecurs_coef2(int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt) {
   int lminusm1 = l-m1;
   int lplusm1 = l+m1;
-
   int n1 = (lminusm1 - 1)*( lplusm1 + 2);
   int n2 = lminusm1 *(lplusm1 + 1);
-
-  return( sqt[n1]*invsqt[n2]);
-
+  return (sqt[n1]*invsqt[n2]);
 }
 
 
-//inline
-FPTYPE wdhp_rowrecurs(FPTYPE D1, FPTYPE D2, int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt){
-  // D1 = D^l_{(m1+1)(m2)}
-  // D2 = D^l_{(m1+2)(m2)}
-
+inline
+FPTYPE wdhp_rowrecurs(FPTYPE D1, FPTYPE D2, int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt) {
+  /*  D1 = D^l_{(m1+1)(m2)} */
+  /*  D2 = D^l_{(m1+2)(m2)} */
   FPTYPE c1 = wdhp_rowrecurs_coef1(l,m1,m2,sqt,invsqt);
   FPTYPE c2 = wdhp_rowrecurs_coef2(l,m1,m2,sqt,invsqt);
-
-  //  printf("m1 m2 %d %d | D1 D2 = % e % e | c1 c2 % e % e\n",m1,m2,(double)D1,(double)D2,(double)c1,(double)c2);
-
-  return( c1*D1-c2*D2 );
+  return (c1*D1-c2*D2);
 }
 
 
@@ -258,9 +248,9 @@ FPTYPE wdhp_get_lm1m2_pos(int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt) {
 
 
 void wdhp_get_col_pos(int l,int m2, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_llm, double *Dcol) {
-  //
-  //  Upon completion Dcol[m1] = D^l_{m1 m2}
-  //
+  /*  */
+  /*   Upon completion Dcol[m1] = D^l_{m1 m2} */
+  /*  */
 
 
   FPTYPE D1, D2;
@@ -286,9 +276,9 @@ void wdhp_get_col_pos(int l,int m2, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_l
 
 
 void wdhp_get_row_pos(int l,int m1, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_llm, double *Drow) {
-  //
-  // Upon completion Drow[m2] = D^l_{m1 m2}
-  //
+  /*  */
+  /*  Upon completion Drow[m2] = D^l_{m1 m2} */
+  /*  */
 
   FPTYPE D,D1, D2;
 
@@ -297,8 +287,8 @@ void wdhp_get_row_pos(int l,int m1, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_l
 
   int m2 = l;
 
-  // D contains the column D^l {... m1}
-  // Drow contains the transposed row, D^l {m1 ...}
+  /*  D contains the column D^l {... m1} */
+  /*  Drow contains the transposed row, D^l {m1 ...} */
   D = D1;
   Drow[m2] = wdhp_sign_parity(m1+m2)*D;
 
@@ -314,9 +304,9 @@ void wdhp_get_row_pos(int l,int m1, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_l
 }
 
 void wdhp_get_quarter_plane2(int l, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_llm, double *D) {
-  //
-  //  Upon completion D[m1*(l+1)+m2] = D^l_{m1 m2}
-  //  for m1,m2 >= 0.
+  /*  */
+  /*   Upon completion D[m1*(l+1)+m2] = D^l_{m1 m2} */
+  /*   for m1,m2 >= 0. */
 
   FPTYPE D0,D1, D2;
 
@@ -327,8 +317,8 @@ void wdhp_get_quarter_plane2(int l, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_l
 
     int m2 = l;
 
-    // D contains the column D^l {... m1}
-    // Drow contains the transposed row, D^l {m1 ...}
+    /*  D contains the column D^l {... m1} */
+    /*  Drow contains the transposed row, D^l {m1 ...} */
     D0 = D1;
     D[m1*Nm+m2] = wdhp_sign_parity(m1+m2)*D1;
     D[m2*Nm+m1] = D1;
@@ -349,9 +339,9 @@ void wdhp_get_quarter_plane2(int l, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_l
 
 
 void wdhp_get_quarter_plane(int l, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_llm, double *D) {
-  //
-  //  Upon completion D[m1*(l+1)+m2] = D^l_{m1 m2}
-  //  for m1,m2 >= 0.
+  /*  */
+  /*   Upon completion D[m1*(l+1)+m2] = D^l_{m1 m2} */
+  /*   for m1,m2 >= 0. */
 
   FPTYPE D0,D1, D2;
   int m2;
@@ -391,7 +381,7 @@ FPTYPE wdhp_get_lm1m2_pos2(int l,int m1,int m2, FPTYPE *sqt, FPTYPE *invsqt) {
     lilm = m2;
     bigm = m1;
     sign = wdhp_sign_parity(m1+m2);
-    //  printf("flippers\n");
+    /*   printf("flippers\n"); */
   } else {
     lilm = m1;
     bigm = m2;
@@ -410,7 +400,7 @@ wdhp_TN_helper *wdhp_TN_helper_init(int lmax){
   w->invsqt = wdhp_init_invsqt(lmax,w->sqt);
   w->D_all_llm = calloc((lmax+1)*(lmax+2)/2,sizeof(FPTYPE));
 
-  //wdhp_get_all_llm(lmax,w->D_all_llm);
+  /* wdhp_get_all_llm(lmax,w->D_all_llm); */
   wdhp_get_all_llm2(lmax,w->D_all_llm,w->sqt,w->invsqt);
 
   w->Dwork = calloc((lmax+1)*(lmax+1),sizeof(FPTYPE));

@@ -43,27 +43,35 @@ void printf_diff(complex *a, complex *a2, int lmax);
 
 int main(int argc, char *argv[]) {
   
-  // Read in the arguments
+  int spins02[2] = {0,2};
+  
+  int iarg, lmax, Nphi, Ntheta, Npix, Nlm, Nm, NJmm, NGmm, i,l,m;
+
+  fftw_complex *f, *fI, *fP, *aT, *aP, *aPnew, *aTnew, *Gmm_I, *Gmm_P, *Jmm, *Jmm_I, *Jmm_P, tmp;
+
+  wdhp_TN_helper *DeltaTN;
+
+  /*  Read in the arguments */
   if (argc!=4) {
     printf(USAGE);
     abort();
   }
   
-  int iarg=1;
-  int lmax = atoi(argv[iarg++]);
-  int Nphi = atoi(argv[iarg++]);
-  int Ntheta = 1+atoi(argv[iarg++]);
+  iarg=1;
+  lmax = atoi(argv[iarg++]);
+  Nphi = atoi(argv[iarg++]);
+  Ntheta = 1+atoi(argv[iarg++]);
 
 
-  // Sizes of various data objects
-  int Npix = Nphi * Ntheta;
-  int Nlm = N_lm(lmax);
-  int Nm = 2*lmax+1;
-  int NJmm = (lmax+1)*Nm;
-  int NGmm = Nm*Nm;
+  /*  Sizes of various data objects */
+  Npix = Nphi * Ntheta;
+  Nlm = N_lm(lmax);
+  Nm = 2*lmax+1;
+  NJmm = (lmax+1)*Nm;
+  NGmm = Nm*Nm;
 
 
-  // Report the sizes
+  /*  Report the sizes */
   printf("lmax = %d\n",lmax);
   printf("Nphi = %d\n",Nphi);
   printf("Ntheta = %d\n",Ntheta);
@@ -73,49 +81,46 @@ int main(int argc, char *argv[]) {
   printf("Nm = %d\n",Nm);
   printf("Nlm = %d\n",Nlm);
 
-  //////////////////////////////
-  //
-  // Allocate data objects
-  //
-  /////////////////////////////
+  /* //////////////////////////// */
+  /*  */
+  /*  Allocate data objects */
+  /*  */
+  /* /////////////////////////// */
 
 
-  // Real space polarized function, I and P = Q+iU parts
+  /*  Real space polarized function, I and P = Q+iU parts */
 
-  fftw_complex *f = calloc(2*Npix,sizeof(fftw_complex));
-  fftw_complex *fI = f;
-  fftw_complex *fP = &f[Npix];
+  f = calloc(2*Npix,sizeof(fftw_complex));
+  fI = f;
+  fP = &f[Npix];
  
 
-  // Harmonic space coeffients, intensity and polarization
+  /*  Harmonic space coeffients, intensity and polarization */
  
-  fftw_complex *aT = calloc(Nlm,sizeof(fftw_complex));
-  fftw_complex *aP = calloc(Nlm,sizeof(fftw_complex));
+  aT = calloc(Nlm,sizeof(fftw_complex));
+  aP = calloc(Nlm,sizeof(fftw_complex));
   
-  fftw_complex *aPnew = calloc(Nlm,sizeof(fftw_complex));
-  fftw_complex *aTnew = calloc(Nlm,sizeof(fftw_complex));
+  aPnew = calloc(Nlm,sizeof(fftw_complex));
+  aTnew = calloc(Nlm,sizeof(fftw_complex));
  
   
-  // Ancillary harmonic objects, G and J
+  /*  Ancillary harmonic objects, G and J */
 
-  fftw_complex *Gmm_I = fftw_malloc(NGmm*sizeof(fftw_complex));
-  fftw_complex *Gmm_P = fftw_malloc(NGmm*sizeof(fftw_complex));
+  Gmm_I = fftw_malloc(NGmm*sizeof(fftw_complex));
+  Gmm_P = fftw_malloc(NGmm*sizeof(fftw_complex));
 
-  fftw_complex *Jmm = fftw_malloc(2*NJmm*sizeof(fftw_complex));
-  fftw_complex *Jmm_I = Jmm;
-  fftw_complex *Jmm_P = &Jmm[NJmm];
+  Jmm = fftw_malloc(2*NJmm*sizeof(fftw_complex));
+  Jmm_I = Jmm;
+  Jmm_P = &Jmm[NJmm];
 
   
-  ////////////////////////////////
-  //
-  // Generate some random harmonic coefficients 
-  //
-  ////////////////////////////////
+  /* ////////////////////////////// */
+  /*  */
+  /*  Generate some random harmonic coefficients  */
+  /*  */
+  /* ////////////////////////////// */
 
-  int i,l,m;
   srand48(524398);
-
-  fftw_complex tmp;
 
   for (l=0;l<=lmax;l++) {
     for (m=0;m<l;m++){
@@ -131,7 +136,6 @@ int main(int argc, char *argv[]) {
     }
   }
 
-
   for (l=2;l<=lmax;l++) {
     for (m=-l;m<l;m++){
       tmp = drand48() + I*drand48();
@@ -145,32 +149,31 @@ int main(int argc, char *argv[]) {
   printf("Sample harmonic coef. aP(l=2,m=1) = %e %e\n",creal(aP[lm_ind(2,1,lmax)]),cimag(aP[lm_ind(2,1,lmax)]));
 
 
-  ////////////////////////////////////
-  //
-  //  Set up & execute transform:  alm -> real-space iqu  
-  //
-  ////////////////////////////////////
+  /* ////////////////////////////////// */
+  /*  */
+  /*   Set up & execute transform:  alm -> real-space iqu   */
+  /*  */
+  /* ////////////////////////////////// */
 
 
-  //  Initialize the wigner Delta functions
-  wdhp_TN_helper *DeltaTN = wdhp_TN_helper_init(lmax);
+  /*   Initialize the wigner Delta functions */
+  DeltaTN = wdhp_TN_helper_init(lmax);
   
-  //  Transform to Gmm (L^3 time)
+  /*   Transform to Gmm (L^3 time) */
   spinsfast_backward_Gmm_alm2iqu(aT,aP,lmax,Gmm_I,Gmm_P, WDHP_METHOD_TN_PLANE, (void *)DeltaTN);
 
-  //  Transform to real space via FFTs
+  /*   Transform to real space via FFTs */
   spinsfast_backward_transform(fI, Ntheta, Nphi, lmax, Gmm_I);
   spinsfast_backward_transform(fP, Ntheta, Nphi, lmax, Gmm_P);
   
 
 
-  ////////////////////////////////////
-  //
-  //  Set up & execute transform:  real-space iqu -> alm
-  //
-  ////////////////////////////////////
+  /* ////////////////////////////////// */
+  /*  */
+  /*   Set up & execute transform:  real-space iqu -> alm */
+  /*  */
+  /* ////////////////////////////////// */
 
-  int spins02[2] = {0,2};
   spinsfast_forward_multi_Jmm(f, spins02, 2, Ntheta, Nphi, lmax, Jmm);
 
 
@@ -187,11 +190,6 @@ int main(int argc, char *argv[]) {
   
   printf("P harmonic coefficients, new - old\n");
   printf_diff(aP, aPnew, lmax);
-
-
-
-
-  
 
   fftw_free(aT);
   fftw_free(aTnew);
@@ -213,7 +211,7 @@ void printf_diff(complex *a, complex *a2, int lmax) {
 
   for (i=0; i< N_lm(lmax); i++) {
     ind_lm(i, &l, &m, lmax);
-    //    printf("% d % d % d % e % e | %e %e\n",s,l,m,creal(a2[i]),cimag(a2[i]),creal(a[i]),cimag(a[i]));
+    /*     printf("% d % d % d % e % e | %e %e\n",s,l,m,creal(a2[i]),cimag(a2[i]),creal(a[i]),cimag(a[i])); */
     
     diff = a2[i] - a[i];
     rmsdiff += cabs(diff)*cabs(diff);

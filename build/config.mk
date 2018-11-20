@@ -9,7 +9,8 @@ else
 endif
 
 #CFLAGS:=-Wall -g -std=c99 -O3 -fpic -fstrict-aliasing -Wstrict-aliasing -D_GNU_SOURCE
-CFLAGS:=-Wall -O3 -fpic -fstrict-aliasing -Wstrict-aliasing
+#CFLAGS:=-Wall -O3 -fpic -fstrict-aliasing -Wstrict-aliasing -I/Users/boyle/.continuum/anaconda3/include
+CFLAGS:=-Wall -std=c89 -O3 -fpic -fstrict-aliasing -Wstrict-aliasing -I/Users/boyle/.continuum/anaconda3/include -Wextra -Wstrict-prototypes -Wold-style-definition -Wmissing-prototypes -Wmissing-declarations -Wno-declaration-after-statement -Wno-unused-parameter
 
 # Optional portions of code
 #CFLAGS+= -DUSE_FITSIO

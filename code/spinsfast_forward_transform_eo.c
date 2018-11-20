@@ -60,15 +60,15 @@ void spinsfast_forward_transform_eo(fftw_complex * restrict a, const int Ntransf
   fftw_complex *E = &E_[lmax];
 
 
-  // Set up Wigner Deltas
-  // If Delta not precomputed, initialize it here
+  /*  Set up Wigner Deltas */
+  /*  If Delta not precomputed, initialize it here */
   Delta_initialize(DeltaMethod,Deltawork);
 
 
-  //  Main loop over multipole l
+  /*   Main loop over multipole l */
   for (l=0;l<=lmax;l++) {
 
-    // For supported methods, grab or compute the l-plane of Delta matrix
+    /*  For supported methods, grab or compute the l-plane of Delta matrix */
     const double * restrict Deltal = NULL;
     Delta_getplane(DeltaMethod, Deltawork, Deltal, l);
 
@@ -76,7 +76,7 @@ void spinsfast_forward_transform_eo(fftw_complex * restrict a, const int Ntransf
           s = spins[ispin];
 
           if (l >= abs(s)) {
-            // shift to correct blocks
+            /*  shift to correct blocks */
             complex * restrict asl = &a[ispin*Nlm + lm_ind(l,0,lmax)];
             fftw_complex * restrict Jmm = &Jmm_set[ispin*NJmm];
 
@@ -89,18 +89,18 @@ void spinsfast_forward_transform_eo(fftw_complex * restrict a, const int Ntransf
 
             const int twicelp1 = 2*l+1;
             norml = sqrt(twicelp1)/2./sqrt(M_PI);
-            //      const int negtol =  spinsfast_forward_sign_parity(l); // = (-1)^l
+            /*       const int negtol =  spinsfast_forward_sign_parity(l); // = (-1)^l */
 
 
-            // Zero term
+            /*  Zero term */
             mp = 0;
             {
-              const int signnegm = spinsfast_forward_sign_parity(l); // = (1-)^(l+mp)
+              const int signnegm = spinsfast_forward_sign_parity(l); /*  = (1-)^(l+mp) */
 
-              // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
+              /*  Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix. */
               const double * restrict Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
 
-              // Get Delta_{mp s} from Delta_{mp |s|}
+              /*  Get Delta_{mp s} from Delta_{mp |s|} */
               const int s_sign_fudge = (s<0) ? 1 : spinsfast_forward_sign_parity(l);
               const double Deltamps_norml = Delta_mp[abs(s)] * norml * s_sign_fudge;
 
@@ -136,13 +136,13 @@ void spinsfast_forward_transform_eo(fftw_complex * restrict a, const int Ntransf
               }
             }
 
-            for (mp=1; mp<=l; mp+=2){ // Odd mp > 0
-              const int signnegm = spinsfast_forward_sign_parity(l+1); // = (1-)^(l+mp)
+            for (mp=1; mp<=l; mp+=2){ /*  Odd mp > 0 */
+              const int signnegm = spinsfast_forward_sign_parity(l+1); /*  = (1-)^(l+mp) */
 
-              // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
+              /*  Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix. */
               const double * restrict Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
 
-              // Get Delta_{mp s} from Delta_{mp |s|}
+              /*  Get Delta_{mp s} from Delta_{mp |s|} */
               const int s_sign_fudge = (s<0) ? 1 : spinsfast_forward_sign_parity(l+1);
               const double Deltamps_norml = Delta_mp[abs(s)] * norml * s_sign_fudge;
 
@@ -160,13 +160,13 @@ void spinsfast_forward_transform_eo(fftw_complex * restrict a, const int Ntransf
               }
             }
 
-            for (mp=2; mp<=l; mp+=2){ // Even mp > 0
-              const int signnegm = spinsfast_forward_sign_parity(l); // = (1-)^(l+mp)
+            for (mp=2; mp<=l; mp+=2){ /*  Even mp > 0 */
+              const int signnegm = spinsfast_forward_sign_parity(l); /*  = (1-)^(l+mp) */
 
-              // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
+              /*  Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix. */
               const double * restrict Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
 
-              // Get Delta_{mp s} from Delta_{mp |s|}
+              /*  Get Delta_{mp s} from Delta_{mp |s|} */
               const int s_sign_fudge = (s<0) ? 1 : spinsfast_forward_sign_parity(l);
               const double Deltamps_norml = Delta_mp[abs(s)] * norml * s_sign_fudge;
 
@@ -196,14 +196,14 @@ void spinsfast_forward_transform_eo(fftw_complex * restrict a, const int Ntransf
 
 
             for (m=-l;m<=l;m++) {
-              //        asl[m] = 0;
+              /*         asl[m] = 0; */
               asl[m] = Z[m] + E[m] + O[m];
             }
 
-          } // We are now done looping over m' and m
-        }   //
+          } /*  We are now done looping over m' and m */
+        }   /*  */
 
-        // Increment Delta to next l if Risbo not precomputed
+        /*  Increment Delta to next l if Risbo not precomputed */
         if (l<lmax) {
           if (DeltaMethod==WDHP_METHOD_RISBO) {
             Delta_increment_l(DeltaMethod, Deltawork);
@@ -212,8 +212,8 @@ void spinsfast_forward_transform_eo(fftw_complex * restrict a, const int Ntransf
   }
 
 
-  // Set the phases
-   fftw_complex *Itom_helper = fftw_malloc(Nm*sizeof(complex));
+  /*  Set the phases */
+  fftw_complex *Itom_helper = fftw_malloc(Nm*sizeof(complex));
   fftw_complex *Itom = &Itom_helper[lmax];
 
   for (m=-lmax; m<=lmax; m++){

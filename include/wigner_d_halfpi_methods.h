@@ -27,7 +27,7 @@
 #define WDHP_METHOD_RISBO_PRECOMPUTE 1
 #define WDHP_METHOD_TN 2
 #define WDHP_METHOD_TN_PLANE 3
-//#define WDHP_METHOD_TN_PRECOMPUTE 4
+/* #define WDHP_METHOD_TN_PRECOMPUTE 4 */
 
 
 void Delta_initialize(int DeltaMethod,void * Deltawork);

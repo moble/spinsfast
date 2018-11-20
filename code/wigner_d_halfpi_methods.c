@@ -24,7 +24,7 @@
 #include <wigner_d_halfpi.h>
 
 void Delta_initialize(int DeltaMethod,void * Deltawork) {
- // If Delta not precomputed, initialize it here
+ /*  If Delta not precomputed, initialize it here */
   if (DeltaMethod == WDHP_METHOD_RISBO) {
     wdhp_reset((wdhp *)Deltawork);
   } else if (DeltaMethod == WDHP_METHOD_TN) {
@@ -38,7 +38,7 @@ void Delta_initialize(int DeltaMethod,void * Deltawork) {
 
 void Delta_getplane( int DeltaMethod, void * Deltawork, const double * restrict Deltal, int l) {
 
-  // For supported methods, grab or compute the l-plane of Delta matrix
+  /*  For supported methods, grab or compute the l-plane of Delta matrix */
   if (DeltaMethod == WDHP_METHOD_RISBO_PRECOMPUTE) {
     Deltal = &((double *)Deltawork)[wdhp_integer_idx(l, 0, 0)];
   } else if (DeltaMethod == WDHP_METHOD_TN_PLANE) {
@@ -52,7 +52,7 @@ void Delta_getplane( int DeltaMethod, void * Deltawork, const double * restrict 
 
 
 const double *Delta_getrow( int DeltaMethod, void * Deltawork, const double * restrict Deltal, int l,int twicelp1, int mp) {
-  // Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix.
+  /*  Grab/compute the mp row (a 1-d array) of the Wigner-d Delta matrix. */
   if (DeltaMethod == WDHP_METHOD_RISBO) {
     return wdhp_integer_getrow((wdhp *)Deltawork,mp);
   } else if (DeltaMethod == WDHP_METHOD_RISBO_PRECOMPUTE) {
@@ -75,7 +75,7 @@ const double *Delta_getrow( int DeltaMethod, void * Deltawork, const double * re
 
 void Delta_increment_l( int DeltaMethod, void * Deltawork) {
 
-  // Increment Delta to next l if Risbo not precomputed
+  /*  Increment Delta to next l if Risbo not precomputed */
   if (DeltaMethod==WDHP_METHOD_RISBO) {
     wdhp_jplus1((wdhp *)Deltawork);
   }

@@ -42,7 +42,7 @@ void spinsfast_salm2map(fftw_complex *alm, fftw_complex *f, int s, int Ntheta, i
 void spinsfast_multi_salm2map(fftw_complex *alm, fftw_complex *f, int *s, const int Ntransform, int Ntheta, int Nphi, int lmax);
 
 void spinsfast_backward_Gmm(const fftw_complex * restrict a, int Ntransform, const int *spins,const int lmax, fftw_complex * restrict Gmm_set, int DeltaMethod, void *Deltawork);
-//void spinsfast_backward_Gmm(const fftw_complex * restrict a, const int s,const int lmax, fftw_complex * restrict Gmm, int DeltaMethod, void *Deltawork);
+/* void spinsfast_backward_Gmm(const fftw_complex * restrict a, const int s,const int lmax, fftw_complex * restrict Gmm, int DeltaMethod, void *Deltawork); */
 void spinsfast_backward_Gmm_old(const fftw_complex * restrict a, const int s, const int lmin,const int lmax, fftw_complex * restrict Gmm);
 void spinsfast_backward_Gmm_preDelta(const fftw_complex * restrict a, const int s, const int lmin,const int lmax, fftw_complex * restrict Gmm,const double * restrict Delta);
 void spinsfast_backward_Gmm_alm2iqu(const fftw_complex * restrict T, const fftw_complex * restrict P2,const int lmax, fftw_complex * restrict Gmm_I, fftw_complex * restrict Gmm_P, int DeltaMethod, void *Deltawork);

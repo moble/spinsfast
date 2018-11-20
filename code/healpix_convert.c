@@ -21,11 +21,11 @@
 
 /* Code revision: 104, 2012-04-13 13:00:16 -0400 (Fri, 13 Apr 2012) */
 
-// Routines to convert healpix (ring) grids to and from equiangular grids.
-// Assumes the equiangular grid well-oversamples the healpix grid,
-// or you can get empty pixels (w/ NaNs).
+/*  Routines to convert healpix (ring) grids to and from equiangular grids. */
+/*  Assumes the equiangular grid well-oversamples the healpix grid, */
+/*  or you can get empty pixels (w/ NaNs). */
 
-// From Kevin Huffenberger
+/*  From Kevin Huffenberger */
 
 #ifdef USE_HEALPIX
 
@@ -33,7 +33,7 @@
 
 void ecp2healpix_avg(complex *ecp, int Ntheta, int Nphi,
                      double *hp_r, double *hp_i, int nside) {
-  // assign average of contributing pixels to healpix pixel
+  /*  assign average of contributing pixels to healpix pixel */
 
   int npix = 12*nside*nside;
   double *w = calloc(npix,sizeof(double));
@@ -45,14 +45,14 @@ void ecp2healpix_avg(complex *ecp, int Ntheta, int Nphi,
   int i,j,p;
   long hp;
 
-  // initialize
+  /*  initialize */
   for (hp=0;hp<npix;hp++) {
     hp_r[hp] = 0.0;
     hp_i[hp] = 0.0;
     w[hp] = 0.0;
   }
 
-  // accumulate pixel values & weight map
+  /*  accumulate pixel values & weight map */
   for (j=0;j<Ntheta;j++) {
     theta = j*dtheta;
 
@@ -70,7 +70,7 @@ void ecp2healpix_avg(complex *ecp, int Ntheta, int Nphi,
 
   }
 
-  // normalize by weight map
+  /*  normalize by weight map */
   for (hp=0;hp<npix;hp++) {
     hp_r[hp] /=  w[hp];
     hp_i[hp] /=  w[hp];
@@ -98,11 +98,11 @@ void ecp2healpix_nearest(complex *ecp, int Ntheta, int Nphi,
   for (hp=0;hp<npix;hp++) {
     pix2ang_ring(nside, hp, &theta, &phi);
 
-    // shift by half pixel so that the *middle* of the pixel is at j*dtheta
+    /*  shift by half pixel so that the *middle* of the pixel is at j*dtheta */
     j = theta/dtheta + 0.5;
     i = phi/dphi + 0.5;
 
-    // correct for out-of-bounds
+    /*  correct for out-of-bounds */
     if (j>Ntheta) {
       j = Ntheta-1;
       i += Nphi/2;
@@ -124,7 +124,7 @@ void ecp2healpix_nearest(complex *ecp, int Ntheta, int Nphi,
 
 void healpix2ecp(double *hp_r, double *hp_i, int nside,
                  complex *ecp, int Ntheta, int Nphi) {
-   // loop over pixels and grab healpix value
+   /*  loop over pixels and grab healpix value */
 
   double theta,phi;
   double dtheta = M_PI/Ntheta;

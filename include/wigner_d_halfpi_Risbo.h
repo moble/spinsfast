@@ -39,7 +39,7 @@ typedef struct {
 
   
 
-  // double p,q,pc,qc;
+  /* double p,q,pc,qc; */
   double * restrict sqt;
   
   double * restrict d;

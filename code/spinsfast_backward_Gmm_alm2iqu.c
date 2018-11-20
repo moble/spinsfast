@@ -22,10 +22,19 @@
 /* Code revision: 104, 2012-04-13 13:00:16 -0400 (Fri, 13 Apr 2012) */
 
 #include <spinsfast_backward.h>
+#include <inline.h>
 
 
-//inline
-int spinsfast_backward_sign_parity(int m);
+inline int spinsfast_backward_sign_parity_alm2iqu(int m);
+
+inline
+int spinsfast_backward_sign_parity_alm2iqu(int m) {
+  /*  returns  (-1)^m, */
+  /*  = 1 if even */
+  /*  = -1 if odd. */
+  int eo = (m & 1);
+  return( 1 - eo - eo );
+}
 
 
 void spinsfast_backward_Gmm_alm2iqu(const fftw_complex * restrict T, const fftw_complex * restrict P2,const int lmax, fftw_complex * restrict Gmm_I, fftw_complex * restrict Gmm_P, int DeltaMethod, void *Deltawork) {
@@ -35,7 +44,7 @@ void spinsfast_backward_Gmm_alm2iqu(const fftw_complex * restrict T, const fftw_
  int Nm = 2*lmax+1;
  double norml;
 
- //int Nlm = N_lm(lmax);
+ /* int Nlm = N_lm(lmax); */
  int NGmm = Nm*Nm;
 
  for (m=0;m<NGmm;m++) {
@@ -57,21 +66,21 @@ void spinsfast_backward_Gmm_alm2iqu(const fftw_complex * restrict T, const fftw_
  int * restrict midx = &midx_helper[lmax];
 
 
-  // Set up Wigner Deltas
-  // If Delta not precomputed, initialize it here
+  /*  Set up Wigner Deltas */
+  /*  If Delta not precomputed, initialize it here */
   Delta_initialize(DeltaMethod,Deltawork);
 
 
-  // Compute Gm'm for m' >= 0
+  /*  Compute Gm'm for m' >= 0 */
   for (l=0;l<=lmax;l++) {
 
-    // For supported methods, grab or compute the l-plane of Delta matrix
+    /*  For supported methods, grab or compute the l-plane of Delta matrix */
     const double * restrict Deltal = NULL;
     Delta_getplane(DeltaMethod, Deltawork, Deltal, l);
 
-    // remember to protect spin 2 from less than l=2
+    /*  remember to protect spin 2 from less than l=2 */
     {
-      // shift to correct blocks
+      /*  shift to correct blocks */
       const complex * restrict Tl = &T[lm_ind(l,0,lmax)];
       const complex * restrict P2l = &P2[lm_ind(l,0,lmax)];
 
@@ -81,17 +90,17 @@ void spinsfast_backward_Gmm_alm2iqu(const fftw_complex * restrict T, const fftw_
 
       const int twicelp1 = 2*l+1;
       norml = sqrt(twicelp1)/2./sqrt(M_PI);
-      const int signnegm = spinsfast_backward_sign_parity(l);
+      const int signnegm = spinsfast_backward_sign_parity_alm2iqu(l);
 
       for (mp=0; mp<=l; mp++){
 
-        // Grab the proper row (a 1-d array) of the Wigner-d Delta matrix,
-        // however it has been computed.
+        /*  Grab the proper row (a 1-d array) of the Wigner-d Delta matrix, */
+        /*  however it has been computed. */
         const double * restrict Delta_mp = Delta_getrow( DeltaMethod, Deltawork, Deltal, l,twicelp1, mp);
 
-        //     if (l==17) {
-        //  printf("%d %e\n",mp,Delta_mp[0]);
-        // }
+        /*      if (l==17) { */
+        /*   printf("%d %e\n",mp,Delta_mp[0]); */
+        /*  } */
 
 
 
@@ -99,26 +108,26 @@ void spinsfast_backward_Gmm_alm2iqu(const fftw_complex * restrict T, const fftw_
 
         complex * restrict Gmp_I = &Gmm_I[mpmod*Nm];
         complex * restrict Gmp_P = &Gmm_P[mpmod*Nm];
-        //     double *Delta_minusmp = &Delta[wdhp_integer_idx(l, -mp, 0)];
+        /*      double *Delta_minusmp = &Delta[wdhp_integer_idx(l, -mp, 0)]; */
 
-        // Get Delta_{mp -s} from Delta_{mp |s|}
+        /*  Get Delta_{mp -s} from Delta_{mp |s|} */
         const double Deltamp0_norml = Delta_mp[0] * norml;
-        const double Deltamp2_norml = Delta_mp[2] * norml * spinsfast_backward_sign_parity(l+mp);
+        const double Deltamp2_norml = Delta_mp[2] * norml * spinsfast_backward_sign_parity_alm2iqu(l+mp);
 
         Gmp_I[midx[0]] += Delta_mp[0] * Deltamp0_norml * Tl[0];
         Gmp_P[midx[0]] += Delta_mp[0] * Deltamp2_norml * P2l[0];
 
         for (m=1; m<=l; m++){
-          //for (m=-l; m<=l; m++){
+          /* for (m=-l; m<=l; m++){ */
           const double Delta_mpm = Delta_mp[m];
 
-          //printf("%e %e\n",Delta_minusmp[m],Delta_minusmp1[m]);
+          /* printf("%e %e\n",Delta_minusmp[m],Delta_minusmp1[m]); */
 
           const double fact0 = (Delta_mpm * Deltamp0_norml);
           const double fact2 = (Delta_mpm * Deltamp2_norml);
 
           Gmp_I[midx[m]] +=  fact0*Tl[m];
-          //    Gmp_I[midx[-m]] +=  fact0*Tl[-m]*signnegm;
+          /*     Gmp_I[midx[-m]] +=  fact0*Tl[-m]*signnegm; */
 
           Gmp_P[midx[m]] +=  fact2*P2l[m];
           Gmp_P[midx[-m]] +=  fact2*P2l[-m]*signnegm;
@@ -130,7 +139,7 @@ void spinsfast_backward_Gmm_alm2iqu(const fftw_complex * restrict T, const fftw_
     }
 
 
-    // Increment Delta to next l if Risbo not precomputed
+    /*  Increment Delta to next l if Risbo not precomputed */
     if (l<lmax) {
       if (DeltaMethod==WDHP_METHOD_RISBO) {
         Delta_increment_l(DeltaMethod, Deltawork);
@@ -139,31 +148,31 @@ void spinsfast_backward_Gmm_alm2iqu(const fftw_complex * restrict T, const fftw_
 
   }
 
-  // Set the phase for m' >= 0
+  /*  Set the phase for m' >= 0 */
   for (mp=0; mp<=lmax; mp++){
     int mpmod = midx[mp];
     complex *Gmp_I = &Gmm_I[mpmod*Nm];
     complex *Gmp_P = &Gmm_P[mpmod*Nm];
 
-    //   for (m=0; m<=lmax; m++){
+    /*    for (m=0; m<=lmax; m++){ */
     for (m=-lmax; m<=lmax; m++){
       int mmod = midx[m];
-      Gmp_I[mmod]*= Ito[m];// (-i)^m * (-i)^0
-      Gmp_P[mmod]*= -Ito[m];// (-i)^m * (-i)^2
+      Gmp_I[mmod]*= Ito[m];/*  (-i)^m * (-i)^0 */
+      Gmp_P[mmod]*= -Ito[m];/*  (-i)^m * (-i)^2 */
     }
 
-    // really I have no clue why this is here.
-    // Maybe for delta_mp-s to delta_mps repair?
+    /*  really I have no clue why this is here. */
+    /*  Maybe for delta_mp-s to delta_mps repair? */
     for (m=0; m<=lmax; m++){
       int mmod = midx[m];
-      Gmp_I[mmod]*=spinsfast_backward_sign_parity(m);
-      Gmp_P[mmod]*=spinsfast_backward_sign_parity(m);
+      Gmp_I[mmod]*=spinsfast_backward_sign_parity_alm2iqu(m);
+      Gmp_P[mmod]*=spinsfast_backward_sign_parity_alm2iqu(m);
     }
-    // no clue again...
+    /*  no clue again... */
     for (m=-lmax; m<0; m++){
       int mmod = midx[m];
-      Gmp_I[mmod]*= spinsfast_backward_sign_parity(mp+m);
-      Gmp_P[mmod]*= spinsfast_backward_sign_parity(mp+m);
+      Gmp_I[mmod]*= spinsfast_backward_sign_parity_alm2iqu(mp+m);
+      Gmp_P[mmod]*= spinsfast_backward_sign_parity_alm2iqu(mp+m);
     }
   }
 
@@ -185,7 +194,7 @@ void spinsfast_backward_Gmm_alm2iqu(const fftw_complex * restrict T, const fftw_
   }
 
 
-  /*  // Use symmetry G_(-m')m = (-1)^(m+s) G_m'm */
+  /*  Use symmetry G_(-m')m = (-1)^(m+s) G_m'm */
   const int sign_helper[3] = {-1,1,-1};
   const int *sign = &sign_helper[1];
 

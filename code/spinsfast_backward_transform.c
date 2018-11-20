@@ -24,13 +24,13 @@
 #include <spinsfast_backward.h>
 
 void spinsfast_backward_transform(fftw_complex  *f, int Ntheta, int Nphi, int lmax, fftw_complex *Gmm) {
-  // f is Ntheta by Nphi, access f[ itheta * Nphi + iphi ].
-  // F is  version of f extended to the whole sphere
-  // Works for pixelization where first ring is north pole and the last ring is the south pole
-  // ie theta = itheta*pi/(Ntheta-1)
-  //    phi   = iphi*pi/Nphi
-  //
-  // The number of theta rows in the extended version of F is 2*(Ntheta-1)
+  /*  f is Ntheta by Nphi, access f[ itheta * Nphi + iphi ]. */
+  /*  F is  version of f extended to the whole sphere */
+  /*  Works for pixelization where first ring is north pole and the last ring is the south pole */
+  /*  ie theta = itheta*pi/(Ntheta-1) */
+  /*     phi   = iphi*pi/Nphi */
+  /*  */
+  /*  The number of theta rows in the extended version of F is 2*(Ntheta-1) */
   int itheta, iphi;
   int m,mp;
   fftw_complex *F = fftw_malloc(2*(Ntheta-1)*Nphi*sizeof(fftw_complex));
@@ -39,7 +39,7 @@ void spinsfast_backward_transform(fftw_complex  *f, int Ntheta, int Nphi, int lm
   for (m=0;m<NF;m++)
     F[m] = 0;
 
-  // copy Imm values into F;
+  /*  copy Imm values into F; */
 
   int Nm = 2*lmax + 1 ;
   int limit = lmax;
@@ -57,26 +57,26 @@ void spinsfast_backward_transform(fftw_complex  *f, int Ntheta, int Nphi, int lm
   for (mp=0;mp<=limit;mp++) {
     for (m=0;m<=limit;m++) {
 
-      // ++
+      /*  ++ */
       F[ mp * Nphi + m] = Gmm[ mp * Nm + m ] ;
 
-      // +-
+      /*  +- */
       if (m > 0)
         F[ mp * Nphi + (Nphi - m) ] =	Gmm[ mp * Nm + (Nm - m)];
 
-      // -+
+      /*  -+ */
       if (mp > 0)
         F[ (2*(Ntheta-1) - mp) * Nphi + m ] = Gmm[ (Nm - mp) * Nm + m];
 
-      // --
+      /*  -- */
       if ( (mp > 0) && (m > 0) )
         F[ (2*(Ntheta-1) - mp) * Nphi + (Nphi - m) ] = Gmm[ (Nm - mp) * Nm + (Nm - m)];
 
     }
   }
 
-  //    printf("Ntheta Nphi = %d %d\n",Ntheta,Nphi);
-  //  printf ("dumping F status = %d\n", dump_cimage(F,2*(Ntheta-1),Nphi,"!output/eff.fits"));
+  /*     printf("Ntheta Nphi = %d %d\n",Ntheta,Nphi); */
+  /*   printf ("dumping F status = %d\n", dump_cimage(F,2*(Ntheta-1),Nphi,"!output/eff.fits")); */
 
 
   fftw_plan fftplan = fftw_plan_dft_2d(2*(Ntheta-1), Nphi, F, F, FFTW_BACKWARD, FFTW_ESTIMATE);
@@ -84,7 +84,7 @@ void spinsfast_backward_transform(fftw_complex  *f, int Ntheta, int Nphi, int lm
   fftw_destroy_plan(fftplan);
 
 
-  //printf ("dumping F status = %d\n", dump_cimage(F,2*(Ntheta-1),Nphi,"!output/EFF.fits"));
+  /* printf ("dumping F status = %d\n", dump_cimage(F,2*(Ntheta-1),Nphi,"!output/EFF.fits")); */
 
 
   for (itheta = 0; itheta < Ntheta; itheta++) {
@@ -101,13 +101,13 @@ void spinsfast_backward_transform(fftw_complex  *f, int Ntheta, int Nphi, int lm
 
 
 void spinsfast_backward_multi_transform(fftw_complex *f, const int Ntransform, int Ntheta, int Nphi, int lmax, fftw_complex *Gmm) {
-  // f is Ntheta by Nphi, access f[ itheta * Nphi + iphi ].
-  // F is  version of f extended to the whole sphere
-  // Works for pixelization where first ring is north pole and the last ring is the south pole
-  // ie theta = itheta*pi/(Ntheta-1)
-  //    phi   = iphi*pi/Nphi
-  //
-  // The number of theta rows in the extended version of F is 2*(Ntheta-1)
+  /*  f is Ntheta by Nphi, access f[ itheta * Nphi + iphi ]. */
+  /*  F is  version of f extended to the whole sphere */
+  /*  Works for pixelization where first ring is north pole and the last ring is the south pole */
+  /*  ie theta = itheta*pi/(Ntheta-1) */
+  /*     phi   = iphi*pi/Nphi */
+  /*  */
+  /*  The number of theta rows in the extended version of F is 2*(Ntheta-1) */
   int itheta, iphi;
   int m,mp;
   fftw_complex *F = fftw_malloc(2*(Ntheta-1)*Nphi*sizeof(fftw_complex));
@@ -115,7 +115,7 @@ void spinsfast_backward_multi_transform(fftw_complex *f, const int Ntransform, i
 
   int NF = 2*(Ntheta-1)*Nphi;
 
-  // copy Imm values into F;
+  /*  copy Imm values into F; */
 
   int Nm = 2*lmax + 1 ;
   int NGmm = Nm*Nm;
@@ -135,15 +135,15 @@ void spinsfast_backward_multi_transform(fftw_complex *f, const int Ntransform, i
       F[m] = 0;
     for (mp=0;mp<=limit;mp++) {
       for (m=0;m<=limit;m++) {
-        // ++
+        /*  ++ */
         F[ mp * Nphi + m] = Gmm[ itransform*NGmm + mp * Nm + m ] ;
-        // +-
+        /*  +- */
         if (m > 0)
           F[ mp * Nphi + (Nphi - m) ] =	Gmm[ itransform*NGmm + mp * Nm + (Nm - m)];
-        // -+
+        /*  -+ */
         if (mp > 0)
           F[ (2*(Ntheta-1) - mp) * Nphi + m ] = Gmm[ itransform*NGmm + (Nm - mp) * Nm + m];
-        // --
+        /*  -- */
         if ( (mp > 0) && (m > 0) )
           F[ (2*(Ntheta-1) - mp) * Nphi + (Nphi - m) ] = Gmm[ itransform*NGmm + (Nm - mp) * Nm + (Nm - m)];
       }
