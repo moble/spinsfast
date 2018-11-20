@@ -25,6 +25,7 @@
 #define _WIGNER_D_HALFPI_H_
 
 
+#include <restrict.h>
 #include <wigner_d_halfpi_Risbo.h>
 #include <wigner_d_halfpi_TN.h>
 #include <wigner_d_halfpi_methods.h>

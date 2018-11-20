@@ -21,20 +21,8 @@
 
 /* Code revision: 104, 2012-04-13 13:00:16 -0400 (Fri, 13 Apr 2012) */
 
-#include<math.h>
-
-// The following tries to deal with the `restrict` keyword used by the
-// spinsfast module.
-#ifndef restrict
-#ifdef __restrict
-#define restrict __restrict
-#endif
-#endif
-#ifndef restrict
-#if __STDC_VERSION__ < 199901L
-#define restrict /* nothing */
-#endif
-#endif
+#include <math.h>
+#include "restrict.h"
 
 int lm_ind(int l, int m, int lmax);
 void ind_lm(int i, int *l, int *m, int lmax);

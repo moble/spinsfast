@@ -21,6 +21,8 @@
 
 /* Code revision: 104, 2012-04-13 13:00:16 -0400 (Fri, 13 Apr 2012) */
 
+#include "restrict.h"
+
 #define WDHP_METHOD_RISBO 0
 #define WDHP_METHOD_RISBO_PRECOMPUTE 1
 #define WDHP_METHOD_TN 2

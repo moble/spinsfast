@@ -28,11 +28,12 @@
 #undef complex
 #define complex _Complex double
 #include <fftw3.h>
+#include "restrict.h"
 #include <wigner_d_halfpi.h>
 #include <alm.h>
 
 #ifndef M_PI
-# define M_PI		3.14159265358979323846	/* pi */
+#define M_PI 3.14159265358979323846 /* pi */
 #endif
 
 void spinsfast_backward_transform(fftw_complex *f, int Ntheta, int Nphi, int lmax, fftw_complex *Gmm);
