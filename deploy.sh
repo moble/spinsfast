@@ -21,9 +21,6 @@ python -c 'import spinsfast; print(spinsfast.__version__)'
 python setup.py sdist
 twine upload dist/*
 
-# # Create a pure source pip package
-# python setup.py sdist upload
-
 # Create all the osx binary pip packages
 ./python/build_macosx_wheels.sh "${package_version}"
 
