@@ -1,5 +1,8 @@
 #! /bin/bash
 
+set -e
+set -x
+
 if [ -z "$ANACONDA_API_TOKEN" ]; then
     echo "The variable 'ANACONDA_API_TOKEN' cannot be empty"
     exit 1
@@ -7,10 +10,11 @@ fi
 
 export package_version=$(date +"%Y.%m.%d.%H.%M.%S")
 export package_version="104.${package_version}"
+echo "Building version '${package_version}'"
 
 # Rebuild and install locally, then test trivial action, to ensure there are no warnings
-/bin/rm -rf build __pycache__
-CFLAGS='-Werror -Wall -Wextra' python setup.py install
+/bin/rm -rf build/{lib,temp,bdist}* __pycache__
+python setup.py install
 python -c 'import spinsfast; print(spinsfast.__version__)'
 
 # Create a pure source pip package
@@ -18,8 +22,8 @@ python -c 'import spinsfast; print(spinsfast.__version__)'
 python setup.py sdist
 twine upload dist/*
 
-# Create a pure source pip package
-python setup.py sdist upload
+# # Create a pure source pip package
+# python setup.py sdist upload
 
 # Create all the osx binary pip packages
 ./python/build_macosx_wheels.sh "${package_version}"

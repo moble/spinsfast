@@ -71,7 +71,7 @@ else:
         except:
             version = '0.0.0'
             print("Setup.py failed to determine the version; using '{0}'".format(version))
-version = '104.' + version
+    version = '104.' + version
 with open('python/_version.py', 'w') as f:
     f.write('__version__ = "{0}"'.format(version))
 
