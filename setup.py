@@ -82,6 +82,12 @@ else:
     extra_compile_args = ['-std=c99', '-fPIC', '-O3', '-DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION']
 
 
+long_description = """\
+This module is a lightly modified version of the code originally written by Huffenberger and
+Wandelt.  It enables the user to transform between modes of a spin-weighted spherical-harmonic
+decomposition and values of that function on a spherical gride.
+"""
+
 setup(name = 'spinsfast',
       version = version,
       packages = ['spinsfast'],
@@ -89,6 +95,8 @@ setup(name = 'spinsfast',
       url = 'https://github.com/moble/spinsfast',
       maintainer = 'Mike Boyle',
       maintainer_email = 'mob22@cornell.edu',
+      description='Fast and exact spin-s spherical-harmonic transforms',
+      long_description=long_description,
       ext_modules = [Extension(
           name = 'spinsfast.cextension',
           sources = ['python/cextension.c'] + glob.glob('code/*.c'),
