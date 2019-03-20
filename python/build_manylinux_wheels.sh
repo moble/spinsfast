@@ -1,6 +1,6 @@
 #! /bin/bash
 set -e -x
-export package_version="${1:-$(date +'%Y.%m.%d.%H.%M.%S')}"
+export package_version="${1:-$(date +'104.%Y.%m.%d.%H.%M.%S')}"
 
 
 ### NOTE: This script is designed to be written in the standard pypa/manylinux1 docker container.
