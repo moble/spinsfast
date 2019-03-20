@@ -8,6 +8,16 @@ fi
 export package_version=$(date +"%Y.%m.%d.%H.%M.%S")
 export package_version="104.${package_version}"
 
+# Rebuild and install locally, then test trivial action, to ensure there are no warnings
+/bin/rm -rf build __pycache__
+CFLAGS='-Werror -Wall -Wextra' python setup.py install
+python -c 'import spinsfast; print(spinsfast.__version__)'
+
+# Create a pure source pip package
+/bin/rm -rf dist
+python setup.py sdist
+twine upload dist/*
+
 # Create a pure source pip package
 python setup.py sdist upload
 
