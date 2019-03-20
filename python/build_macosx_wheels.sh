@@ -1,8 +1,16 @@
 #! /bin/bash
 set -e
-export package_version="${1:-$(date +'%Y.%m.%d.%H.%M.%S')}"
+set -x
 
-wheelhouse="${HOME}/Research/Temp/wheelhouse"
+. ~/.continuum/anaconda3/etc/profile.d/conda.sh
+conda activate base
+
+export package_version="${1:-$(date +'104.%Y.%m.%d.%H.%M.%S')}"
+echo "Building macosx wheels, version '${package_version}'"
+
+temp_dir="${HOME}/Research/Temp"
+wheelhouse="${temp_dir}/wheelhouse"
+code_dir="${PWD}"
 
 /bin/rm -rf "${wheelhouse}"
 mkdir -p "${wheelhouse}"

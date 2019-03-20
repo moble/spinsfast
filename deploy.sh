@@ -8,8 +8,7 @@ if [ -z "$ANACONDA_API_TOKEN" ]; then
     exit 1
 fi
 
-export package_version=$(date +"%Y.%m.%d.%H.%M.%S")
-export package_version="104.${package_version}"
+export package_version=$(date +"104.%Y.%m.%d.%H.%M.%S")
 echo "Building version '${package_version}'"
 
 # Rebuild and install locally, then test trivial action, to ensure there are no warnings
