@@ -48,12 +48,12 @@ jobs:
         conda install numpy fftw pip
         pip install --upgrade pip wheel auditwheel
         pip install -r ./python/dev-requirements.txt
-        find "C:\ProgramData" -name "*msvcr*"
-        find "${CONDA_PREFIX}" -name "*msvcr*"
-        find "${CONDA_PREFIX}" -name "*fftw3*"
-        "C:\ProgramData\Chocolatey\bin\gcc.exe" --help || true
-        "C:/ProgramData/Chocolatey/bin/gcc.exe" --help || true
-        gcc.exe --help || true
+        # find "C:\ProgramData" -name "*msvcr*"
+        # find "${CONDA_PREFIX}" -name "*msvcr*"
+        # find "${CONDA_PREFIX}" -name "*fftw3*"
+        # "C:\ProgramData\Chocolatey\bin\gcc.exe" --help || true
+        # "C:/ProgramData/Chocolatey/bin/gcc.exe" --help || true
+        # gcc.exe --help || true
         gcc.exe -print-libgcc-file-name || true
         export LIBRARY_PATH="C:\Miniconda\envs\test/Library/lib;C:\Miniconda\envs\test/Library/bin"
         export CPATH="C:\Miniconda\envs\test/Library/include"
