@@ -29,7 +29,7 @@ jobs:
         conda install numpy fftw pip
         pip install --upgrade pip wheel auditwheel
         pip install -r ./python/dev-requirements.txt
-        set "FFTW3_HOME=${CONDA_PREFIX}"
+        export "FFTW3_HOME=${CONDA_PREFIX}"
         echo
         echo "FFTW3_HOME=${CONDA_PREFIX}"
         ls "${FFTW3_HOME}"
