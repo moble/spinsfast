@@ -30,7 +30,14 @@ jobs:
         pip install --upgrade pip wheel auditwheel
         pip install -r ./python/dev-requirements.txt
         set "FFTW3_HOME=${CONDA_PREFIX}"
+        echo
         echo "FFTW3_HOME=${CONDA_PREFIX}"
+        ls "${FFTW3_HOME}"
+        echo
+        ls "${FFTW3_HOME}/lib"
+        echo
+        ls "${FFTW3_HOME}/include"
+        echo
         python setup.py bdist_wheel
     - name: Upload wheel
       uses: actions/upload-artifact@v1
