@@ -12,17 +12,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: goanpeca/setup-miniconda@v1
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
-        channels: conda-forge
-    - name: Install conda packages
-      shell: bash -l {0}
+        python-version: 3.8
+    - name: Install dependencies
       run: |
-        conda update -n base -c defaults conda
-        conda install numpy fftw pip
-        export LIBRARY_PATH="${CONDA_PREFIX}"/lib
-        export C_INCLUDE_PATH="${CONDA_PREFIX}"/include
+        python -m pip install --upgrade pip
     - uses: ./.github/workflows/actions/manylinux1_x86_64/
     - uses: ./.github/workflows/actions/manylinux1_i686/
     - name: Copy manylinux wheels
@@ -35,10 +31,10 @@ jobs:
         name: dist
         path: dist
     - name: Publish to PyPI
+      shell: bash -l {0}
       env:
         PYPI_USERNAME: __token__
         PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         pip install twine
         python -m twine upload -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD} dist/*
-      shell: bash -l {0}
