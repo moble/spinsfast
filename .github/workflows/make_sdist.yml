@@ -27,7 +27,7 @@ jobs:
         path: dist
     - name: Publish to PyPI
       env:
-        PYPI_USERNAME: ${{ secrets.PYPI_USER }}
+        PYPI_USERNAME: __token__
         PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         pip install twine
