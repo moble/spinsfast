@@ -69,4 +69,4 @@ void spinsfast_forward_transform_preDelta(fftw_complex * restrict a, const int s
 void spinsfast_forward_transform_iqu2alm(fftw_complex * restrict T,fftw_complex * P2,const int lmax, fftw_complex * restrict Jmm_I, fftw_complex * restrict Jmm_P, int DeltaMethod, void *Deltawork);
 
 
-#endif SPINSFAST_FORWARD_H
+#endif /* SPINSFAST_FORWARD_H */
