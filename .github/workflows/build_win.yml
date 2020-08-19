@@ -29,17 +29,6 @@ jobs:
         conda install numpy fftw pip
         pip install --upgrade pip wheel auditwheel
         pip install -r ./python/dev-requirements.txt
-        export "FFTW3_HOME=${CONDA_PREFIX}"
-        echo
-        echo "FFTW3_HOME=${CONDA_PREFIX}"
-        ls "${FFTW3_HOME}"
-        echo
-        ls "${FFTW3_HOME}/lib"
-        echo
-        ls "${FFTW3_HOME}/include"
-        echo
-        find "${FFTW3_HOME}" -name "*fftw*"
-        echo
         python setup.py bdist_wheel
     - name: Upload wheel
       uses: actions/upload-artifact@v1

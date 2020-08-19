@@ -21,8 +21,15 @@ if "GSL_HOME" in environ :
     LibDirs += [os.path.join(environ["GSL_HOME"], 'lib')]
 ## See if FFTW3_HOME is set; if so, use it
 if "FFTW3_HOME" in environ :
-    IncDirs += [os.path.join(environ["FFTW3_HOME"], 'include')]
-    LibDirs += [os.path.join(environ["FFTW3_HOME"], 'lib')]
+    IncDirs += [
+        os.path.join(environ["FFTW3_HOME"], 'include'),
+        os.path.join(environ["FFTW3_HOME"], 'Library', 'include'),
+    ]
+    LibDirs += [
+        os.path.join(environ["FFTW3_HOME"], 'lib'),
+        os.path.join(environ["FFTW3_HOME"], 'Library', 'lib'),
+        os.path.join(environ["FFTW3_HOME"], 'Library', 'bin'),
+    ]
     # fftw_rpath = '-Wl,-rpath,{FFTW3_HOME}/lib'.format(FFTW3_HOME=environ["FFTW3_HOME"])
 # If /opt/local directories exist, use them
 if isdir('/opt/local/include'):
