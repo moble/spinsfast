@@ -3,7 +3,7 @@ name: build wheels for windows
 on:
   push:
     branches:
-      - notmaster
+      - master
 
 jobs:
   build:
@@ -24,7 +24,7 @@ jobs:
       env:
         CACHE_NUMBER: 0  # Invalidate cache by changing this number
       with:
-        path: ~\Miniconda\envs
+        path: ~\Miniconda
         key: mmf-cpu-${{ matrix.platform }}-python${{ matrix.python-version }}-${{ env.CACHE_NUMBER }}-${{ hashFiles('**/requirements.txt') }}-${{ hashFiles('**/setup.py') }}
 
     - name: Cache pip
@@ -45,7 +45,7 @@ jobs:
       shell: bash -l {0}
       run: |
         conda update -n base -c defaults conda
-        conda install numpy fftw pip
+        conda install numpy fftw pip m2w64-toolchain
         pip install --upgrade pip wheel auditwheel
         pip install -r ./python/dev-requirements.txt
         # find "C:\ProgramData" -name "*msvcr*"

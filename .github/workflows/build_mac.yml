@@ -24,7 +24,7 @@ jobs:
       env:
         CACHE_NUMBER: 0  # Invalidate cache by changing this number
       with:
-        path: ~/miniconda/envs
+        path: ~/miniconda
         key: mmf-cpu-${{ matrix.platform }}-python${{ matrix.python-version }}-${{ env.CACHE_NUMBER }}-${{ hashFiles('**/requirements.txt') }}-${{ hashFiles('**/setup.py') }}
 
     - name: Cache pip
