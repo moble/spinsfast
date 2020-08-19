@@ -18,10 +18,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: goanpeca/setup-miniconda@v1
+
+    - name: Cache pip
+      uses: actions/cache@v2
+      with:
+        path: ~/Library/Caches/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install miniconda
+      uses: goanpeca/setup-miniconda@v1
       with:
         python-version: ${{ matrix.python-version }}
         channels: conda-forge
+
     - name: Install conda packages
       shell: bash -l {0}
       run: |
@@ -29,17 +40,20 @@ jobs:
         conda install numpy fftw pip
         export LIBRARY_PATH="${CONDA_PREFIX}"/lib
         export C_INCLUDE_PATH="${CONDA_PREFIX}"/include
+
     - name: Build wheel
       shell: bash -l {0}
       run: |
         pip install --upgrade pip wheel auditwheel
         pip install -r ./python/dev-requirements.txt
         python setup.py bdist_wheel
+
     - name: Upload wheel
       uses: actions/upload-artifact@v1
       with:
         name: dist_${{ matrix.os }}_${{ matrix.architecture }}_${{ matrix.python-version }}
         path: dist
+
     - name: Publish to PyPI
       env:
         PYPI_USERNAME: __token__
