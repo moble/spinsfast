@@ -12,6 +12,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: goanpeca/setup-miniconda@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+        channels: conda-forge
+    - name: install conda packages
+      shell: bash -l {0}
+      run: |
+        conda install numpy fftw pip
+        export LIBRARY_PATH="${CONDA_PREFIX}"/lib
+        export C_INCLUDE_PATH="${CONDA_PREFIX}"/include
     - uses: ./.github/workflows/actions/manylinux1_x86_64/
     - uses: ./.github/workflows/actions/manylinux1_i686/
     - name: copy manylinux wheels
