@@ -88,17 +88,12 @@ with open(os.path.join('python', '_version.py'), 'w') as f:
     f.write('__version__ = "{0}"'.format(version))
 
 
-extra_compile_args = ['-std=c99', '-O3', '-DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION']
-
 if on_windows:
-    pass
     # # Use the below for MSVC; assuming mingw/gcc by default.  However, also note that FFTW's
     # # complex type appears to break MSVC, and I don't know how to solve it.
-    # extra_compile_args = extra_compile_args + [
-    #     '/O2', '/DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION',
-    # ]  # No c99 equivalent for windows
+    extra_compile_args = ['/O2', '/DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION']  # No c99 equivalent for windows
 else:
-    extra_compile_args = extra_compile_args + ['-fPIC']
+    extra_compile_args = ['-std=c99', '-O3', '-fPIC', '-DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION']
 
 
 long_description = """\
