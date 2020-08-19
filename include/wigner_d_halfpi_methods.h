@@ -21,6 +21,9 @@
 
 /* Code revision: 104, 2012-04-13 13:00:16 -0400 (Fri, 13 Apr 2012) */
 
+#ifndef WIGNER_D_HALFPI_METHODS_H
+#define WIGNER_D_HALFPI_METHODS_H
+
 #include "restrict.h"
 
 #define WDHP_METHOD_RISBO 0
@@ -34,3 +37,5 @@ void Delta_initialize(int DeltaMethod,void * Deltawork);
 void Delta_getplane(int DeltaMethod, void * Deltawork, const double * restrict Deltal, int l);
 const double *Delta_getrow(int DeltaMethod, void * Deltawork, const double * restrict Deltal, int l,int twicelp1, int mp);
 void Delta_increment_l(int DeltaMethod, void * Deltawork);
+
+#endif /* WIGNER_D_HALFPI_METHODS_H */

@@ -21,9 +21,14 @@
 
 /* Code revision: 104, 2012-04-13 13:00:16 -0400 (Fri, 13 Apr 2012) */
 
+#ifndef ALM_H
+#define ALM_H
+
 #include <math.h>
 #include "restrict.h"
 
 int lm_ind(int l, int m, int lmax);
 void ind_lm(int i, int *l, int *m, int lmax);
 int N_lm(int lmax);
+
+#endif /* ALM_H */

@@ -21,6 +21,9 @@
 
 /* Code revision: 104, 2012-04-13 13:00:16 -0400 (Fri, 13 Apr 2012) */
 
+#ifndef HEALPIX_CONVERT_H
+#define HEALPIX_CONVERT_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -42,3 +45,5 @@ void ecp2healpix_nearest(complex *ecp, int Ntheta, int Nphi,
 
 void healpix2ecp(double *hp_r, double *hp_i, int nside,
 	    complex *ecp, int Ntheta, int Nphi);
+
+#endif /* HEALPIX_CONVERT_H */

@@ -21,6 +21,9 @@
 
 /* Code revision: 104, 2012-04-13 13:00:16 -0400 (Fri, 13 Apr 2012) */
 
+#ifndef SPINSFAST_BACKWARD_H
+#define SPINSFAST_BACKWARD_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -46,3 +49,5 @@ void spinsfast_backward_Gmm(const fftw_complex * restrict a, int Ntransform, con
 void spinsfast_backward_Gmm_old(const fftw_complex * restrict a, const int s, const int lmin,const int lmax, fftw_complex * restrict Gmm);
 void spinsfast_backward_Gmm_preDelta(const fftw_complex * restrict a, const int s, const int lmin,const int lmax, fftw_complex * restrict Gmm,const double * restrict Delta);
 void spinsfast_backward_Gmm_alm2iqu(const fftw_complex * restrict T, const fftw_complex * restrict P2,const int lmax, fftw_complex * restrict Gmm_I, fftw_complex * restrict Gmm_P, int DeltaMethod, void *Deltawork);
+
+#endif /* SPINSFAST_BACKWARD_H */

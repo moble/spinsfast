@@ -21,6 +21,9 @@
 
 /* Code revision: 104, 2012-04-13 13:00:16 -0400 (Fri, 13 Apr 2012) */
 
+#ifndef _WIGNER_D_HALFPI_TN_H_
+#define _WIGNER_D_HALFPI_TN_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -70,3 +73,6 @@ void wdhp_get_col_pos(int l,int m2, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_l
 void wdhp_get_row_pos(int l,int m1, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_llm, double *Drow);
 void wdhp_get_quarter_plane(int l, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_llm, double *D);
 void wdhp_get_quarter_plane2(int l, FPTYPE *sqt, FPTYPE *invsqt, FPTYPE *D_all_llm, double *D); /*  This is same as wdhp_get_row_pos for m2>m1 */
+
+
+#endif
