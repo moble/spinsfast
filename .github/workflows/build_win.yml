@@ -50,7 +50,9 @@ jobs:
         pip install -r ./python/dev-requirements.txt
         find "${CONDA_PREFIX}" -name "*msvcr*"
         find "${CONDA_PREFIX}" -name "*fftw3*"
-        python setup.py build --compiler=gcc
+        mingw32 /? || true
+        python setup.py build --compiler=mingw32
+        #python setup.py build --compiler=gcc  # Doesn't know how to work on nt
         #CC=gcc python setup.py build  # Just uses MSVC
         #python setup.py build --compiler=mingw-w64  # Doesn't know how to work on nt
         python setup.py install
