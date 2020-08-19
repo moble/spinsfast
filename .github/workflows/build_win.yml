@@ -54,8 +54,11 @@ jobs:
         # "C:\ProgramData\Chocolatey\bin\gcc.exe" --help || true
         # "C:/ProgramData/Chocolatey/bin/gcc.exe" --help || true
         # gcc.exe --help || true
+        echo "Messing with the paths:"
         gcc.exe -print-libgcc-file-name || true
-        export LIBRARY_PATH="C:\Miniconda\envs\test/Library/lib;C:\Miniconda\envs\test/Library/bin"
+        ln -s `gcc.exe -print-libgcc-file-name` "libmsvcr140.a" || true
+        export LIBRARY_PATH="C:\Miniconda\envs\test/Library/lib;C:\Miniconda\envs\test/Library/bin;${PWD}"
+        echo "LIBRARY_PATH=_${LIBRARY_PATH}_"
         export CPATH="C:\Miniconda\envs\test/Library/include"
         ln -s "C:\ProgramData/chocolatey/lib/mingw/tools/install/mingw64/x86_64-w64-mingw32/lib/libmsvcr120.a" "libmsvcr140.a"
         #python setup.py build  # Uses MSVC, which doesn't understand fftw_complex
