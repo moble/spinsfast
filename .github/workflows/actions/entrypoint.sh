@@ -1,5 +1,7 @@
 #!/bin/sh
 
+yum install -y fftw3 fftw3-devel
+
 PYTHONS=("cp36-cp36m" "cp37-cp37m" "cp38-cp38")
 
 for PYTHON in ${PYTHONS[@]}; do
