@@ -44,7 +44,7 @@ void spinsfast_forward_transform(fftw_complex * restrict a, const int Ntransform
   int Nm = 2*lmax+1;
   double norml;
 
-  fftw_complex *Itom_helper = fftw_malloc(Nm*sizeof(complex));
+  fftw_complex *Itom_helper = fftw_malloc(Nm*sizeof(fftw_complex));
   fftw_complex *Itom = &Itom_helper[lmax];
 
   for (m=-lmax; m<=lmax; m++){
