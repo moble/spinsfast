@@ -3,7 +3,7 @@ name: build wheels for macos
 on:
   push:
     branches:
-      - master
+      - notmaster
 
 jobs:
   build:
@@ -52,7 +52,6 @@ jobs:
     - name: Build wheel
       shell: bash -l {0}
       run: |
-        exit 666
         pip install --upgrade pip wheel auditwheel
         pip install -r ./python/dev-requirements.txt
         python setup.py bdist_wheel
