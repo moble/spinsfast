@@ -58,7 +58,8 @@ jobs:
         gcc.exe /? || true
         gcc.exe --help || true
         echo "LIBRARY_PATH=_${LIBRARY_PATH}_"
-        export LIBRARY_PATH=C:\Miniconda\envs\test/Library/lib;C:\Miniconda\envs\test/Library/bin
+        export LIBRARY_PATH="C:\Miniconda\envs\test/Library/lib;C:\Miniconda\envs\test/Library/bin"
+        echo "LIBRARY_PATH=_${LIBRARY_PATH}_"
         #python setup.py build  # Uses MSVC, which doesn't understand fftw_complex
         #python setup.py build --compiler=gcc  # Doesn't know how to work on nt
         #CC=gcc python setup.py build  # Just uses MSVC
