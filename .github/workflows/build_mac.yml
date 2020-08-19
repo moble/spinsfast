@@ -22,19 +22,20 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         channels: conda-forge
-    - name: install conda packages
+    - name: Install conda packages
       shell: bash -l {0}
       run: |
+        conda update -n base -c defaults conda
         conda install numpy fftw pip
         export LIBRARY_PATH="${CONDA_PREFIX}"/lib
         export C_INCLUDE_PATH="${CONDA_PREFIX}"/include
-    - name: build wheel
+    - name: Build wheel
       shell: bash -l {0}
       run: |
         pip install --upgrade pip wheel auditwheel
         pip install -r ./python/dev-requirements.txt
         python setup.py bdist_wheel
-    - name: upload wheel
+    - name: Upload wheel
       uses: actions/upload-artifact@v1
       with:
         name: dist_${{ matrix.os }}_${{ matrix.architecture }}_${{ matrix.python-version }}
