@@ -51,8 +51,12 @@ jobs:
         find "C:\ProgramData" -name "*msvcr*"
         find "${CONDA_PREFIX}" -name "*msvcr*"
         find "${CONDA_PREFIX}" -name "*fftw3*"
-        C:\ProgramData\Chocolatey\bin\gcc.exe /? || true
-        C:\ProgramData\Chocolatey\bin\gcc.exe --help || true
+        "C:\ProgramData\Chocolatey\bin\gcc.exe" /? || true
+        "C:\ProgramData\Chocolatey\bin\gcc.exe" --help || true
+        "C:/ProgramData/Chocolatey/bin/gcc.exe" /? || true
+        "C:/ProgramData/Chocolatey/bin/gcc.exe" --help || true
+        gcc.exe /? || true
+        gcc.exe --help || true
         echo "LIBRARY_PATH=_${LIBRARY_PATH}_"
         export LIBRARY_PATH=C:\Miniconda\envs\test/Library/lib;C:\Miniconda\envs\test/Library/bin
         #python setup.py build  # Uses MSVC, which doesn't understand fftw_complex
