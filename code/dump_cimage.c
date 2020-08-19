@@ -24,10 +24,7 @@
 #ifdef USE_FITSIO
 
 
-#include <complex.h>
-#undef complex
-#define complex _Complex double
-#include <fftw3.h>
+#include "fftw3.h"
 #include <cfitsio/fitsio.h>
 
 int dump_cimage(fftw_complex *image, int Ntheta, int Nphi, const char *filename) {
