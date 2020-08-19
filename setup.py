@@ -91,7 +91,6 @@ if on_windows:
     #     r'-IC:\Miniconda\envs\test/Library/include',
     #     '/O2', '/DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION',
     # ]  # No c99 equivalent for windows
-else:
 
 
 long_description = """\
