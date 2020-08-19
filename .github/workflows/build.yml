@@ -1,6 +1,10 @@
 name: Build
 
-on: [push, pull_request]
+on: #[push, pull_request]
+  push:
+    branches:
+      - notmaster
+
 
 jobs:
   build_wheels:
@@ -20,7 +24,7 @@ jobs:
           python-version: '3.7'
           channels: conda-forge
 
-      - name: Install conda packages and build wheel
+      - name: Install conda packages
         shell: bash -l {0}
         run: |
           conda update -n base -c defaults conda
@@ -35,6 +39,12 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           choco install vcpython27 -f -y
+          echo "Messing with the paths:"
+          gcc.exe -print-libgcc-file-name || true
+          ln -s `gcc.exe -print-libgcc-file-name` "libmsvcr140.a" || true
+          export LIBRARY_PATH="C:\Miniconda\envs\test/Library/lib;C:\Miniconda\envs\test/Library/bin;${PWD}"
+          echo "LIBRARY_PATH=_${LIBRARY_PATH}_"
+          export CPATH="C:\Miniconda\envs\test/Library/include"
         shell: bash -l {0}
 
       - name: Build wheels
