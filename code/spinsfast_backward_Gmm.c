@@ -52,7 +52,7 @@ void spinsfast_backward_Gmm(const fftw_complex * restrict a, int Ntransform, con
 
   int ispin, s;
 
-  fftw_complex *Ito_helper = fftw_malloc(Nm*sizeof(complex));
+  fftw_complex *Ito_helper = fftw_malloc(Nm*sizeof(fftw_complex));
   fftw_complex *Ito = &Ito_helper[lmax];
 
   for (m=-lmax; m<=lmax; m++){
