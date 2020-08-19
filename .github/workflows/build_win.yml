@@ -18,10 +18,29 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: goanpeca/setup-miniconda@v1
+
+    - name: Cache conda
+      uses: actions/cache@v2
+      env:
+        CACHE_NUMBER: 0  # Invalidate cache by changing this number
+      with:
+        path: ~\Miniconda\envs
+        key: mmf-cpu-${{ matrix.platform }}-python${{ matrix.python-version }}-${{ env.CACHE_NUMBER }}-${{ hashFiles('**/requirements.txt') }}-${{ hashFiles('**/setup.py') }}
+
+    - name: Cache pip
+      uses: actions/cache@v2
+      with:
+        path: ~\AppData\Local\pip\Cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install miniconda
+      uses: goanpeca/setup-miniconda@v1
       with:
         python-version: ${{ matrix.python-version }}
         channels: conda-forge
+
     - name: Install conda packages and build wheel
       shell: bash -l {0}
       run: |
@@ -31,14 +50,17 @@ jobs:
         pip install -r ./python/dev-requirements.txt
         find "${CONDA_PREFIX}" -name "*msvcr*"
         find "${CONDA_PREFIX}" -name "*fftw3*"
-        CC=gcc python setup.py build
-        #python setup.py build --compiler=mingw-w64
+        python setup.py build --compiler=gcc
+        #CC=gcc python setup.py build  # Just uses MSVC
+        #python setup.py build --compiler=mingw-w64  # Doesn't know how to work on nt
         python setup.py install
+
     - name: Upload wheel
       uses: actions/upload-artifact@v1
       with:
         name: dist_${{ matrix.os }}_${{ matrix.architecture }}_${{ matrix.python-version }}
         path: dist
+
     - name: Publish to PyPI
       env:
         PYPI_USERNAME: __token__

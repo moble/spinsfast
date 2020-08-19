@@ -12,19 +12,33 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Cache pip
+      uses: actions/cache@v2
+      env:
+        CACHE_NUMBER: 0  # Invalidate cache by changing this number
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
         python-version: 3.8
+
     - name: make sdist
       run: |
         pip install -r ./python/dev-requirements.txt
         python setup.py sdist
-    - name: upload sdist
+
+    - name: Upload sdist
       uses: actions/upload-artifact@v1
       with:
         name: dist
         path: dist
+
     - name: Publish to PyPI
       env:
         PYPI_USERNAME: __token__
