@@ -91,9 +91,10 @@ with open(os.path.join('python', '_version.py'), 'w') as f:
 extra_compile_args = ['-std=c99', '-fPIC', '-O3', '-DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION']
 
 if on_windows:
-    extra_compile_args = extra_compile_args + [r'-IC:\Miniconda\envs\test/Library/include']
-    # [
-    #     r'-IC:\Miniconda\envs\test/Library/include',
+    pass
+    # # Use the below for MSVC; assuming mingw/gcc by default.  However, also note that FFTW's
+    # # complex type appears to break MSVC, and I don't know how to solve it.
+    # extra_compile_args = extra_compile_args + [
     #     '/O2', '/DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION',
     # ]  # No c99 equivalent for windows
 
