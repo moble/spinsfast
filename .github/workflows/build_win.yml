@@ -48,7 +48,7 @@ jobs:
         conda install numpy fftw pip
         pip install --upgrade pip wheel auditwheel
         pip install -r ./python/dev-requirements.txt
-        find C:\ProgramData -name "*msvcr*"
+        find "C:\ProgramData" -name "*msvcr*"
         find "${CONDA_PREFIX}" -name "*msvcr*"
         find "${CONDA_PREFIX}" -name "*fftw3*"
         C:\ProgramData\Chocolatey\bin\gcc.exe /? || true
