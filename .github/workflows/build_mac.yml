@@ -3,7 +3,7 @@ name: build wheels for macos
 on:
   push:
     branches:
-      - notmaster
+      - master
 
 jobs:
   build:
@@ -18,6 +18,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Cache conda
+      uses: actions/cache@v2
+      env:
+        CACHE_NUMBER: 0  # Invalidate cache by changing this number
+      with:
+        path: ~/miniconda/envs
+        key: mmf-cpu-${{ matrix.platform }}-python${{ matrix.python-version }}-${{ env.CACHE_NUMBER }}-${{ hashFiles('**/requirements.txt') }}-${{ hashFiles('**/setup.py') }}
 
     - name: Cache pip
       uses: actions/cache@v2
@@ -44,6 +52,7 @@ jobs:
     - name: Build wheel
       shell: bash -l {0}
       run: |
+        exit 666
         pip install --upgrade pip wheel auditwheel
         pip install -r ./python/dev-requirements.txt
         python setup.py bdist_wheel
