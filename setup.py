@@ -24,11 +24,16 @@ if "FFTW3_HOME" in environ :
     IncDirs += [
         os.path.join(environ["FFTW3_HOME"], 'include'),
         os.path.join(environ["FFTW3_HOME"], 'Library', 'include'),
+        environ["FFTW3_HOME"]+'/include',  # stupid Windows
+        environ["FFTW3_HOME"]+'/Library/include',  # stupid Windows
     ]
     LibDirs += [
+        environ["FFTW3_HOME"],
         os.path.join(environ["FFTW3_HOME"], 'lib'),
         os.path.join(environ["FFTW3_HOME"], 'Library', 'lib'),
         os.path.join(environ["FFTW3_HOME"], 'Library', 'bin'),
+        environ["FFTW3_HOME"]+'/Library/lib',  # stupid Windows
+        environ["FFTW3_HOME"]+'/Library/bin',  # stupid Windows
     ]
     # fftw_rpath = '-Wl,-rpath,{FFTW3_HOME}/lib'.format(FFTW3_HOME=environ["FFTW3_HOME"])
 # If /opt/local directories exist, use them
