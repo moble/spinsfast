@@ -2,7 +2,7 @@
 /* spinsfast module when it is not defined. */
 #ifndef restrict
 #ifdef __restrict
-#define restrict __restrict
+#define restrict /* __restrict */
 #else
 #define restrict /* nothing */
 #endif
