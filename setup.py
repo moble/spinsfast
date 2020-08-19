@@ -84,7 +84,10 @@ with open(os.path.join('python', '_version.py'), 'w') as f:
 
 
 if on_windows:
-    extra_compile_args = ['/O2', '/DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION']  # No c99 equivalent for windows
+    extra_compile_args = [
+        '-IC:\Miniconda\envs\test/Library/include/fftw3.h'
+        '/O2', '/DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION'
+    ]  # No c99 equivalent for windows
 else:
     extra_compile_args = ['-std=c99', '-fPIC', '-O3', '-DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION']
 
