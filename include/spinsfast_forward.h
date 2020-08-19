@@ -21,6 +21,9 @@
 
 /* Code revision: 104, 2012-04-13 13:00:16 -0400 (Fri, 13 Apr 2012) */
 
+#ifndef SPINSFAST_FORWARD_H
+#define SPINSFAST_FORWARD_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -64,3 +67,6 @@ void spinsfast_forward_transform_eo(fftw_complex * restrict a, const int Ntransf
 void spinsfast_forward_transform_from_Imm(fftw_complex * restrict a, const int s,const int smax,const int lmax, fftw_complex * restrict Imm, int pre, void *Deltawork);
 void spinsfast_forward_transform_preDelta(fftw_complex * restrict a, const int s,const int smax,const int lmax, fftw_complex * restrict Imm,const double * restrict Delta) ;
 void spinsfast_forward_transform_iqu2alm(fftw_complex * restrict T,fftw_complex * P2,const int lmax, fftw_complex * restrict Jmm_I, fftw_complex * restrict Jmm_P, int DeltaMethod, void *Deltawork);
+
+
+#endif SPINSFAST_FORWARD_H

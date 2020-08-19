@@ -21,6 +21,9 @@
 
 /* Code revision: 104, 2012-04-13 13:00:16 -0400 (Fri, 13 Apr 2012) */
 
+#ifndef _WIGNER_D_HALFPI_RISBO_H_
+#define _WIGNER_D_HALFPI_RISBO_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -60,3 +63,5 @@ double *wdhp_integer_getrow(wdhp *wd, int m1);
 int wdhp_integer_idx(int l, int m1, int m2);
 int wdhp_integer_N(int lmax);
 double *wdhp_integer_precompute(int lmax);
+
+#endif /* _WIGNER_D_HALFPI_RISBO_H_ */
