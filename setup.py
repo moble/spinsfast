@@ -17,12 +17,12 @@ IncDirs = [numpy_inc, "include",]
 LibDirs = ["lib",]
 ## See if GSL_HOME is set; if so, use it
 if "GSL_HOME" in environ :
-    IncDirs += [environ["GSL_HOME"]+'/include']
-    LibDirs += [environ["GSL_HOME"]+'/lib']
+    IncDirs += [os.path.join(environ["GSL_HOME"], 'include')]
+    LibDirs += [os.path.join(environ["GSL_HOME"], 'lib')]
 ## See if FFTW3_HOME is set; if so, use it
 if "FFTW3_HOME" in environ :
-    IncDirs += [environ["FFTW3_HOME"]+'/include']
-    LibDirs += [environ["FFTW3_HOME"]+'/lib']
+    IncDirs += [os.path.join(environ["FFTW3_HOME"], 'include')]
+    LibDirs += [os.path.join(environ["FFTW3_HOME"], 'lib')]
     # fftw_rpath = '-Wl,-rpath,{FFTW3_HOME}/lib'.format(FFTW3_HOME=environ["FFTW3_HOME"])
 # If /opt/local directories exist, use them
 if isdir('/opt/local/include'):
@@ -72,7 +72,7 @@ else:
             version = '0.0.0'
             print("Setup.py failed to determine the version; using '{0}'".format(version))
     version = '104.' + version
-with open('python/_version.py', 'w') as f:
+with open(os.path.join('python', '_version.py'), 'w') as f:
     f.write('__version__ = "{0}"'.format(version))
 
 
@@ -99,7 +99,7 @@ setup(name = 'spinsfast',
       long_description=long_description,
       ext_modules = [Extension(
           name = 'spinsfast.cextension',
-          sources = ['python/cextension.c'] + glob.glob('code/*.c'),
+          sources = [os.path.join('python', 'cextension.c')] + glob.glob(os.path.join('code', '*.c')),
           include_dirs=IncDirs,
           libraries=['fftw3'],
           library_dirs=LibDirs,
