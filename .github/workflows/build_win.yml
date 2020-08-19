@@ -38,6 +38,8 @@ jobs:
         echo
         ls "${FFTW3_HOME}/include"
         echo
+        find "${FFTW3_HOME}" -name "*fftw*"
+        echo
         python setup.py bdist_wheel
     - name: Upload wheel
       uses: actions/upload-artifact@v1
