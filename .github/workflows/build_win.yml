@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-        architecture: [x64]
+        architecture: [x64] #, x86]
         python-version: [3.6, 3.7, 3.8]
 
     steps:
@@ -48,13 +48,18 @@ jobs:
         conda install numpy fftw pip
         pip install --upgrade pip wheel auditwheel
         pip install -r ./python/dev-requirements.txt
+        find C:\ProgramData -name "*msvcr*"
         find "${CONDA_PREFIX}" -name "*msvcr*"
         find "${CONDA_PREFIX}" -name "*fftw3*"
-        mingw32 /? || true
-        python setup.py build --compiler=mingw32
+        C:\ProgramData\Chocolatey\bin\gcc.exe /? || true
+        C:\ProgramData\Chocolatey\bin\gcc.exe --help || true
+        echo "LIBRARY_PATH=_${LIBRARY_PATH}_"
+        export LIBRARY_PATH=C:\Miniconda\envs\test/Library/lib;C:\Miniconda\envs\test/Library/bin
+        #python setup.py build  # Uses MSVC, which doesn't understand fftw_complex
         #python setup.py build --compiler=gcc  # Doesn't know how to work on nt
         #CC=gcc python setup.py build  # Just uses MSVC
         #python setup.py build --compiler=mingw-w64  # Doesn't know how to work on nt
+        python setup.py build --compiler=mingw32
         python setup.py install
 
     - name: Upload wheel
