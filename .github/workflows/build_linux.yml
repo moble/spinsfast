@@ -3,7 +3,7 @@ name: build wheels for linux
 on:
   push:
     branches:
-      - master
+      - notmaster
 
 jobs:
   build:
