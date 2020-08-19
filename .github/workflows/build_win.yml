@@ -29,6 +29,13 @@ jobs:
         conda install numpy fftw pip
         pip install --upgrade pip wheel auditwheel
         pip install -r ./python/dev-requirements.txt
+        echo "Messing with the paths:"
+        echo "CL=_${CL}_"
+        echo "_CL_=_${_CL_}_"
+        echo "INCLUDE=_${INCLUDE}_"
+        echo "LIBPATH=_${LIBPATH}_"
+        export LIBPATH="${LIBPATH};C:\Miniconda\envs\test/Library/lib;C:\Miniconda\envs\test/Library/bin;${PWD}"
+        export CL="${CL} -IC:\Miniconda\envs\test/Library/include"
         python setup.py bdist_wheel
     - name: Upload wheel
       uses: actions/upload-artifact@v1
