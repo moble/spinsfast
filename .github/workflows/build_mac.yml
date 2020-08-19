@@ -2,8 +2,8 @@ name: build wheels for macos
 
 on:
   push:
-    tags:
-      - v*
+    branches:
+      - master
 
 jobs:
   build:
