@@ -1,7 +1,7 @@
 #if _MSC_VER && !__INTEL_COMPILER
-#define FFTW_DLL
+/* #include <complex.h> */
+#define FFTW_NO_Complex
 #include <fftw3.h>
-#include <complex.h>
 /* #undef I */
 /* typedef double fftw_complex[2]; */
 /* const _Dcomplex I = {0.0, 1.0}; */
