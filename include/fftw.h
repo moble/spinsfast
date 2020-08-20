@@ -2,6 +2,7 @@
 #define FFTW_DLL
 #include <fftw3.h>
 #include <complex.h>
+typedef double fftw_complex[2];
 #else
 #include <complex.h>
 #undef complex
