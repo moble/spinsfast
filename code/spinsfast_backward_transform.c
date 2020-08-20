@@ -23,7 +23,7 @@
 
 #include <spinsfast_backward.h>
 
-void spinsfast_backward_transform(fftw_complex  *f, int Ntheta, int Nphi, int lmax, fftw_complex *Gmm) {
+void spinsfast_backward_transform(fftw_complex *f, int Ntheta, int Nphi, int lmax, fftw_complex *Gmm) {
   /*  f is Ntheta by Nphi, access f[ itheta * Nphi + iphi ]. */
   /*  F is  version of f extended to the whole sphere */
   /*  Works for pixelization where first ring is north pole and the last ring is the south pole */
