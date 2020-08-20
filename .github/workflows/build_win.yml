@@ -23,19 +23,18 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-        architecture: x64
     # - uses: goanpeca/setup-miniconda@v1
     #   with:
     #     python-version: ${{ matrix.python-version }}
     #     channels: conda-forge
     - name: Install conda packages and build wheel
-      shell: bash -l {0}
+      # shell: bash -l {0}
       run: |
         # conda update -n base -c defaults conda
         # conda install numpy fftw pip
-        pip install --upgrade pip wheel auditwheel
+        pip install --upgrade pip
         pip install -r ./python/dev-requirements.txt
-        pip install pyfftw
+        pip install wheel auditwheel pyfftw
         echo "Messing with the paths:"
         echo "CL=_${CL}_"
         echo "_CL_=_${_CL_}_"
