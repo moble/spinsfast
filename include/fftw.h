@@ -1,4 +1,5 @@
 #if _MSC_VER && !__INTEL_COMPILER
+#define FFTW_DLL
 #include <fftw3.h>
 #include <complex.h>
 #else
