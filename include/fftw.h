@@ -1,5 +1,5 @@
 #if _MSC_VER && !__INTEL_COMPILER
-/* #include <complex.h> */
+#include <complex.h>
 #define FFTW_NO_Complex
 #include <fftw3.h>
 /* #undef I */
