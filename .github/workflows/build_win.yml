@@ -35,17 +35,17 @@ jobs:
         pip install --upgrade pip
         pip install -r ./python/dev-requirements.txt
         pip install wheel auditwheel pyfftw
-        echo "Messing with the paths:"
-        echo "CL=_${CL}_"
-        echo "_CL_=_${_CL_}_"
-        echo "INCLUDE=_${INCLUDE}_"
-        echo "LIBPATH=_${LIBPATH}_"
-        export LIBPATH="${LIBPATH};C:\Miniconda\envs\test/Library/lib;C:\Miniconda\envs\test/Library/bin;${PWD}"
-        export CL="${CL} -IC:\Miniconda\envs\test/Library/include"
-        echo "CL=_${CL}_"
-        echo "_CL_=_${_CL_}_"
-        echo "INCLUDE=_${INCLUDE}_"
-        echo "LIBPATH=_${LIBPATH}_"
+        # echo "Messing with the paths:"
+        # echo "CL=_${CL}_"
+        # echo "_CL_=_${_CL_}_"
+        # echo "INCLUDE=_${INCLUDE}_"
+        # echo "LIBPATH=_${LIBPATH}_"
+        # export LIBPATH="${LIBPATH};C:\Miniconda\envs\test/Library/lib;C:\Miniconda\envs\test/Library/bin;${PWD}"
+        # export CL="${CL} -IC:\Miniconda\envs\test/Library/include"
+        # echo "CL=_${CL}_"
+        # echo "_CL_=_${_CL_}_"
+        # echo "INCLUDE=_${INCLUDE}_"
+        # echo "LIBPATH=_${LIBPATH}_"
         python setup.py bdist_wheel
     - name: Upload wheel
       uses: actions/upload-artifact@v1
