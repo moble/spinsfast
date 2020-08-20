@@ -2,9 +2,9 @@
 #define FFTW_DLL
 #include <fftw3.h>
 #include <complex.h>
-#undef I
+/* #undef I */
 /* typedef double fftw_complex[2]; */
-const _Dcomplex I = {0.0, 1.0};
+/* const _Dcomplex I = {0.0, 1.0}; */
 #else
 #include <complex.h>
 #undef complex
