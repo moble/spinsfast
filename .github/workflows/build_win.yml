@@ -46,7 +46,7 @@ jobs:
         # echo "_CL_=_${_CL_}_"
         # echo "INCLUDE=_${INCLUDE}_"
         # echo "LIBPATH=_${LIBPATH}_"
-        set CL="-IC:\Miniconda\envs\test/Library/include /TP"
+        # set CL="-IC:\Miniconda\envs\test/Library/include"
         python setup.py bdist_wheel
     - name: Upload wheel
       uses: actions/upload-artifact@v1
