@@ -30,6 +30,7 @@ jobs:
     - name: Install conda packages and build wheel
       # shell: bash -l {0}
       run: |
+        choco install mingw
         # conda update -n base -c defaults conda
         # conda install numpy fftw pip
         pip install --upgrade pip
@@ -47,6 +48,7 @@ jobs:
         # echo "INCLUDE=_${INCLUDE}_"
         # echo "LIBPATH=_${LIBPATH}_"
         # set CL="-IC:\Miniconda\envs\test/Library/include"
+        python setup.py build --compiler=mingw32
         python setup.py bdist_wheel
     - name: Upload wheel
       uses: actions/upload-artifact@v1
