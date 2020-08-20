@@ -30,7 +30,7 @@ jobs:
     - name: Install conda packages and build wheel
       # shell: bash -l {0}
       run: |
-        choco install mingw
+        choco install --force mingw
         # conda update -n base -c defaults conda
         # conda install numpy fftw pip
         pip install --upgrade pip
