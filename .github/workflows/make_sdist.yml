@@ -3,7 +3,7 @@ name: make source distribution
 on:
   push:
     branches:
-      - notmaster
+      - master
 
 jobs:
   build:
