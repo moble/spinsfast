@@ -3,7 +3,7 @@ name: build wheels for windows
 on:
   push:
     branches:
-      - master
+      - never
 
 jobs:
   build:
@@ -31,6 +31,7 @@ jobs:
       # shell: bash -l {0}
       run: |
         choco install --force mingw
+        setx path "%path%;C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin"
         # conda update -n base -c defaults conda
         # conda install numpy fftw pip
         pip install --upgrade pip
