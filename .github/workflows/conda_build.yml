@@ -1,11 +1,17 @@
-name: build wheels for linux
+name: Build with conda-build
 
 on: push
 
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: [3.6]
 
     steps:
     - uses: actions/checkout@v2
@@ -33,6 +39,10 @@ jobs:
       run: |
         conda update -n base -c defaults conda
         conda install conda-build conda-verify
+
+    - name: Run conda-build
+      shell: bash -l {0}
+      run: |
         export LIBRARY_PATH="${CONDA_PREFIX}"/lib
         export C_INCLUDE_PATH="${CONDA_PREFIX}"/include
         conda build conda
