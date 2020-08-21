@@ -5,9 +5,9 @@ package:
 source:
   git_url: https://github.com/moble/spinsfast.git
 
-# build:
-#   # script: python setup.py install
-#   # script: python setup.py bdist_wheel
+build:
+  # script: python setup.py install
+  script: python setup.py bdist_wheel
 
 requirements:
   build:
