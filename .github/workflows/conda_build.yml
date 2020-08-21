@@ -1,0 +1,39 @@
+name: build wheels for linux
+
+on: push
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Cache conda
+      uses: actions/cache@v2
+      env:
+        CACHE_NUMBER: 0  # Invalidate cache by changing this number
+      with:
+        path: ~\Miniconda
+        # path: |
+        #   /usr/share/miniconda/
+        #   /usr/local/miniconda/
+        # path: ~/miniconda
+        key: mmf-cpu-${{ matrix.platform }}-python${{ matrix.python-version }}-${{ env.CACHE_NUMBER }}-${{ hashFiles('**/requirements.txt') }}-${{ hashFiles('**/setup.py') }}
+
+    - name: Install miniconda
+      uses: goanpeca/setup-miniconda@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+        channels: conda-forge
+
+    - name: Install conda packages
+      shell: bash -l {0}
+      run: |
+        conda update -n base -c defaults conda
+        conda install conda-build conda-verify
+        export LIBRARY_PATH="${CONDA_PREFIX}"/lib
+        export C_INCLUDE_PATH="${CONDA_PREFIX}"/include
+        conda build conda
+        ls dist

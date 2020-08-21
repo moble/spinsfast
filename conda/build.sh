@@ -18,4 +18,5 @@ else
     export C_INCLUDE_PATH=$PREFIX/include
 fi
 
-python setup.py install
+#python setup.py install
+python setup.py bdist_wheel
