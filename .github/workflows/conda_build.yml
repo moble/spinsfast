@@ -41,12 +41,14 @@ jobs:
         conda update -n base -c defaults conda
         conda install conda-build conda-verify #m2w64-gcc
         conda install m2w64-toolchain
+        conda install -c conda-forge m2w64-toolchain_win-64
 
     - name: Run conda-build
       shell: bash -l {0}
       run: |
         export LIBRARY_PATH="${CONDA_PREFIX}"/lib
         export C_INCLUDE_PATH="${CONDA_PREFIX}"/include
+        export "PATH=${CONDA_PREFIX}\Library\mingw-w64\bin;${PATH}"
         # python setup.py build --compiler=mingw32
         # python setup.py bdist_wheel
         conda build conda
