@@ -1,1 +1,1 @@
-python setup.py bdist_wheel
+CC=gcc python setup.py bdist_wheel
