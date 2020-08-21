@@ -39,14 +39,14 @@ jobs:
       shell: bash -l {0}
       run: |
         conda update -n base -c defaults conda
-        conda install conda-build conda-verify m2w64-gcc
+        conda install conda-build conda-verify #m2w64-gcc
 
     - name: Run conda-build
       shell: bash -l {0}
       run: |
         export LIBRARY_PATH="${CONDA_PREFIX}"/lib
         export C_INCLUDE_PATH="${CONDA_PREFIX}"/include
-        python setup.py build --compiler=mingw32
-        python setup.py bdist_wheel
-        # conda build conda
+        # python setup.py build --compiler=mingw32
+        # python setup.py bdist_wheel
+        conda build conda
         find .
