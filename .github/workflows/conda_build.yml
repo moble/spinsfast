@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: [3.6]
 
     steps:
@@ -46,4 +46,4 @@ jobs:
         export LIBRARY_PATH="${CONDA_PREFIX}"/lib
         export C_INCLUDE_PATH="${CONDA_PREFIX}"/include
         conda build conda
-        ls dist
+        find .
