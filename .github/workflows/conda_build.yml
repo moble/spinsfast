@@ -40,6 +40,7 @@ jobs:
       run: |
         conda update -n base -c defaults conda
         conda install conda-build conda-verify #m2w64-gcc
+        conda install m2w64-toolchain
 
     - name: Run conda-build
       shell: bash -l {0}
