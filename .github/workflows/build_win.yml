@@ -12,7 +12,7 @@ jobs:
       matrix:
         os: [windows-latest]
         architecture: [x64, x86]
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.6] #, 3.7, 3.8]
 
     steps:
     - uses: actions/checkout@v2
@@ -30,13 +30,14 @@ jobs:
     - name: Install conda packages and build wheel
       shell: bash -l {0}
       run: |
-        conda update -n base -c defaults conda
-        conda install numpy fftw pip
-        pip install wheel auditwheel
+        # conda update -n base -c defaults conda
+        # conda install numpy fftw pip
+        # pip install wheel auditwheel
+        conda install numpy fftw
         export LIBPATH="${LIBPATH};C:\Miniconda\envs\test/Library/lib;C:\Miniconda\envs\test/Library/bin;${PWD}"
         export CL="${CL} -IC:\Miniconda\envs\test/Library/include"
         python setup.py build
-        python setup.py bdist_wheel
+        # python setup.py bdist_wheel
 
 
 
