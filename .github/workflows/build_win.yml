@@ -1,9 +1,6 @@
 name: build wheels for windows
 
-on:
-  push:
-    branches:
-      - never
+on: [push]
 
 jobs:
   build:
