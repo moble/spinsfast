@@ -1,0 +1,47 @@
+name: build wheels for windows
+
+on:
+  push:
+    branches:
+      - never
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        architecture: [x64, x86]
+        python-version: [3.6, 3.7, 3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - uses: goanpeca/setup-miniconda@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+        channels: conda-forge
+
+    - name: Install conda packages and build wheel
+      shell: bash -l {0}
+      run: |
+        conda update -n base -c defaults conda
+        conda install numpy fftw pip
+        pip install wheel auditwheel
+        export LIBPATH="${LIBPATH};C:\Miniconda\envs\test/Library/lib;C:\Miniconda\envs\test/Library/bin;${PWD}"
+        export CL="${CL} -IC:\Miniconda\envs\test/Library/include"
+        python setup.py build
+        python setup.py bdist_wheel
+
+
+
+#         export LIBRARY_PATH="C:\Miniconda\envs\test/Library/lib;C:\Miniconda\envs\test/Library/bin;${PWD}"
+#         export CPATH="C:\Miniconda\envs\test/Library/include"
