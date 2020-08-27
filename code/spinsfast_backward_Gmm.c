@@ -47,7 +47,11 @@ void spinsfast_backward_Gmm(const fftw_complex * restrict a, int Ntransform, con
   int NGmm = Nm*Nm;
 
   for (m=0;m<NGmm*Ntransform;m++) {
-    Gmm_set[m] = {0.0, 0.0};
+    #ifdef _MSC_VER
+    Gmm_set[m] = _Dcomplex{0.0, 0.0};
+    #else
+    Gmm_set[m] = 0.0;
+    #endif
   }
 
   int ispin, s;
