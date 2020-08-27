@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <complex.h>
+/* #include <complex.h> */
 /* #undef complex */
 /* #define complex _Complex double */
 #include <fftw3.h>
