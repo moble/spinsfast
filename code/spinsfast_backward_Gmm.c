@@ -55,8 +55,18 @@ void spinsfast_backward_Gmm(const fftw_complex * restrict a, int Ntransform, con
   fftw_complex *Ito_helper = fftw_malloc(Nm*sizeof(complex));
   fftw_complex *Ito = &Ito_helper[lmax];
 
+  #ifdef _MSC_VER
+  _Dcomplex res;
+  #endif
+
   for (m=-lmax; m<=lmax; m++){
+    #ifdef _MSC_VER
+    res = cpow(_Dcomplex{0.0, 1.0}, _Dcomplex{m, 0.0});
+    Ito[m] = {creal(res), creal(imag)};
+    #else
     Ito[m] = cpow(I,m);
+    #endif
+    /* Ito[m] = cpow(I,m); */
   }
 
   int *midx_helper = calloc(Nm,sizeof(int));
