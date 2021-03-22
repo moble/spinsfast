@@ -12,7 +12,7 @@ export package_version="${1:-$(date +'104.%Y.%m.%d.%H.%M.%S')}"
 ###         -v ${HOME}/.pypirc:/root/.pypirc:ro \
 ###         -v /full/path/to/code:/code \
 ###         -v /full/path/to/this/script/build_maylinux_wheels.sh:/build_manylinux_wheels.sh \
-###         quay.io/pypa/manylinux1_x86_64 /build_manylinux_wheels.sh
+###         quay.io/pypa/manylinux_2_24_x86_64 /build_manylinux_wheels.sh
 ###
 ### Also be aware that several lines of this script may be specialized for this particular code; see
 ### the comments above each section to decide if that is true.

@@ -15,7 +15,7 @@ code_dir="${PWD}"
 /bin/rm -rf "${wheelhouse}"
 mkdir -p "${wheelhouse}"
 
-CONDA_ENVS=( py27 py35 py36 py37 )
+CONDA_ENVS=( py27 py36 py37 py38 py39 )
 
 # Update conda envs
 for CONDA_ENV in "${CONDA_ENVS[@]}"; do
