@@ -49,7 +49,7 @@ jobs:
     - name: Copy manylinux wheels
       run: |
         mkdir dist
-        cp wheelhouse/spinsfast*-manylinux1*.whl dist/
+        cp wheelhouse/spinsfast*-manylinux*.whl dist/
 
     - name: Upload wheels
       uses: actions/upload-artifact@v1
