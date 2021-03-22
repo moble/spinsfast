@@ -2,7 +2,7 @@
 
 yum install -y fftw3 fftw3-devel
 
-PYTHONS=("cp36-cp36m" "cp37-cp37m" "cp38-cp38")
+PYTHONS=("cp36-cp36m" "cp37-cp37m" "cp38-cp38" "cp39-cp39")
 
 for PYTHON in ${PYTHONS[@]}; do
     /opt/python/${PYTHON}/bin/pip install --upgrade pip wheel auditwheel
