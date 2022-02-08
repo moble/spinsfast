@@ -1,11 +1,11 @@
 [tool.cibuildwheel]
 skip = "cp36-* cp37-* *-win*"
-before-build = "python -m pip install --no-cache-dir --force-reinstall --only-binary :all: 'numpy>=1.19'"
+before-build = "python -m pip install --no-cache-dir --force-reinstall --only-binary :all: -r requirements.txt"
 
 [tool.cibuildwheel.macos]
 before-all = "brew install fftw"
-test-command = "echo 'installed on macos'"
+test-command = "python -c 'import spinsfast'"
 
 [tool.cibuildwheel.linux]
 before-all = "yum install -y fftw fftw-devel"
-test-command = "echo 'installed on linux'"
+test-command = "python -c 'import spinsfast'"
