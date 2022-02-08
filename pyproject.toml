@@ -1,6 +1,10 @@
 [tool.cibuildwheel]
-skip = "cp36-* cp37-* *-win*"
-before-build = "python -m pip install --no-cache-dir --force-reinstall --only-binary :all: -r requirements.txt"
+skip = "cp36-* cp37-* *310-*i686 *-win*"
+before-build = "python -m pip install --no-cache-dir --force-reinstall -r requirements.txt"
+
+[tool.cibuildwheel.environment]
+# this makes sure that we build only on platforms that have a corresponding numpy wheel
+PIP_ONLY_BINARY = ":all:"
 
 [tool.cibuildwheel.macos]
 before-all = "brew install fftw"
