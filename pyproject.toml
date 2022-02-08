@@ -1,0 +1,11 @@
+[tool.cibuildwheel]
+skip = "cp36-* cp37-* *-win*"
+before-build = "pip install numpy==1.19"
+
+[tool.cibuildwheel.macos]
+before-all = "brew install fftw"
+test-command = "echo 'installed on macos'"
+
+[tool.cibuildwheel.linux]
+before-all = "yum install -y fftw fftw-devel"
+test-command = "echo 'installed on linux'"
