@@ -1,5 +1,5 @@
 [tool.cibuildwheel]
-skip = "cp36-* cp37-* pp37-* pp38-*i686 *310-*i686 *-win*"
+skip = "cp36-* cp37-* pp37-* pp38-*i686 pp38-macos* *310-*i686 *-win*"
 before-build = "python -m pip install --no-cache-dir --force-reinstall -r requirements.txt"
 
 [tool.cibuildwheel.environment]
