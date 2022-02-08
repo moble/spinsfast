@@ -1,0 +1,38 @@
+name: CI build wheels
+
+on: [push, pull_request]
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, macos-10.15]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.3.1
+        env:
+          CIBW_BEFORE_ALL_LINUX: "yum install -y fftw3 fftw3-devel"
+          CIBW_BEFORE_ALL_MACOS: "brew install fftw"
+          CIBW_SKIP: "cp36-* cp37-* *-win*"
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ./wheelhouse/*.whl
+
+    # - name: Publish to PyPI
+    #   if: >-
+    #       github.ref == 'refs/heads/main'
+    #       && !contains(github.event.head_commit.message, '[no release]')
+    #       && (success() || contains(github.event.head_commit.message, '[skip tests]'))
+    #   shell: bash -l {0}
+    #   env:
+    #     PYPI_USERNAME: __token__
+    #     PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+    #   run: |
+    #     pip install twine
+    #     python -m twine upload -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD} dist/*-manylinux*.whl
