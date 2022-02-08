@@ -8,10 +8,10 @@ PIP_ONLY_BINARY = ":all:"
 
 [tool.cibuildwheel.macos]
 before-all = "brew install fftw"
-before-test = "python -m pip install --no-cache-dir --force-reinstall -r requirements.txt"
+before-test = "python -m pip install -r requirements.txt"
 test-command = "python -c 'import spinsfast'"
 
 [tool.cibuildwheel.linux]
 before-all = "yum install -y fftw fftw-devel"
-before-test = "python -m pip install --no-cache-dir --force-reinstall -r requirements.txt"
+before-test = "python -m pip install -r requirements.txt"
 test-command = "python -c 'import spinsfast'"
