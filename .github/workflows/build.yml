@@ -43,8 +43,9 @@ jobs:
           python setup.py sdist
 
       - name: 'Upload sdist'
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
+          name: dist
           path: dist/*.tar.gz
 
 
