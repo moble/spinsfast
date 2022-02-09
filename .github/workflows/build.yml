@@ -45,14 +45,17 @@ jobs:
           path: dist/*.tar.gz
 
 
-  # upload_pypi:
-  #   needs: [build_wheels, build_sdist]
-  #   name: Publish to PyPI
-  #   runs-on: ubuntu-latest
-  #   if: >-
-  #       github.ref == 'refs/heads/main'
-  #       && !contains(github.event.head_commit.message, '[no release]')
-  #       && (success() || contains(github.event.head_commit.message, '[skip tests]'))
+  upload_pypi:
+    needs: [build_wheels, build_sdist]
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    if: >-
+        github.ref == 'refs/heads/main'
+        && !contains(github.event.head_commit.message, '[no release]')
+        && (success() || contains(github.event.head_commit.message, '[skip tests]'))
+    steps:
+      - uses: actions/checkout@v2
+      
   #   steps:
   #     - uses: actions/download-artifact@v2
   #       with:
