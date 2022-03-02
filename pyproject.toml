@@ -1,6 +1,6 @@
 [tool.cibuildwheel]
 skip = "cp36-* cp37-* pp37-* pp38-*i686 *musl* pp38-macos* *310-*i686 *-win*"
-before-build = "python -m pip install --no-cache-dir --force-reinstall -r requirements.txt"
+before-build = "python -m pip install --no-cache-dir --force-reinstall oldest-supported-numpy"
 
 [tool.cibuildwheel.environment]
 # this makes sure that we build only on platforms that have a corresponding numpy wheel
@@ -8,12 +8,12 @@ PIP_ONLY_BINARY = ":all:"
 
 [tool.cibuildwheel.macos]
 before-all = "brew install fftw"
-before-test = "python -m pip install -r requirements.txt"
+before-test = "python -m pip install oldest-supported-numpy"
 test-command = "python -c 'import spinsfast'"
 
 [tool.cibuildwheel.linux]
 before-all = "yum install -y fftw fftw-devel"
-before-test = "python -m pip install -r requirements.txt"
+before-test = "python -m pip install oldest-supported-numpy"
 test-command = "python -c 'import spinsfast'"
 
 [[tool.cibuildwheel.overrides]]
