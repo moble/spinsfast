@@ -3,7 +3,44 @@ name: Build
 on: [push]
 
 jobs:
+
+  get_new_version:
+    name: Get new version number
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        name: Install Python
+        with:
+          python-version: '3.10'
+
+      - name: Install tomli
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip tomli
+      - name: Install poetry
+        shell: bash
+        run: |
+          curl -fsS -o get-poetry.py https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py
+          python get-poetry.py -y
+      - name: Bump version
+        id: get_version
+        shell: bash
+        env:
+          github_event_head_commit_message: ${{ github.event.head_commit.message }}
+        run: |
+          export version_bump_rule=$(python .github/scripts/parse_bump_rule.py)
+          echo "version_bump_rule: '${version_bump_rule}'"
+          $HOME/.poetry/bin/poetry version "${version_bump_rule}"
+          export new_version=$(python .github/scripts/parse_version.py pyproject.toml)
+          echo "new_version: '${new_version}'"
+          echo "::set-output name=version::${new_version}"
+
   build_wheels:
+    needs: get_new_version
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -17,6 +54,18 @@ jobs:
       - name: 'Check out code'
         uses: actions/checkout@v2
 
+      - uses: actions/setup-python@v2
+        name: Install Python
+        with:
+          python-version: '3.8'
+
+      - name: Update versions
+        shell: bash
+        run: |
+          export new_version=${{needs.get_new_version.outputs.version}}
+          echo "Updating version to '${new_version}'"
+          python .github/scripts/update_versions.py
+
       - name: 'Build wheels'
         uses: pypa/cibuildwheel@v2.3.1
 
@@ -27,6 +76,7 @@ jobs:
 
 
   build_sdist:
+    needs: get_new_version
     name: 'Build sdist'
     runs-on: ubuntu-latest
     if: >-
@@ -39,8 +89,15 @@ jobs:
       - name: 'Set up Python'
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
+          python-version: '3.8'
           cache: 'pip'
+
+      - name: Update versions
+        shell: bash
+        run: |
+          export new_version=${{needs.get_new_version.outputs.version}}
+          echo "Updating version to '${new_version}'"
+          python .github/scripts/update_versions.py
 
       - name: 'Make sdist'
         run: |
@@ -54,18 +111,57 @@ jobs:
 
 
   upload_pypi:
-    name: 'Publish to PyPI'
     needs: [build_wheels, build_sdist]
+    name: Tag and release
+    runs-on: ubuntu-latest
     if: >-
         github.ref == 'refs/heads/main'
         && !contains(github.event.head_commit.message, '[no release]')
         && (success() || contains(github.event.head_commit.message, '[skip tests]'))
-    runs-on: ubuntu-latest
+
     steps:
       - uses: actions/download-artifact@v2
         with:
           name: artifact
           path: dist
+
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        name: Install Python
+        with:
+          python-version: '3.10'
+
+      - name: Update versions
+        shell: bash
+        run: |
+          export new_version=${{needs.get_new_version.outputs.version}}
+          echo "Updating version to '${new_version}'"
+          echo "new_version=${new_version}" >> $GITHUB_ENV
+          python .github/scripts/update_versions.py
+
+      - name: Tag and push new version
+        shell: bash
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit -m "Update version for new release" pyproject.toml setup.py src/quaternion/__init__.py
+          git tag -a "v${new_version}" -m "Version ${new_version}"
+          git status
+          git push --follow-tags  # Will not trigger new workflow because it uses GITHUB_TOKEN
+
+      - name: Create release
+        if: "!contains(github.event.head_commit.message, '[no release]')"
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.new_version }}
+          name: Release v${{ env.new_version }}
+          draft: false
+          prerelease: false
 
       - name: 'Publish to PyPI'
         uses: pypa/gh-action-pypi-publish@release/v1

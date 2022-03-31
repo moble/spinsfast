@@ -1,3 +1,12 @@
+[tool.poetry]
+name = "spinsfast"
+version = "104.2022.4"  # Starts with "104" as original spinsfast version, followed by year, then patch level
+description = "Fast and exact spin-s spherical-harmonic transforms"
+readme = "README.md"
+license = "GPL-3.0-only"
+authors = ["Michael Boyle <mob22@cornell.edu>"]
+homepage = "https://github.com/moble/spinsfast"
+
 [tool.cibuildwheel]
 skip = "cp36-* cp37-* pp37-* pp38-*i686 *musl* pp38-macos* *310-*i686 *-win*"
 before-build = "python -m pip install --no-cache-dir --force-reinstall oldest-supported-numpy"
@@ -19,3 +28,7 @@ test-command = "python -c 'import spinsfast'"
 [[tool.cibuildwheel.overrides]]
 select = "*musllinux*"
 before-all = "apk add fftw fftw-dev"
+
+[build-system]
+requires = ["setuptools!=50.0", "wheel", "oldest-supported-numpy"]
+build-backend = "setuptools.build_meta"
