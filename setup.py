@@ -1,9 +1,9 @@
-from os.path import isdir, join, dirname, realpath
-from setuptools import setup, Extension
-from distutils.sysconfig import get_python_lib
 import os
 import glob
 import time
+from os.path import isdir, join, dirname, realpath
+from setuptools import setup, Extension
+from distutils.sysconfig import get_python_lib
 
 
 # NOTE: Don't change the following line; it is modified automatically in the
@@ -48,6 +48,8 @@ if isdir('/opt/local/lib'):
     LibDirs += ['/opt/local/lib']
 
 
+from sys import platform
+on_windows = ('win' in platform.lower() and not 'darwin' in platform.lower())
 if on_windows:
     extra_compile_args = ['-std=c99', '-O3', '-DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION']
     # # Use the below for MSVC; assuming mingw/gcc by default.  However, also note that FFTW's
