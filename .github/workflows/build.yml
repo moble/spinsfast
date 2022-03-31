@@ -111,7 +111,7 @@ jobs:
 
 
   upload_pypi:
-    needs: [build_wheels, build_sdist]
+    needs: [get_new_version, build_wheels, build_sdist]
     name: Tag and release
     runs-on: ubuntu-latest
     if: >-
@@ -138,12 +138,12 @@ jobs:
         run: |
           export new_version=${{needs.get_new_version.outputs.version}}
           echo "Updating version to '${new_version}'"
-          echo "new_version=${new_version}" >> $GITHUB_ENV
           python .github/scripts/update_versions.py
 
       - name: Tag and push new version
         shell: bash
         run: |
+          export new_version=${{needs.get_new_version.outputs.version}}
           git config user.name github-actions
           git config user.email github-actions@github.com
           git commit -m "Update version for new release" pyproject.toml setup.py python/__init__.py
@@ -158,8 +158,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ env.new_version }}
-          name: Release v${{ env.new_version }}
+          tag_name: v${{ needs.get_new_version.outputs.version }}
+          name: Release v${{ needs.get_new_version.outputs.version }}
           draft: false
           prerelease: false
 
