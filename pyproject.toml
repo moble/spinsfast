@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spinsfast"
-version = "104.2022.5"  # Starts with "104" as original spinsfast version, followed by year, then patch level
+version = "104.2022.6"  # Starts with "104" as original spinsfast version, followed by year, then patch level
 description = "Fast and exact spin-s spherical-harmonic transforms"
 readme = "README.md"
 license = "GPL-3.0-only"
