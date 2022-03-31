@@ -21,11 +21,13 @@ jobs:
         shell: bash
         run: |
           python -m pip install --upgrade pip tomli
+
       - name: Install poetry
         shell: bash
         run: |
           curl -fsS -o get-poetry.py https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py
           python get-poetry.py -y
+
       - name: Bump version
         id: get_version
         shell: bash
@@ -39,20 +41,27 @@ jobs:
           echo "new_version: '${new_version}'"
           echo "::set-output name=version::${new_version}"
 
+
   build_wheels:
     needs: get_new_version
     name: Build wheels on ${{ matrix.os }}
+
     runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-20.04, macos-10.15]
-      fail-fast: false
+
     if: >-
         !contains(github.event.head_commit.message, '[skip ci]')
         && !contains(github.event.head_commit.message, '[skip tests]')
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
     steps:
-      - name: 'Check out code'
+      - name: "Check out code"
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v2
         name: Install Python
@@ -66,8 +75,14 @@ jobs:
           echo "Updating version to '${new_version}'"
           python .github/scripts/update_versions.py
 
-      - name: 'Build wheels'
-        uses: pypa/cibuildwheel@v2.3.1
+      - name: Install cibuildwheel
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install cibuildwheel
+
+      - name: Build wheels
+        run: |
+          python -m cibuildwheel --output-dir wheelhouse
 
       - name: 'Upload wheels'
         uses: actions/upload-artifact@v2
@@ -77,11 +92,13 @@ jobs:
 
   build_sdist:
     needs: get_new_version
-    name: 'Build sdist'
+    name: Build source distribution
     runs-on: ubuntu-latest
+
     if: >-
         !contains(github.event.head_commit.message, '[skip ci]')
         && !contains(github.event.head_commit.message, '[skip tests]')
+
     steps:
       - name: 'Check out code'
         uses: actions/checkout@v2
@@ -90,7 +107,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.8'
-          cache: 'pip'
 
       - name: Update versions
         shell: bash
@@ -120,13 +136,13 @@ jobs:
         && (success() || contains(github.event.head_commit.message, '[skip tests]'))
 
     steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
       - uses: actions/download-artifact@v2
         with:
           name: artifact
           path: dist
-
-      - name: Check out code
-        uses: actions/checkout@v2
 
       - uses: actions/setup-python@v2
         name: Install Python
@@ -150,6 +166,8 @@ jobs:
           git tag -a "v${new_version}" -m "Version ${new_version}"
           git status
           git push --follow-tags  # Will not trigger new workflow because it uses GITHUB_TOKEN
+          ls
+          ls dist
 
       - name: Create release
         if: "!contains(github.event.head_commit.message, '[no release]')"
@@ -164,7 +182,7 @@ jobs:
           prerelease: false
 
       - name: 'Publish to PyPI'
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@master
         with:
           user: __token__
           password: ${{ secrets.PYPI_PASSWORD }}
