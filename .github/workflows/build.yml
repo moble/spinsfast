@@ -146,7 +146,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git commit -m "Update version for new release" pyproject.toml setup.py src/quaternion/__init__.py
+          git commit -m "Update version for new release" pyproject.toml setup.py python/__init__.py
           git tag -a "v${new_version}" -m "Version ${new_version}"
           git status
           git push --follow-tags  # Will not trigger new workflow because it uses GITHUB_TOKEN
