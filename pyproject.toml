@@ -8,7 +8,7 @@ authors = ["Michael Boyle <mob22@cornell.edu>"]
 homepage = "https://github.com/moble/spinsfast"
 
 [tool.cibuildwheel]
-skip = "cp36-* cp37-* pp37-* pp38-*i686 *musl* pp38-macos* *-win*"
+skip = "cp36-* cp37-* pp37-* pp38-*i686 pp39-* pp38-macos* *musl* *-win*"
 before-build = "python -m pip install --no-cache-dir --force-reinstall oldest-supported-numpy"
 
 [tool.cibuildwheel.environment]
