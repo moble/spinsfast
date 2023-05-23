@@ -8,7 +8,7 @@ from distutils.sysconfig import get_python_lib
 
 # NOTE: Don't change the following line; it is modified automatically in the
 # github actions build step, based on the version given in pyproject.toml
-version = "2022.4.1"
+version = "2022.4.2"
 
 try:
     import numpy
