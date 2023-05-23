@@ -8,8 +8,9 @@ authors = ["Michael Boyle <mob22@cornell.edu>"]
 homepage = "https://github.com/moble/spinsfast"
 
 [tool.cibuildwheel]
-skip = "cp36-* cp37-* pp37-* pp38-*i686 pp39-* pp38-macos* *musl* *-win*"
-before-build = "python -m pip install --no-cache-dir --force-reinstall oldest-supported-numpy"
+#skip = "cp36-* cp37-* pp37-* pp38-*i686 pp39-* pp38-macos* *musl* *-win*"
+skip = "*p36-* *p37-* pp38-*i686 pp38-macos* pp39-* *musl* *-win*"
+# before-build = "python -m pip install --no-cache-dir --force-reinstall oldest-supported-numpy"
 
 [tool.cibuildwheel.environment]
 # this makes sure that we build only on platforms that have a corresponding numpy wheel
