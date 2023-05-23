@@ -8,7 +8,7 @@ authors = ["Michael Boyle <mob22@cornell.edu>"]
 homepage = "https://github.com/moble/spinsfast"
 
 [tool.cibuildwheel]
-skip = "cp36-* cp37-* pp37-* pp38-*i686 *musl* pp38-macos* *310-*i686 *-win*"
+skip = "cp36-* cp37-* pp37-* pp38-*i686 *musl* pp38-macos* *-win*"
 before-build = "python -m pip install --no-cache-dir --force-reinstall oldest-supported-numpy"
 
 [tool.cibuildwheel.environment]
@@ -16,6 +16,8 @@ before-build = "python -m pip install --no-cache-dir --force-reinstall oldest-su
 PIP_ONLY_BINARY = ":all:"
 
 [tool.cibuildwheel.macos]
+# Docs say not to use homebrew: https://cibuildwheel.readthedocs.io/en/stable/faq/#missing-dependencies
+# If there are problems on macos arm or something, this is probably why
 before-all = "brew install fftw"
 before-test = "python -m pip install oldest-supported-numpy"
 test-command = "python -c 'import spinsfast'"
