@@ -105,41 +105,43 @@ Note this may also install `numpy` and `fftw` automatically.
 While generally less robust, this package is also available via `pip`:
 
 ```bash
-pip install spinsfast
+python -m pip install spinsfast
 ```
 
-Unfortunately, maintaining binary distributions on pip is too time-consuming, so `pip` will try to
+Unfortunately, maintaining binary distributions on pip is very complicated, so `pip` may try to
 compile the source code for you, in which case you will need to have FFTW and a compiler installed.
-Unfortunately, `pip` has no good way of handling these dependencies.  See below for environment
-variables you may need to set to get compilation working properly.
+But `pip` has no good way of handling these dependencies.  See below for environment variables you
+may need to set to get compilation working properly.
+
+It may be helpful to install `pyfftw` first.  Or, on MacOS, you may have better luck installing FFTW
+via homebrew and adding flags like `CFLAGS=" -L/opt/homebrew/lib " python -m pip install spinsfast`.
 
 
 ## Manual installation
 
-Manual installation of this package is slightly more delicate.  The
-[FFTW package](http://www.fftw.org/) must be installed first.  This is usually
-very simple.  But the resulting header and library must be found by the
-compilation step for this package.  You can first simply try to run
+Manual installation of this package is slightly more delicate.  The [FFTW
+package](http://www.fftw.org/) must be installed first.  This is usually very simple.  But the
+resulting header and library must be found by the compilation step for this package.  You can first
+simply try to run
 
 ```bash
-python setup.py install
+python -m pip install .
 ```
 
-from the top directory of the `spinsfast` code.
+from the top directory of the `spinsfast` code.  This attempts to find the `fftw` header or library
+for you, using some common defaults checked by code in `setup.py`.
 
-If this doesn't work, you can read the error message, but the most likely
-problem is that the compiler cannot find the `fftw` header, or the linker
-cannot find the `fftw` library.  To solve these problems, you will need to run
-something more like this:
+If this doesn't work, you can read the error message, but the most likely problem is that the
+compiler cannot find the `fftw` header, or the linker cannot find the `fftw` library.  To solve
+these problems, you will need to run something more like this:
 
 ```bash
 export LIBRARY_PATH=/path/to/fftw/lib
 export C_INCLUDE_PATH=/path/to/fftw/include
-python setup.py install
+python -m pip install .
 ```
 
-Alternatively, you could try to alter `setup.py` to point to the right
-paths.
+Alternatively, you could try to alter `setup.py` to point to the right paths.
 
 
 # Original installation instructions

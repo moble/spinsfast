@@ -46,6 +46,10 @@ if isdir('/opt/local/include'):
     IncDirs += ['/opt/local/include']
 if isdir('/opt/local/lib'):
     LibDirs += ['/opt/local/lib']
+if isdir('/opt/homebrew/include'):
+    IncDirs += ['/opt/homebrew/include']
+if isdir('/opt/homebrew/lib'):
+    LibDirs += ['/opt/homebrew/lib']
 
 
 from sys import platform
