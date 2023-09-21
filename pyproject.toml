@@ -13,7 +13,7 @@ homepage = "https://github.com/moble/spinsfast"
 # SciPy and NumPy don't support 32-bit Linux from Python 3.10 and onwards
 # Numpy only supports pypy38 x86_64 on Linux
 #skip = "cp36-* cp37-* pp37-* pp38-*i686 pp38-macos* pp39-* *musl* *-win*"
-skip = "*p36-* *p37-* pp38-*i686 pp39-* pp310-* *musl* *-win* cp310-manylinux_i686 cp311-manylinux_i686"
+skip = "*p36-* *p37-* pp38-*i686 pp39-* pp310-* *musl* *-win* cp310-manylinux_i686 cp311-manylinux_i686 cp312-manylinux_i686"
 # before-build = "python -m pip install --no-cache-dir --force-reinstall oldest-supported-numpy"
 
 [tool.cibuildwheel.environment]
