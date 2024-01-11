@@ -36,7 +36,7 @@ def ind_lm(index, lmax):
 
 def lm_ind(l, m, lmax):
     """Convert (ell, m) pair to corresponding single index"""
-    return _ind_lm(l, m, lmax)
+    return _lm_ind(l, m, lmax)
 
 
 def salm2map(salm, s, lmax, Ntheta, Nphi):
