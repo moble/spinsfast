@@ -1,6 +1,6 @@
 [![Build](https://github.com/moble/spinsfast/actions/workflows/build.yml/badge.svg)](https://github.com/moble/spinsfast/actions/workflows/build.yml)
 [![PyPI Version](https://img.shields.io/pypi/v/spinsfast?color=)](https://pypi.org/project/spinsfast/)
-[![Conda Version](https://img.shields.io/conda/vn/conda-forge/spinsfast.svg?color=)](https://anaconda.org/conda-forge/spinsfast)
+[![Conda Version](https://anaconda.org/conda-forge/spinsfast/badges/version.svg)](https://anaconda.org/conda-forge/spinsfast)
 [![GPL-3.0 License](https://img.shields.io/github/license/moble/spinsfast.svg)](https://github.com/moble/spinsfast/blob/main/LICENSE)
 [![DOI](https://zenodo.org/badge/30340582.svg)](https://zenodo.org/badge/latestdoi/30340582)
 
