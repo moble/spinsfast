@@ -1,9 +1,6 @@
-import os
 import glob
-import time
-from os.path import isdir, join, dirname, realpath
+from os.path import isdir, join
 from setuptools import setup, Extension
-from distutils.sysconfig import get_python_lib
 
 
 # NOTE: Don't change the following line; it is modified automatically in the
@@ -14,7 +11,8 @@ try:
     import numpy
     numpy_inc = numpy.get_include()
 except:
-    numpy_inc = os.path.join(get_python_lib(plat_specific=1), 'numpy', 'core', 'include')
+    from distutils.sysconfig import get_python_lib
+    numpy_inc = join(get_python_lib(plat_specific=1), 'numpy', 'core', 'include')
 
 ## The following block is added for nicer behavior with `module`s on clusters
 from os import environ
@@ -22,21 +20,21 @@ IncDirs = [numpy_inc, "include",]
 LibDirs = ["lib",]
 ## See if GSL_HOME is set; if so, use it
 if "GSL_HOME" in environ :
-    IncDirs += [os.path.join(environ["GSL_HOME"], 'include')]
-    LibDirs += [os.path.join(environ["GSL_HOME"], 'lib')]
+    IncDirs += [join(environ["GSL_HOME"], 'include')]
+    LibDirs += [join(environ["GSL_HOME"], 'lib')]
 ## See if FFTW3_HOME is set; if so, use it
 if "FFTW3_HOME" in environ :
     IncDirs += [
-        os.path.join(environ["FFTW3_HOME"], 'include'),
-        os.path.join(environ["FFTW3_HOME"], 'Library', 'include'),
+        join(environ["FFTW3_HOME"], 'include'),
+        join(environ["FFTW3_HOME"], 'Library', 'include'),
         environ["FFTW3_HOME"]+'/include',  # stupid Windows
         environ["FFTW3_HOME"]+'/Library/include',  # stupid Windows
     ]
     LibDirs += [
         environ["FFTW3_HOME"],
-        os.path.join(environ["FFTW3_HOME"], 'lib'),
-        os.path.join(environ["FFTW3_HOME"], 'Library', 'lib'),
-        os.path.join(environ["FFTW3_HOME"], 'Library', 'bin'),
+        join(environ["FFTW3_HOME"], 'lib'),
+        join(environ["FFTW3_HOME"], 'Library', 'lib'),
+        join(environ["FFTW3_HOME"], 'Library', 'bin'),
         environ["FFTW3_HOME"]+'/Library/lib',  # stupid Windows
         environ["FFTW3_HOME"]+'/Library/bin',  # stupid Windows
     ]
@@ -80,7 +78,7 @@ setup(name = 'spinsfast',
       long_description=long_description,
       ext_modules = [Extension(
           name = 'spinsfast.cextension',
-          sources = [os.path.join('python', 'cextension.c')] + glob.glob(os.path.join('code', '*.c')),
+          sources = [join('python', 'cextension.c')] + glob.glob(join('code', '*.c')),
           include_dirs=IncDirs,
           libraries=['fftw3'],
           library_dirs=LibDirs,
