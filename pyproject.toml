@@ -9,11 +9,15 @@ homepage = "https://github.com/moble/spinsfast"
 
 [tool.cibuildwheel]
 # See pyfftw for a good example: https://github.com/pyFFTW/pyFFTW/blob/master/.github/workflows/wheel_tests_and_release.yml
+# See also numpy: https://github.com/numpy/numpy/blob/main/pyproject.toml#L137
+# And scipy: https://github.com/scipy/scipy/blob/main/pyproject.toml#L123
 # SciPy and NumPy don't support musllinux
 # SciPy and NumPy don't support 32-bit Linux from Python 3.10 and onwards
 # Numpy only supports pypy38 x86_64 on Linux
 #skip = "cp36-* cp37-* pp37-* pp38-*i686 pp38-macos* pp39-* *musl* *-win*"
-skip = "*p36-* *p37-* pp38-*i686 pp39-* pp310-* *musl* *-win* cp310-manylinux_i686 cp311-manylinux_i686 cp312-manylinux_i686"
+#skip = "cp36-* cp37-* cp-38* pp37-* *-manylinux_i686 *_ppc64le *_s390x *_universal2"
+#skip = "cp36-* cp37-* cp38-* pp* *_ppc64le *_i686 *_s390x"
+skip = "*p36-* *p37-* *p-38* pp38-*i686 pp39-* pp310-* *musl* *-win* *-manylinux_i686 *_ppc64le *_s390x *_universal2"
 # before-build = "python -m pip install --no-cache-dir --force-reinstall oldest-supported-numpy"
 
 [tool.cibuildwheel.environment]
