@@ -10,12 +10,12 @@ jobs:
     outputs:
       version: ${{ steps.get_version.outputs.version }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v5
         name: Install Python
         with:
-          python-version: '3.10'
+          python-version: '3.12'
 
       - name: Install tomli
         shell: bash
@@ -59,11 +59,11 @@ jobs:
 
     steps:
       - name: "Check out code"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v5
         name: Install Python
         with:
           python-version: '3.8'
@@ -101,10 +101,10 @@ jobs:
 
     steps:
       - name: 'Check out code'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: 'Set up Python'
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.8'
 
@@ -137,17 +137,17 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: artifact
           path: dist
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v5
         name: Install Python
         with:
-          python-version: '3.10'
+          python-version: '3.12'
 
       - name: Update versions
         shell: bash
@@ -170,7 +170,7 @@ jobs:
       - name: Create release
         if: "!contains(github.event.head_commit.message, '[no release]')"
         id: create_release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -180,7 +180,7 @@ jobs:
           prerelease: false
 
       - name: 'Publish to PyPI'
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.PYPI_PASSWORD }}
