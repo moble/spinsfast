@@ -85,7 +85,7 @@ jobs:
           python -m cibuildwheel --output-dir wheelhouse
 
       - name: 'Upload wheels'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3  # Don't upgrade to v4 until each artifact is named
         with:
           path: ./wheelhouse/*.whl
 
@@ -121,7 +121,7 @@ jobs:
           python setup.py sdist
 
       - name: 'Upload sdist'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3  # Don't upgrade to v4 until each artifact is named
         with:
           path: dist/*.tar.gz
 
@@ -139,7 +139,8 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
+      - name: Download artifact
+        uses: actions/download-artifact@v3  # Don't upgrade to v4 until each artifact is named
         with:
           name: artifact
           path: dist
