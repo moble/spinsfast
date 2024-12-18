@@ -28,12 +28,12 @@ PIP_ONLY_BINARY = ":all:"
 # Docs say not to use homebrew: https://cibuildwheel.readthedocs.io/en/stable/faq/#missing-dependencies
 # If there are problems on macos arm or something, this is probably why
 before-all = "brew install fftw"
-before-test = "python -m pip install oldest-supported-numpy"
+before-test = "python -m pip install numpy>=2.0"
 test-command = "python -c 'import spinsfast'"
 
 [tool.cibuildwheel.linux]
 before-all = "yum install -y fftw fftw-devel"
-before-test = "python -m pip install oldest-supported-numpy"
+before-test = "python -m pip install numpy>=2.0"
 test-command = "python -c 'import spinsfast'"
 
 [[tool.cibuildwheel.overrides]]
@@ -41,5 +41,5 @@ select = "*musllinux*"
 before-all = "apk add fftw fftw-dev"
 
 [build-system]
-requires = ["setuptools!=50.0", "wheel", "oldest-supported-numpy"]
+requires = ["setuptools!=50.0", "wheel", "numpy>=1.25"]
 build-backend = "setuptools.build_meta"
