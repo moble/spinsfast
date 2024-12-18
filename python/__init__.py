@@ -16,7 +16,7 @@ from __future__ import absolute_import
 
 # NOTE: Don't change the following line; it is modified automatically in the
 # github actions build step, based on the version given in pyproject.toml
-__version__ = "2022.4.6"
+__version__ = "2022.4.7"
 
 # explicitly import functions with underscores (which will be wrapped)
 from .cextension import (
