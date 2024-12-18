@@ -85,6 +85,7 @@ jobs:
 
       - name: Build wheels
         run: |
+          export MACOSX_DEPLOYMENT_TARGET=$(echo "${{ matrix.os }}" | sed 's/macos-//').0
           python -m cibuildwheel --output-dir wheelhouse
 
       - name: 'Upload wheels'
