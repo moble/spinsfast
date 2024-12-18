@@ -31,7 +31,7 @@ before-all = "brew install fftw"
 before-test = "python -m pip install numpy>=2.0"
 test-command = "python -c 'import spinsfast'"
 # This target needs to match the macos runner version in .github/workflows/build.yml
-environment = { MACOSX_DEPLOYMENT_TARGET="12.0" }
+environment = { MACOSX_DEPLOYMENT_TARGET="13.0" }
 
 [tool.cibuildwheel.linux]
 before-all = "yum install -y fftw fftw-devel"
