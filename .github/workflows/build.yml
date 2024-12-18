@@ -56,7 +56,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-12]
+        # At least the macos runner should be the oldest available, so that the fftw library is
+        # compatible with the MACOSX_DEPLOYMENT_TARGET value, which tries to be as old as possible
 
     steps:
       - name: "Check out code"
