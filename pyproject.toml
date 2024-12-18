@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spinsfast"
-version = "2022.4.7"
+version = "2022.4.8"
 description = "Fast and exact spin-s spherical-harmonic transforms"
 readme = "README.md"
 license = "GPL-3.0-only"
