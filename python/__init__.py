@@ -210,7 +210,7 @@ def map2salm(map, s, lmax):
     salm = np.empty(map.shape[:-2]+(N_lm(lmax),), dtype=np.complex128)
     if map.ndim>2:
         s = np.ascontiguousarray(s, dtype=np.intc)
-        if s.ndim != map.ndim-2 or np.product(s.shape) != np.product(map.shape[:-2]):
+        if s.ndim != map.ndim-2 or np.prod(s.shape) != np.prod(map.shape[:-2]):
             s = s*np.ones(map.shape[:-2], dtype=np.intc)
         _multi_map2salm(map, salm, s, lmax)
     else:
