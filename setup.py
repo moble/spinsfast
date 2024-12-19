@@ -5,7 +5,7 @@ from setuptools import setup, Extension
 
 # NOTE: Don't change the following line; it is modified automatically in the
 # github actions build step, based on the version given in pyproject.toml
-version = "2022.4.7"
+version = "2022.4.9"
 
 try:
     import numpy
