@@ -42,7 +42,7 @@ I based my work on Huffenberger and Wandelt's "Revision 104, 13 Apr
 notice updates on their end, I will gladly update this code, so feel
 free to open an [issue](https://github.com/moble/spinsfast/issues) to
 notify me.  To see more specifically what I've added, look through the
-[commits](https://github.com/moble/spinsfast/commits/master); my
+[commits](https://github.com/moble/spinsfast/commits/main); my
 contributions are just everything since the initial commit.
 
 
@@ -50,7 +50,7 @@ contributions are just everything since the initial commit.
 
 A convenient ipython/jupyter notebook is found in the `example`
 directory, and can also be [viewed directly
-online](http://nbviewer.ipython.org/github/moble/spinsfast/blob/master/example/spinsfast.ipynb).
+online](https://nbviewer.org/github/moble/spinsfast/blob/main/example/spinsfast.ipynb).
 It shows some example python code that can be used to run this module,
 and explains some of the conventions established by the `spinsfast`
 authors.
